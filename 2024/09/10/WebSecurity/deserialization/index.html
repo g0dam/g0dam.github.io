@@ -8,14 +8,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
     <meta name="description" content="什么是序列化和反序列化？我个人的理解是：序列化是将对象转换为字节流，反序列化是将字节流转换为对象。为什么会有这些概念呢？还是来源于具体的需求，举个例子来说，比如一个公司要开发一个软件，这个软件需要保存用户的信息，那么这个信息需要持久化存储，那么这个信息怎么存储呢，这些信息可能是个在程序运行时可能是个对象，经过序列化之后，就可以存储到文件中，那么反序列化就是将存储在文件中的对象，恢复成对象，这样就可">
 <meta property="og:type" content="article">
-<meta property="og:title" content="deserialization">
+<meta property="og:title" content="反序列化漏洞分析笔记">
 <meta property="og:url" content="https://g0dam.github.io/2024/09/10/WebSecurity/deserialization/index.html">
 <meta property="og:site_name" content="g0dam">
 <meta property="og:description" content="什么是序列化和反序列化？我个人的理解是：序列化是将对象转换为字节流，反序列化是将字节流转换为对象。为什么会有这些概念呢？还是来源于具体的需求，举个例子来说，比如一个公司要开发一个软件，这个软件需要保存用户的信息，那么这个信息需要持久化存储，那么这个信息怎么存储呢，这些信息可能是个在程序运行时可能是个对象，经过序列化之后，就可以存储到文件中，那么反序列化就是将存储在文件中的对象，恢复成对象，这样就可">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://g0dam.github.io/img/2024-09-10-23-41-15.png">
 <meta property="article:published_time" content="2024-09-10T15:07:37.000Z">
-<meta property="article:modified_time" content="2024-09-10T15:45:52.203Z">
+<meta property="article:modified_time" content="2024-09-10T15:46:56.531Z">
 <meta property="article:author" content="g0dam">
 <meta property="article:tag" content="反序列化漏洞">
 <meta name="twitter:card" content="summary">
@@ -39,7 +39,7 @@
       
     
     <!-- title -->
-    <title>deserialization</title>
+    <title>反序列化漏洞分析笔记</title>
     <!-- async scripts -->
     <!-- Google Analytics -->
 
@@ -101,16 +101,16 @@
     <div id="share" style="display: none">
       <ul>
   <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://g0dam.github.io/2024/09/10/WebSecurity/deserialization/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://g0dam.github.io/2024/09/10/WebSecurity/deserialization/&text=deserialization"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://g0dam.github.io/2024/09/10/WebSecurity/deserialization/&title=deserialization"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://g0dam.github.io/2024/09/10/WebSecurity/deserialization/&is_video=false&description=deserialization"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=deserialization&body=Check out this article: https://g0dam.github.io/2024/09/10/WebSecurity/deserialization/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://g0dam.github.io/2024/09/10/WebSecurity/deserialization/&title=deserialization"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://g0dam.github.io/2024/09/10/WebSecurity/deserialization/&title=deserialization"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://g0dam.github.io/2024/09/10/WebSecurity/deserialization/&title=deserialization"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://g0dam.github.io/2024/09/10/WebSecurity/deserialization/&title=deserialization"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://g0dam.github.io/2024/09/10/WebSecurity/deserialization/&name=deserialization&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://g0dam.github.io/2024/09/10/WebSecurity/deserialization/&t=deserialization"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://g0dam.github.io/2024/09/10/WebSecurity/deserialization/&text=反序列化漏洞分析笔记"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://g0dam.github.io/2024/09/10/WebSecurity/deserialization/&title=反序列化漏洞分析笔记"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://g0dam.github.io/2024/09/10/WebSecurity/deserialization/&is_video=false&description=反序列化漏洞分析笔记"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=反序列化漏洞分析笔记&body=Check out this article: https://g0dam.github.io/2024/09/10/WebSecurity/deserialization/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://g0dam.github.io/2024/09/10/WebSecurity/deserialization/&title=反序列化漏洞分析笔记"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://g0dam.github.io/2024/09/10/WebSecurity/deserialization/&title=反序列化漏洞分析笔记"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://g0dam.github.io/2024/09/10/WebSecurity/deserialization/&title=反序列化漏洞分析笔记"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://g0dam.github.io/2024/09/10/WebSecurity/deserialization/&title=反序列化漏洞分析笔记"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://g0dam.github.io/2024/09/10/WebSecurity/deserialization/&name=反序列化漏洞分析笔记&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://g0dam.github.io/2024/09/10/WebSecurity/deserialization/&t=反序列化漏洞分析笔记"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
@@ -130,7 +130,7 @@
   <header>
     
     <h1 class="posttitle p-name" itemprop="name headline">
-        deserialization
+        反序列化漏洞分析笔记
     </h1>
 
 
@@ -256,16 +256,16 @@
     <div id="share-footer" style="display: none">
       <ul>
   <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://g0dam.github.io/2024/09/10/WebSecurity/deserialization/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://g0dam.github.io/2024/09/10/WebSecurity/deserialization/&text=deserialization"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://g0dam.github.io/2024/09/10/WebSecurity/deserialization/&title=deserialization"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://g0dam.github.io/2024/09/10/WebSecurity/deserialization/&is_video=false&description=deserialization"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=deserialization&body=Check out this article: https://g0dam.github.io/2024/09/10/WebSecurity/deserialization/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://g0dam.github.io/2024/09/10/WebSecurity/deserialization/&title=deserialization"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://g0dam.github.io/2024/09/10/WebSecurity/deserialization/&title=deserialization"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://g0dam.github.io/2024/09/10/WebSecurity/deserialization/&title=deserialization"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://g0dam.github.io/2024/09/10/WebSecurity/deserialization/&title=deserialization"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://g0dam.github.io/2024/09/10/WebSecurity/deserialization/&name=deserialization&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://g0dam.github.io/2024/09/10/WebSecurity/deserialization/&t=deserialization"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://g0dam.github.io/2024/09/10/WebSecurity/deserialization/&text=反序列化漏洞分析笔记"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://g0dam.github.io/2024/09/10/WebSecurity/deserialization/&title=反序列化漏洞分析笔记"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://g0dam.github.io/2024/09/10/WebSecurity/deserialization/&is_video=false&description=反序列化漏洞分析笔记"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=反序列化漏洞分析笔记&body=Check out this article: https://g0dam.github.io/2024/09/10/WebSecurity/deserialization/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://g0dam.github.io/2024/09/10/WebSecurity/deserialization/&title=反序列化漏洞分析笔记"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://g0dam.github.io/2024/09/10/WebSecurity/deserialization/&title=反序列化漏洞分析笔记"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://g0dam.github.io/2024/09/10/WebSecurity/deserialization/&title=反序列化漏洞分析笔记"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://g0dam.github.io/2024/09/10/WebSecurity/deserialization/&title=反序列化漏洞分析笔记"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://g0dam.github.io/2024/09/10/WebSecurity/deserialization/&name=反序列化漏洞分析笔记&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://g0dam.github.io/2024/09/10/WebSecurity/deserialization/&t=反序列化漏洞分析笔记"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
