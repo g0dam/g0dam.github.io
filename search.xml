@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>javadeserialization</title>
+      <link href="/2024/09/12/WebSecurity/javadeserialization/"/>
+      <url>/2024/09/12/WebSecurity/javadeserialization/</url>
+      
+        <content type="html"><![CDATA[]]></content>
+      
+      
+      <categories>
+          
+          <category> Web Security </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 反序列化漏洞 </tag>
+            
+            <tag> Java </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>【算法】链表</title>
       <link href="/2024/09/11/algorithm/List/"/>
       <url>/2024/09/11/algorithm/List/</url>
@@ -29,7 +56,7 @@
     
     
     <entry>
-      <title>反序列化漏洞分析笔记 - 第一部分 PHP反序列化分析</title>
+      <title>【Web安全】反序列化漏洞分析笔记 - 第一部分 PHP反序列化分析</title>
       <link href="/2024/09/10/WebSecurity/deserialization/"/>
       <url>/2024/09/10/WebSecurity/deserialization/</url>
       
