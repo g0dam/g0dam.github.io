@@ -4,6 +4,58 @@
   
     
     <entry>
+      <title>【hackthebox】解题记录</title>
+      <link href="/2024/09/19/WebSecurity/hackthebox/"/>
+      <url>/2024/09/19/WebSecurity/hackthebox/</url>
+      
+        <content type="html"><![CDATA[<h1 id="Sightless"><a href="#Sightless" class="headerlink" title="Sightless"></a>Sightless</h1><h2 id="信息搜集"><a href="#信息搜集" class="headerlink" title="信息搜集"></a>信息搜集</h2><p>先用nmap扫描一下：<code>nmap -sC -sV 10.10.11.32 -T4 -oN nmap.txt</code></p><img src="/2024/09/19/WebSecurity/hackthebox/image.png" class="" title="端口开放"><p>发现有web服务，访问web页面。另外存在ftp和ssh服务，这些都可能是后面的突破点，先看下web服务。</p><img src="/2024/09/19/WebSecurity/hackthebox/image-1.png" class="" title="Unknown host"><p>需要修改下host文件了，添加一行 <code>10.10.11.32 sightless.htb</code><br>访问<code>http://sightless.htb</code><br>页面中只有一个SQLPad是有用的，我们访问这个页面（仍然需要修改host文件）</p><img src="/2024/09/19/WebSecurity/hackthebox/image-2.png" class="" title="SQLPad"><p>首先想到的是SQLPad应该是会有一些CVE在的，百度搜一下发现有个</p><img src="/2024/09/19/WebSecurity/hackthebox/image-3.png" class="" title="CVE"><p>刚好和当前的版本是一致的</p><p>太寄了，不知道为什么国内的服务器一直不能反弹回shell，先放个链接吧<br><a href="https://medium.com/@vikram1337/sightless-hackthebox-9599be0ee25b">https://medium.com/@vikram1337/sightless-hackthebox-9599be0ee25b</a></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Web Security </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> CTF </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
+      <title>【Web安全】反序列化漏洞分析笔记 - 第三部分 Python反序列化分析</title>
+      <link href="/2024/09/18/WebSecurity/pythondeserialization-md/"/>
+      <url>/2024/09/18/WebSecurity/pythondeserialization-md/</url>
+      
+        <content type="html"><![CDATA[<h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p>Python的序列化和PHP的很像</p><p>Python序列化相关函数：<br>pickle.dump(obj, file) : 将对象序列化后保存到文件<br>pickle.load(file) : 读取文件， 将文件中的序列化内容反序列化为对象<br>pickle.dumps(obj) : 将对象序列化成字符串格式的字节流<br>pickle.loads(bytes_obj) : 将字符串格式的字节流反序列化为对象</p><p>同样，在Python中也存在魔术方法：<br><code>__reduce__()</code>反序列化时调用</p><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pickle</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">A</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__reduce__</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;111&quot;</span>)</span><br><span class="line">        <span class="keyword">return</span> (os.system, (<span class="string">&#x27;calc&#x27;</span>,))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">a = A()</span><br><span class="line">p_a = pickle.dumps(a)</span><br><span class="line">pickle.loads(p_a)</span><br><span class="line"><span class="built_in">print</span>(p_a)</span><br></pre></td></tr></table></figure><p><code>__init__</code> 本质就是python中的构造函数，在对象被实例化时调用<br><code>__reduce_ex__()</code> 反序列化时调用<br><code>__setstate__()</code> 反序列化时调用<br><code>__getstate__()</code> 序列化时调用</p><p>Python代码审计工具 bandit</p><h1 id="CVE分析"><a href="#CVE分析" class="headerlink" title="CVE分析"></a>CVE分析</h1><h2 id="CVE-2019-6446-Numpy反序列化命令执行"><a href="#CVE-2019-6446-Numpy反序列化命令执行" class="headerlink" title="CVE-2019-6446 Numpy反序列化命令执行"></a>CVE-2019-6446 Numpy反序列化命令执行</h2><p><a href="https://www.freebuf.com/vuls/194540.html">https://www.freebuf.com/vuls/194540.html</a></p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Web Security </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> 反序列化漏洞 </tag>
+            
+            <tag> Python </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>【Web安全】反序列化漏洞分析笔记 - 第二部分 Java反序列化分析</title>
       <link href="/2024/09/12/WebSecurity/javadeserialization/"/>
       <url>/2024/09/12/WebSecurity/javadeserialization/</url>
@@ -96,19 +148,6 @@
             <tag> Android </tag>
             
         </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
-      <title>Hello World</title>
-      <link href="/2024/09/10/hello-world/"/>
-      <url>/2024/09/10/hello-world/</url>
-      
-        <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p><h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p><h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p><h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p><h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>]]></content>
-      
-      
       
     </entry>
     
