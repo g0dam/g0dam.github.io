@@ -14,7 +14,7 @@
 <meta property="og:description" content="Overview本文研究的问题是APP账号自动登录，首先刚看到题目我以为是那种手机上都会有自动输入账号密码的机制，读了文章之后了解到这里说的自动登录是登录状态的保持，比如微信，我们只需要在刚下载微信时输入账号密码进行登录，之后每次即便是关掉微信进程，也是一打开就是自动登录的，这也就省去了用户频繁输入账号和口令的麻烦。然而，在实际使用中，它易受到“data-clone attack”的威胁： 如果自">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2024-09-10T14:50:53.000Z">
-<meta property="article:modified_time" content="2024-09-10T14:53:17.572Z">
+<meta property="article:modified_time" content="2024-09-20T10:43:02.435Z">
 <meta property="article:author" content="g0dam">
 <meta property="article:tag" content="论文精读">
 <meta property="article:tag" content="Android">
@@ -122,7 +122,7 @@
     
     
       <div id="toc">
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Overview"><span class="toc-number">1.</span> <span class="toc-text">Overview</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Professional-term"><span class="toc-number">2.</span> <span class="toc-text">Professional term</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Thesaurus"><span class="toc-number">3.</span> <span class="toc-text">Thesaurus</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Tools"><span class="toc-number">4.</span> <span class="toc-text">Tools</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Overview"><span class="toc-number">1.</span> <span class="toc-text">Overview</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Professional-term"><span class="toc-number">2.</span> <span class="toc-text">Professional term</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Thesaurus"><span class="toc-number">3.</span> <span class="toc-text">Thesaurus</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Tools"><span class="toc-number">4.</span> <span class="toc-text">Tools</span></a></li></ol>
       </div>
     
   </span>
@@ -167,21 +167,21 @@
   
 
   <div class="content e-content" itemprop="articleBody">
-    <h1 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h1><p>本文研究的问题是APP账号自动登录，首先刚看到题目我以为是那种手机上都会有自动输入账号密码的机制，读了文章之后了解到这里说的自动登录是登录状态的保持，比如微信，我们只需要在刚下载微信时输入账号密码进行登录，之后每次即便是关掉微信进程，也是一打开就是自动登录的，这也就省去了用户频繁输入账号和口令的麻烦。然而，在实际使用中，它易受到“data-clone attack”的威胁： 如果自动登录依赖的数据存储在本地，它可能会被攻击者克隆，导致攻击者可以突破登录设备数量限制或秘密登录受害者的帐户，从而损害APP运营者的合法权益或侵犯用户隐私和数据安全。对此，业界提出了设备一致性检查方案，只要发现APP运行设备环境发生变化，APP将禁止自动登录进而阻止克隆攻击。针对该问题，本文进一步研究发现该方案无法完全防御“data-clone attack”。该团队提出了一个具有良好透明性的虚拟化方案VPDroid， 可定制攻击所需的设备环境，以进行App自动登录的安全测试。该研究对应用市场中234个主流APP进行了测试，结果表明，通过VPDroid可有效绕过被测APP的一致性检查机制。在该成果的研究过程中，该团队发现了系列安全漏洞，近20个厂商对提交的漏洞给予了确认（其中包括1个CVE和近10项CNVD漏洞成果）。</p>
+    <h2 id="Overview"><a href="#Overview" class="headerlink" title="Overview"></a>Overview</h2><p>本文研究的问题是APP账号自动登录，首先刚看到题目我以为是那种手机上都会有自动输入账号密码的机制，读了文章之后了解到这里说的自动登录是登录状态的保持，比如微信，我们只需要在刚下载微信时输入账号密码进行登录，之后每次即便是关掉微信进程，也是一打开就是自动登录的，这也就省去了用户频繁输入账号和口令的麻烦。然而，在实际使用中，它易受到“data-clone attack”的威胁： 如果自动登录依赖的数据存储在本地，它可能会被攻击者克隆，导致攻击者可以突破登录设备数量限制或秘密登录受害者的帐户，从而损害APP运营者的合法权益或侵犯用户隐私和数据安全。对此，业界提出了设备一致性检查方案，只要发现APP运行设备环境发生变化，APP将禁止自动登录进而阻止克隆攻击。针对该问题，本文进一步研究发现该方案无法完全防御“data-clone attack”。该团队提出了一个具有良好透明性的虚拟化方案VPDroid， 可定制攻击所需的设备环境，以进行App自动登录的安全测试。该研究对应用市场中234个主流APP进行了测试，结果表明，通过VPDroid可有效绕过被测APP的一致性检查机制。在该成果的研究过程中，该团队发现了系列安全漏洞，近20个厂商对提交的漏洞给予了确认（其中包括1个CVE和近10项CNVD漏洞成果）。</p>
 <p>具体什么是自动登录呢，如下图是我在作者的另一篇论文中找到的图片，可以看到当前已有设备登录账号，在另一手机登陆时会弹出仅能登录一个设备的提示。在安卓手机中，app通常使用用户登录凭证来实现自动登录，在首次登录成功之后，app将凭证数据保存在本地存储当中，下次登陆前进行验证，安卓提供了四种存储机制包括内部存储、外部存储、共享存储、数据库存储。相应的app数据会存储在对应路径当中，一般其它的应用是无法访问的。要实现克隆的话不仅需要克隆应用本身资源，为了防止这样的克隆行为，业界的解决方案是检查设备一致性，如设备电话号、序列号等信息，此类行为可能可以使用Xposed等框架hook相关函数进行绕过，但很多app也会有反调试措施，而且之前的相关工作当中仅hook了13个相关的标识信息，但本文通过调研发现了103个有关设备标识的信息。</p>
 <p>本文通过定制了一个安卓虚拟机系统来实现了对设备标识的定制化修改，该修改对于app来说是透明的。Cells是一个轻量的安卓虚拟机系统，可以直接与硬件进行交互，他的主要机制是创建了一个独立的虚拟机命名空间，以此实现同真机系统的隔离，以及不同系统间的隔离，但是Cells也有很多局限性，它的灵活性弱，对新版本的安卓系统并不支持，同时缺少对蓝牙、GPS等设备的支持，而且对于app来说，可以发现Cells虚拟机的指纹信息，也就是说可以发现当前设备是虚拟机。</p>
 <p>本文在Cells的基础上进行定制化，为了实现对app克隆的攻击模型，虚拟机需要满足两个条件，第一点是需要直接能够接触到硬件，第二点是可以定制化系统参数并且对app而言该操作是透明的。为了实现这些目标，本文主要采取两个方式，首先是针对在安卓ServiceManager中定义的服务，采用binder机制进行通信，binder机制是安卓系统引入的进程间通信的一种机制。第二种方法是，对于没有在ServiceManager中定义的服务，采用和真机交互的方式，设置通信代理。（RIL是一种和电话运营商网络交互的功能接口，RILD是在C++层的接口）</p>
 <p>VPDroid系统整体概况图如图所示，虚拟出的安卓设备独立于主机，并可实现其中的参数定制。</p>
 <p>那么怎么具体实现参数定制化呢，VPDroid提供了一个定制文件，修改其中的文件信息便可实现定制，对于安卓系统的参数信息，只需要将其中定制信息初始化在虚拟机内存中即可，对于用户层和内核层的定制化，则需要将其初始化在真机内存中。</p>
 <p>本文采用了应用商店排名靠前的234个应用进行实验，在VPDroid中所有app都能实现绕过，作者也提出了建议，不要将认证凭证保存在本地、或者采用可信执行环境，但这样的开销也会加大，影响用户体验，本文最后也指出了VPDroid对于经root的用户来说还不是透明的，因为在采用代理通信时，VPDroid并未直接与RILD通信，也存在有相应的指纹信息。</p>
-<h1 id="Professional-term"><a href="#Professional-term" class="headerlink" title="Professional term"></a>Professional term</h1><ul>
+<h2 id="Professional-term"><a href="#Professional-term" class="headerlink" title="Professional term"></a>Professional term</h2><ul>
 <li>original equipment manufacturer (OEM)（原始设备生产商）：</li>
 <li>app克隆：深入挖掘APP克隆实验 - FreeBuf网络安全行业门户 Android 手机克隆&#x2F;一键换机原理初探_IT先森的博客-CSDN博客_手机克隆原理</li>
 <li>Binder：安卓中进程间通信的一种机制 SourceAnalysis-1&#x2F;Binder源码分析.md at master · VPDroid&#x2F;SourceAnalysis-1 (github.com)</li>
 <li>SELinux：SELinux 属于MAC的具体实现，增强了Linux系统的安全性。MAC机制的特点在于，资源的拥有者，并不能决定谁可以接入到资源。具体决定是否可以接入到资源，是基于安全策略。而安全策略则是有一系列的接入规则组成，并仅有特定权限的用户有权限操作安全策略</li>
 <li>Android RIL概述：和电话运营商网络交互的功能接口Android RIL概述-CSDN博客</li>
 </ul>
-<h1 id="Thesaurus"><a href="#Thesaurus" class="headerlink" title="Thesaurus"></a>Thesaurus</h1><ul>
+<h2 id="Thesaurus"><a href="#Thesaurus" class="headerlink" title="Thesaurus"></a>Thesaurus</h2><ul>
 <li>client-side tampering vulnerabilities（客户端篡改漏洞）：In this paper, we focus on the security risk caused by mobile apps’ auto-login functions, which belongs to client-side tampering vulnerabilities.</li>
 <li>hassle（麻烦）：It avoids the hassle of retyping user ID and password in a small keyboard when reaccessing the app.</li>
 <li>In a nutshell（简而言之）：In a nutshell, we make the following three significant contributions.</li>
@@ -194,7 +194,7 @@
 <li>pseudo（假的）：The Binder driver is a custom pseudo driver with no corresponding physical device.</li>
 <li>To the best of our knowledge（据我们所知）：To the best of our knowledge, VPDroid offers the most comprehensive Android device-attribute editing options so far.</li>
 </ul>
-<h1 id="Tools"><a href="#Tools" class="headerlink" title="Tools"></a>Tools</h1><p>GitHub - VPDroid&#x2F;Dev: VPDroid is a lightweight Android OS-level virtualization architecture</p>
+<h2 id="Tools"><a href="#Tools" class="headerlink" title="Tools"></a>Tools</h2><p>GitHub - VPDroid&#x2F;Dev: VPDroid is a lightweight Android OS-level virtualization architecture</p>
 <p>​</p>
 
   </div>
@@ -241,7 +241,7 @@
     
     
       <div id="toc-footer" style="display: none">
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#Overview"><span class="toc-number">1.</span> <span class="toc-text">Overview</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Professional-term"><span class="toc-number">2.</span> <span class="toc-text">Professional term</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Thesaurus"><span class="toc-number">3.</span> <span class="toc-text">Thesaurus</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Tools"><span class="toc-number">4.</span> <span class="toc-text">Tools</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Overview"><span class="toc-number">1.</span> <span class="toc-text">Overview</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Professional-term"><span class="toc-number">2.</span> <span class="toc-text">Professional term</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Thesaurus"><span class="toc-number">3.</span> <span class="toc-text">Thesaurus</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Tools"><span class="toc-number">4.</span> <span class="toc-text">Tools</span></a></li></ol>
       </div>
     
 
