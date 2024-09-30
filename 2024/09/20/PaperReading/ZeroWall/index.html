@@ -13,14 +13,14 @@
 <meta property="og:site_name" content="g0dam">
 <meta property="og:description" content="Overview这篇论文是针对0day攻击的检测，主要方法是利用编码器解码器神经网络，编码器解码器可以将payload编码之后再还原，那么拿很多正常数据报训练之后，还原输出的结果，如果还原的结果和正常数据报相似度高，那么就是正常数据报，否则就是异常数据报。 零日网络攻击是网络安全的最严重威胁之一，因为它们是未知的，所以很难被基于签名的网络应用防火墙（WAF）检测到。文章提出了一种名为ZeroWal">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://g0dam.github.io/.io//09/20/PaperReading/ZeroWall/image.png">
-<meta property="og:image" content="https://g0dam.github.io/.io//09/20/PaperReading/ZeroWall/image-1.png">
+<meta property="og:image" content="https://g0dam.github.io/2024/09/20/PaperReading/ZeroWall/09/20/PaperReading/ZeroWall/image.png">
+<meta property="og:image" content="https://g0dam.github.io/2024/09/20/PaperReading/ZeroWall/09/20/PaperReading/ZeroWall/image-1.png">
 <meta property="article:published_time" content="2024-09-20T10:40:56.000Z">
 <meta property="article:modified_time" content="2024-09-30T04:21:48.531Z">
 <meta property="article:author" content="g0dam">
 <meta property="article:tag" content="论文精读">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://g0dam.github.io/.io//09/20/PaperReading/ZeroWall/image.png">
+<meta name="twitter:image" content="https://g0dam.github.io/2024/09/20/PaperReading/ZeroWall/09/20/PaperReading/ZeroWall/image.png">
     
     
       
@@ -190,7 +190,7 @@
 <li>基于深度学习的方法：提出了基于深度学习的方法来学习复杂的HTTP请求日志。这些方法包括使用神经网络优化反向传播用于入侵检测系统，以及提出多种针对不同类型攻击的深度学习方法。还有基于卷积神经网络（CNN）模型来训练请求中的单词。</li>
 <li>无监督方法：例如，使用n-gram和堆叠自动编码器的无监督方法来学习HTTP请求。然而，这种方法直接使用编码器输出（降维）结果进行异常检测，这可能导致异常样本的输出与正常样本无法区分，从而限制了性能。</li>
 </ul>
-<h2 id="Core-Idea"><a href="#Core-Idea" class="headerlink" title="Core Idea"></a>Core Idea</h2><img src="/.io//09/20/PaperReading/ZeroWall/image.png" class>
+<h2 id="Core-Idea"><a href="#Core-Idea" class="headerlink" title="Core Idea"></a>Core Idea</h2><img src="/2024/09/20/PaperReading/ZeroWall/09/20/PaperReading/ZeroWall/image.png" class>
 <p>在这篇论文的”核心思想和系统概述（CORE IDEA AND SYSTEM OVERVIEW）”部分，作者详细介绍了ZeroWall的设计目标、核心思想和整体架构。这一部分内容可以分为以下几个关键点：</p>
 <h3 id="设计目标"><a href="#设计目标" class="headerlink" title="设计目标"></a>设计目标</h3><ol>
 <li><strong>与现有WAF协同工作</strong>：ZeroWall旨在作为现有基于签名的Web应用防火墙（WAF）的补充，而不是完全取代它们。这种设计允许ZeroWall在不增加额外开销的情况下，与WAF一起部署，共同提高Web安全。</li>
@@ -221,7 +221,7 @@
 <ol>
 <li><strong>使用BLEU指标</strong>：BLEU（Bilingual Evaluation Understudy）指标用于计算两个序列之间的相似度。BLEU值范围从0到1，值越高表示源序列和目标序列之间的相似度越高。</li>
 <li><strong>恶意分数（Malicious Score）</strong>：为了检测异常，系统定义了恶意分数（1 - BLEU）作为估计器。较高的恶意分数意味着网络无法重建给定序列，表明输入序列可能是恶意的。</li>
-<li><strong>阈值判断</strong>：恶意分数与特定阈值进行比较，以确定请求是良性还是恶意的。<img src="/.io//09/20/PaperReading/ZeroWall/image-1.png" class></li>
+<li><strong>阈值判断</strong>：恶意分数与特定阈值进行比较，以确定请求是良性还是恶意的。<img src="/2024/09/20/PaperReading/ZeroWall/09/20/PaperReading/ZeroWall/image-1.png" class></li>
 </ol>
 
   </div>
