@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="PHP代码审计入门指南  https:&#x2F;&#x2F;www.yuque.com&#x2F;burpheart&#x2F;phpaudit&#x2F; PHP 用户可控输入   框架&#x2F;全局变量 获取URL参数（GET） 获取POST参数 获取上传文件 获取Cookie参数 获取服务器参数 获取请求体 获取JSON数据 文件上传方法    PHP原生 $_GET $_POST $_FILES $_COOKIE $_SERVER p">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【Web安全】PHP代码审计">
+<meta property="og:url" content="https://g0dam.github.io/2024/10/02/WebSecurity/codeaudit/phpaudit/index.html">
+<meta property="og:site_name" content="g0dam">
+<meta property="og:description" content="PHP代码审计入门指南  https:&#x2F;&#x2F;www.yuque.com&#x2F;burpheart&#x2F;phpaudit&#x2F; PHP 用户可控输入   框架&#x2F;全局变量 获取URL参数（GET） 获取POST参数 获取上传文件 获取Cookie参数 获取服务器参数 获取请求体 获取JSON数据 文件上传方法    PHP原生 $_GET $_POST $_FILES $_COOKIE $_SERVER p">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-10-02T04:27:24.000Z">
+<meta property="article:modified_time" content="2024-10-03T03:09:26.065Z">
+<meta property="article:author" content="g0dam">
+<meta property="article:tag" content="代码审计">
+<meta property="article:tag" content="PHP">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>【Web安全】PHP代码审计</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+      <link rel="alternate" href="/true" title="g0dam" type="application/atom+xml" />
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Categories</a></li><!--
+     --><!--
+       --><li><a href="/idea/">Idea</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/g0dam">Projects</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/2024/10/03/WebSecurity/codeaudit/xinhuoaaudit/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2024/09/30/algorithm/hash/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://g0dam.github.io/2024/10/02/WebSecurity/codeaudit/phpaudit/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://g0dam.github.io/2024/10/02/WebSecurity/codeaudit/phpaudit/&text=【Web安全】PHP代码审计"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://g0dam.github.io/2024/10/02/WebSecurity/codeaudit/phpaudit/&title=【Web安全】PHP代码审计"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://g0dam.github.io/2024/10/02/WebSecurity/codeaudit/phpaudit/&is_video=false&description=【Web安全】PHP代码审计"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【Web安全】PHP代码审计&body=Check out this article: https://g0dam.github.io/2024/10/02/WebSecurity/codeaudit/phpaudit/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://g0dam.github.io/2024/10/02/WebSecurity/codeaudit/phpaudit/&title=【Web安全】PHP代码审计"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://g0dam.github.io/2024/10/02/WebSecurity/codeaudit/phpaudit/&title=【Web安全】PHP代码审计"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://g0dam.github.io/2024/10/02/WebSecurity/codeaudit/phpaudit/&title=【Web安全】PHP代码审计"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://g0dam.github.io/2024/10/02/WebSecurity/codeaudit/phpaudit/&title=【Web安全】PHP代码审计"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://g0dam.github.io/2024/10/02/WebSecurity/codeaudit/phpaudit/&name=【Web安全】PHP代码审计&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://g0dam.github.io/2024/10/02/WebSecurity/codeaudit/phpaudit/&t=【Web安全】PHP代码审计"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#PHP-%E7%94%A8%E6%88%B7%E5%8F%AF%E6%8E%A7%E8%BE%93%E5%85%A5"><span class="toc-number">1.</span> <span class="toc-text">PHP 用户可控输入</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PHP-%E6%95%8F%E6%84%9F%E5%87%BD%E6%95%B0"><span class="toc-number">2.</span> <span class="toc-text">PHP 敏感函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E6%B3%A8%E5%85%A5-%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB"><span class="toc-number">3.</span> <span class="toc-text">代码注入&#x2F;文件包含</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SQL-LDAP%E6%B3%A8%E5%85%A5"><span class="toc-number">4.</span> <span class="toc-text">SQL&#x2F;LDAP注入</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96-SSRF"><span class="toc-number">5.</span> <span class="toc-text">文件读取&#x2F;SSRF</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0-%E5%86%99%E5%85%A5"><span class="toc-number">6.</span> <span class="toc-text">文件上传&#x2F;写入</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PHP%E5%8E%9F%E7%94%9F%E8%BF%87%E6%BB%A4%E6%96%B9%E6%B3%95"><span class="toc-number">7.</span> <span class="toc-text">PHP原生过滤方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%91%BD%E4%BB%A4%E6%B3%A8%E5%85%A5%E9%98%B2%E6%8A%A4"><span class="toc-number">7.1.</span> <span class="toc-text">1. 命令注入防护</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-SQL%E6%B3%A8%E5%85%A5%E9%98%B2%E6%8A%A4"><span class="toc-number">7.2.</span> <span class="toc-text">2. SQL注入防护</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-XSS%E9%98%B2%E6%8A%A4"><span class="toc-number">7.3.</span> <span class="toc-text">3. XSS防护</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E6%95%B0%E5%AD%97%E7%B1%BB%E5%9E%8B%E8%BF%87%E6%BB%A4"><span class="toc-number">7.4.</span> <span class="toc-text">4. 数字类型过滤</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E5%85%B6%E4%BB%96%E9%98%B2%E6%8A%A4%E9%85%8D%E7%BD%AE%E9%A1%B9"><span class="toc-number">7.5.</span> <span class="toc-text">5. 其他防护配置项</span></a></li></ol></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        【Web安全】PHP代码审计
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">g0dam</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2024-10-02T04:27:24.000Z" class="dt-published" itemprop="datePublished">2024-10-02</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/Web-Security/">Web Security</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/PHP/" rel="tag">PHP</a>, <a class="p-category" href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/" rel="tag">代码审计</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p>PHP代码审计入门指南  <a target="_blank" rel="noopener" href="https://www.yuque.com/burpheart/phpaudit/">https://www.yuque.com/burpheart/phpaudit/</a></p>
+<h2 id="PHP-用户可控输入"><a href="#PHP-用户可控输入" class="headerlink" title="PHP 用户可控输入"></a>PHP 用户可控输入</h2><table>
+<thead>
+<tr>
+<th>框架&#x2F;全局变量</th>
+<th>获取URL参数（GET）</th>
+<th>获取POST参数</th>
+<th>获取上传文件</th>
+<th>获取Cookie参数</th>
+<th>获取服务器参数</th>
+<th>获取请求体</th>
+<th>获取JSON数据</th>
+<th>文件上传方法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>PHP原生</td>
+<td>$_GET</td>
+<td>$_POST</td>
+<td>$_FILES</td>
+<td>$_COOKIE</td>
+<td>$_SERVER</td>
+<td>php:&#x2F;&#x2F;input</td>
+<td>无</td>
+<td>无</td>
+</tr>
+<tr>
+<td>ThinkPHP5</td>
+<td>Request::instance()-&gt;get(); input(‘get.’)</td>
+<td>Request::instance()-&gt;post(); input(‘post.’)</td>
+<td>Request::instance()-&gt;file();</td>
+<td>Request::instance()-&gt;cookie(); input(‘cookie.’)</td>
+<td>Request::instance()-&gt;server(); input(‘server.’)</td>
+<td>Request::instance()-&gt;request(); input(‘request.’)</td>
+<td>Request::instance()-&gt;get(); input(‘get.’);</td>
+<td>$request-&gt;getJSON();</td>
+</tr>
+<tr>
+<td>ThinkPHP3.*</td>
+<td>I(‘get.’)</td>
+<td>I(‘post.’)</td>
+<td>无</td>
+<td>无</td>
+<td>无</td>
+<td>无</td>
+<td>无</td>
+<td>无</td>
+</tr>
+<tr>
+<td>Codeigniter2&#x2F;3</td>
+<td>$this-&gt;input-&gt;get()</td>
+<td>$this-&gt;input-&gt;post()</td>
+<td>$this-&gt;input-&gt;file()</td>
+<td>$this-&gt;input-&gt;cookie()</td>
+<td>$this-&gt;input-&gt;server()</td>
+<td>$this-&gt;input-&gt;post()</td>
+<td>$this-&gt;input-&gt;raw_input_stream</td>
+<td>无</td>
+</tr>
+<tr>
+<td>Codeigniter4</td>
+<td>$request-&gt;getGet()</td>
+<td>$request-&gt;getPost()</td>
+<td>$request-&gt;getFiles()</td>
+<td>$request-&gt;getCookie()</td>
+<td>$request-&gt;getServer()</td>
+<td>$request-&gt;getPost(); $request-&gt;getJSON();</td>
+<td>$request-&gt;getJSON()</td>
+<td>$this-&gt;request-&gt;getFiles();</td>
+</tr>
+<tr>
+<td>CakePHP 4.*</td>
+<td>$this-&gt;request-&gt;getQuery(‘’);</td>
+<td>$this-&gt;request-&gt;getData(‘’);</td>
+<td>$this-&gt;request-&gt;getUploadedFile(‘’);</td>
+<td>无</td>
+<td>$this-&gt;request-&gt;getServer();</td>
+<td>$this-&gt;request-&gt;getData(‘’);</td>
+<td>$this-&gt;request-&gt;input(‘json_decode’);</td>
+<td>无</td>
+</tr>
+<tr>
+<td>Yii 2.0</td>
+<td>$request-&gt;get();</td>
+<td>$request-&gt;post();</td>
+<td>$request-&gt;getBodyParam(‘’);</td>
+<td>$request-&gt;getCookies();</td>
+<td>$request-&gt;getHeaders();</td>
+<td>$request-&gt;getBodyParam(‘’);</td>
+<td>无</td>
+<td>无</td>
+</tr>
+<tr>
+<td>Laravel</td>
+<td>$request-&gt;query(‘’);</td>
+<td>$request-&gt;input(‘’);</td>
+<td>$request-&gt;file(‘’);</td>
+<td>$request-&gt;cookie(‘’);</td>
+<td>无</td>
+<td>$request-&gt;input(‘’);</td>
+<td>$request-&gt;json();</td>
+<td>$request-&gt;file(‘’);</td>
+</tr>
+</tbody></table>
+<h2 id="PHP-敏感函数"><a href="#PHP-敏感函数" class="headerlink" title="PHP 敏感函数"></a>PHP 敏感函数</h2><table>
+<thead>
+<tr>
+<th>函数&#x2F;语法</th>
+<th>描述</th>
+<th>例子</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>system</td>
+<td>执行命令并输出结果</td>
+<td>system(‘id’);</td>
+</tr>
+<tr>
+<td>exec</td>
+<td>执行命令 只可获取最后一行结果</td>
+<td>exec(‘id’, $a); print_r($a);</td>
+</tr>
+<tr>
+<td>passthru</td>
+<td>同 system</td>
+<td>passthru(‘id’);</td>
+</tr>
+<tr>
+<td>shell_exec</td>
+<td>执行命令并返回结果</td>
+<td>$a&#x3D;shell_exec(‘id’); print_r($a);</td>
+</tr>
+<tr>
+<td>&#96; (反引号)</td>
+<td>执行命令并返回结果</td>
+<td>$a&#x3D;<code>id</code>; print_r($a);</td>
+</tr>
+<tr>
+<td>popen</td>
+<td>执行命令并建立管道 返回一个指针 使用fread等函数操作指针进行读写</td>
+<td>$a&#x3D;popen(“id”, “r”); echo fread($a, 2096);</td>
+</tr>
+<tr>
+<td>proc_open</td>
+<td>同 popen (进程控制功能更强大)</td>
+<td>见PHP手册</td>
+</tr>
+<tr>
+<td>pcntl_exec</td>
+<td>执行命令 只返回是否发生错误</td>
+<td>pcntl_exec(‘id’);</td>
+</tr>
+</tbody></table>
+<h2 id="代码注入-文件包含"><a href="#代码注入-文件包含" class="headerlink" title="代码注入&#x2F;文件包含"></a>代码注入&#x2F;文件包含</h2><table>
+<thead>
+<tr>
+<th>函数&#x2F;语法结构</th>
+<th>描述</th>
+<th>例子</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>eval</td>
+<td>将传入的参数内容作为PHP代码执行，eval不是函数，是一种语法结构，不能当做函数动态调用</td>
+<td><code>eval(&#39;phpinfo();&#39;);</code></td>
+</tr>
+<tr>
+<td>assert</td>
+<td>将传入的参数内容作为PHP代码执行，PHP7以下是函数，PHP7及以上为语法结构</td>
+<td><code>assert(&#39;phpinfo();&#39;);</code></td>
+</tr>
+<tr>
+<td>preg_replace</td>
+<td>当<code>preg_replace</code>使用&#x2F;e修饰符且原字符串可控时，有可能执行PHP代码</td>
+<td><code>echo preg_replace(&quot;/e&quot;,&quot;&#123;$&#123;PHPINFO()&#125;&#125;&quot;,&quot;123&quot;);</code></td>
+</tr>
+<tr>
+<td>call_user_func</td>
+<td>把第一个参数作为回调函数调用，两个参数都完全可控时可利用，传入一个参数调用</td>
+<td><code>call_user_func(&#39;assert&#39;, &#39;phpinfo();&#39;);</code></td>
+</tr>
+<tr>
+<td>call_user_func_array</td>
+<td>同<code>call_user_func</code>，可传入一个数组带入多个参数调用函数</td>
+<td><code>call_user_func_array(&#39;file_put_contents&#39;, [&#39;1.txt&#39;,&#39;6666&#39;]);</code></td>
+</tr>
+<tr>
+<td>create_function</td>
+<td>根据传递的参数创建匿名函数，并返回唯一名称，利用时第二个参数可控</td>
+<td><code>$f = create_function(&#39;&#39;,&#39;system($_GET[123]);&#39;); $f();</code></td>
+</tr>
+<tr>
+<td>include</td>
+<td>包含并运行指定文件，执行出错会抛出错误</td>
+<td><code>include &#39;vars.php&#39;;</code> (括号可有可无)</td>
+</tr>
+<tr>
+<td>require</td>
+<td>同<code>include</code>，执行出错会抛出警告</td>
+<td><code>require(&#39;somefile.php&#39;);</code> (括号可有可无)</td>
+</tr>
+<tr>
+<td>require_once</td>
+<td>同<code>require</code>，但会检查之前是否已经包含该文件，确保不重复包含</td>
+<td></td>
+</tr>
+<tr>
+<td>include_once</td>
+<td>同<code>include</code>，但会检查之前是否已经包含该文件，确保不重复包含</td>
+<td></td>
+</tr>
+</tbody></table>
+<h2 id="SQL-LDAP注入"><a href="#SQL-LDAP注入" class="headerlink" title="SQL&#x2F;LDAP注入"></a>SQL&#x2F;LDAP注入</h2><table>
+<thead>
+<tr>
+<th>函数&#x2F;方法</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>mysql_query</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>odbc_exec</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>mysqli_query</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>mysql_db_query</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>mysql_unbuffered_query</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>mysqli::query</code></td>
+<td>用法示例：<code>$mysqli = new mysqli(&quot;localhost&quot;, &quot;my_user&quot;, &quot;my_password&quot;, &quot;world&quot;); $mysqli-&gt;query();</code></td>
+</tr>
+<tr>
+<td><code>pg_query</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>pg_query_params</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>pg_send_query</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>pg_send_query_params</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>sqlsrv_query</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>pdo::query</code></td>
+<td>用法示例：<code>$pdo = new PDO(&quot;mysql:host=localhost;dbname=phpdemo&quot;, &quot;root&quot;, &quot;1234&quot;); $pdo-&gt;query($sql);</code></td>
+</tr>
+<tr>
+<td><code>SQLite3::query</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>SQLite3::exec</code></td>
+<td>用法示例：<code>$db = new SQLite3(&#39;mysqlitedb.db&#39;); $db-&gt;query(&#39;SELECT bar FROM foo&#39;); $db-&gt;exec(&#39;CREATE TABLE bar (bar STRING)&#39;);</code></td>
+</tr>
+<tr>
+<td><code>$mongo = new mongoclient(); $data = $coll-&gt;find($data);</code></td>
+<td>参考：<a target="_blank" rel="noopener" href="https://wooyun.js.org/drops/Mongodb%E6%B3%A8%E5%85%A5%E6%94%BB%E5%87%BB.html">MongoDB注入攻击</a></td>
+</tr>
+<tr>
+<td><code>$ld = ldap_connect(&quot;localhost&quot;); $lb = @ldap_bind($ld, &quot;cn=test,dc=test,dc=com&quot;, &quot;test&quot;);</code></td>
+<td>参考：<a target="_blank" rel="noopener" href="https://www.cnblogs.com/0nc3/p/12063436.html">LDAP注入攻击</a></td>
+</tr>
+<tr>
+<td><code>Db::query</code></td>
+<td>ThinkPHP框架</td>
+</tr>
+<tr>
+<td><code>Db::execute</code></td>
+<td>ThinkPHP框架</td>
+</tr>
+</tbody></table>
+<h2 id="文件读取-SSRF"><a href="#文件读取-SSRF" class="headerlink" title="文件读取&#x2F;SSRF"></a>文件读取&#x2F;SSRF</h2><table>
+<thead>
+<tr>
+<th>函数</th>
+<th>描述</th>
+<th>例子</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>file_get_contents</code></td>
+<td>读入文件并返回字符串</td>
+<td><code>echo file_get_contents(&quot;flag.txt&quot;);</code> <br> <code>echo file_get_contents(&quot;https://www.bilibili.com/&quot;);</code></td>
+</tr>
+<tr>
+<td><code>curl_setopt</code>, <code>curl_exec</code></td>
+<td>Curl访问URL获取信息</td>
+<td><code>function curl($url)&#123; $ch = curl_init(); curl_setopt($ch, CURLOPT_URL, $url); curl_exec($ch); curl_close($ch); &#125; $url = $_GET[&#39;url&#39;]; curl($url);</code></td>
+</tr>
+<tr>
+<td><code>fsockopen</code></td>
+<td>打开一个套接字连接（远程TCP&#x2F;UDP&#x2F;raw）</td>
+<td><a target="_blank" rel="noopener" href="https://www.php.net/manual/zh/function.fsockopen.php">fsockopen函数说明</a></td>
+</tr>
+<tr>
+<td><code>readfile</code></td>
+<td>读取文件并写入输出缓冲区</td>
+<td>类似于<code>file_get_contents</code>，读取文件流</td>
+</tr>
+<tr>
+<td><code>fopen</code>, <code>fread</code>, <code>fgets</code>, etc.</td>
+<td>打开文件或URL并读取文件流</td>
+<td><code>$file = fopen(&quot;test.txt&quot;,&quot;r&quot;); echo fread($file,&quot;1234&quot;); fclose($file);</code></td>
+</tr>
+<tr>
+<td><code>file</code></td>
+<td>将整个文件读入数组</td>
+<td><code>echo implode(&#39;&#39;, file(&#39;https://www.bilibili.com/&#39;));</code></td>
+</tr>
+<tr>
+<td><code>highlight_file</code>, <code>show_source</code></td>
+<td>语法高亮显示文件内容</td>
+<td><code>highlight_file(&quot;1.php&quot;);</code></td>
+</tr>
+<tr>
+<td><code>parse_ini_file</code></td>
+<td>读取并解析一个ini配置文件</td>
+<td><code>print_r(parse_ini_file(&#39;1.ini&#39;));</code></td>
+</tr>
+<tr>
+<td><code>simplexml_load_file</code></td>
+<td>将文件读取并作为XML文档解析</td>
+<td><code>simplexml_load_file(&#39;test.xml&#39;);</code></td>
+</tr>
+<tr>
+<td><strong><code>stream_socket_client</code></strong></td>
+<td>打开一个基于流的套接字连接，用于更灵活的网络通信</td>
+<td><code>$fp = stream_socket_client(&quot;tcp://example.com:80&quot;, $errno, $errstr, 30);</code></td>
+</tr>
+<tr>
+<td><strong><code>get_headers</code></strong></td>
+<td>获取HTTP请求头信息</td>
+<td><code>print_r(get_headers(&quot;https://www.example.com&quot;));</code></td>
+</tr>
+<tr>
+<td><strong><code>file_put_contents</code></strong></td>
+<td>将字符串写入文件</td>
+<td><code>file_put_contents(&quot;test.txt&quot;, &quot;data to write&quot;);</code></td>
+</tr>
+<tr>
+<td><strong><code>copy</code></strong></td>
+<td>拷贝文件到另一个位置</td>
+<td><code>copy(&quot;source.txt&quot;, &quot;destination.txt&quot;);</code></td>
+</tr>
+<tr>
+<td><strong><code>move_uploaded_file</code></strong></td>
+<td>将上传的文件移动到新位置</td>
+<td><code>move_uploaded_file($_FILES[&#39;file&#39;][&#39;tmp_name&#39;], &quot;upload_dir/&quot;.$_FILES[&#39;file&#39;][&#39;name&#39;]);</code></td>
+</tr>
+<tr>
+<td><strong><code>parse_url</code></strong></td>
+<td>解析URL并返回其组成部分</td>
+<td><code>$url_components = parse_url(&quot;http://www.example.com/path?query=string&quot;);</code></td>
+</tr>
+<tr>
+<td><strong><code>stream_context_create</code></strong></td>
+<td>创建并设置流上下文用于文件或网络连接</td>
+<td><code>$context = stream_context_create([&#39;http&#39; =&gt; [&#39;method&#39; =&gt; &#39;GET&#39;]]); file_get_contents(&quot;https://www.example.com&quot;, false, $context);</code></td>
+</tr>
+</tbody></table>
+<p>补充：</p>
+<ul>
+<li>**<code>stream_socket_client</code>**：比<code>fsockopen</code>更加灵活，用于创建各种类型的网络连接（如TCP、UDP）。</li>
+<li>**<code>get_headers</code>**：可以获取指定URL的HTTP响应头。</li>
+<li>**<code>file_put_contents</code>**：可以写入文件，功能类似于<code>fopen</code>+<code>fwrite</code>，但更简便。</li>
+<li>**<code>copy</code>**：可以直接将文件从一个路径复制到另一个路径。</li>
+<li>**<code>move_uploaded_file</code>**：处理文件上传时使用，用于将临时文件移动到指定目录。</li>
+<li>**<code>parse_url</code>**：用于解析URL，返回其组成部分，例如协议、主机名、路径等。</li>
+<li>**<code>stream_context_create</code>**：用于为文件读取&#x2F;写入创建和设置流上下文，比如可以设置HTTP请求头。</li>
+</ul>
+<h2 id="文件上传-写入"><a href="#文件上传-写入" class="headerlink" title="文件上传&#x2F;写入"></a>文件上传&#x2F;写入</h2><table>
+<thead>
+<tr>
+<th>函数&#x2F;方法</th>
+<th>描述</th>
+<th>例子</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>file_put_contents</code></td>
+<td>将一个字符串写入文件</td>
+<td><code>file_put_contents(&quot;1.txt&quot;, &quot;6666&quot;);</code></td>
+</tr>
+<tr>
+<td><code>move_uploaded_file</code></td>
+<td>将上传的临时文件移动到新的位置</td>
+<td><code>move_uploaded_file($_FILES[&quot;pictures&quot;][&quot;tmp_name&quot;], &quot;1.php&quot;);</code></td>
+</tr>
+<tr>
+<td><code>rename</code></td>
+<td>重命名文件&#x2F;目录</td>
+<td><code>rename($oldname, $newname);</code></td>
+</tr>
+<tr>
+<td><code>rmdir</code></td>
+<td>删除目录</td>
+<td><code>rmdir(&quot;directory_name&quot;);</code></td>
+</tr>
+<tr>
+<td><code>mkdir</code></td>
+<td>创建目录</td>
+<td><code>mkdir(&quot;new_directory&quot;);</code></td>
+</tr>
+<tr>
+<td><code>unlink</code></td>
+<td>删除文件</td>
+<td><code>unlink(&quot;file.txt&quot;);</code></td>
+</tr>
+<tr>
+<td><code>copy</code></td>
+<td>复制文件</td>
+<td><code>copy(&quot;source.txt&quot;, &quot;destination.txt&quot;);</code></td>
+</tr>
+<tr>
+<td><code>fopen</code>, <code>fputs</code>, <code>fwrite</code></td>
+<td>打开文件或URL</td>
+<td><a target="_blank" rel="noopener" href="https://www.php.net/manual/zh/function.fwrite.php">fwrite官方文档</a></td>
+</tr>
+<tr>
+<td><code>link</code></td>
+<td>创建文件硬链接</td>
+<td><code>link($target, $link);</code></td>
+</tr>
+<tr>
+<td><code>symlink</code></td>
+<td>创建符号链接（软链接）</td>
+<td><code>symlink($target, $link);</code></td>
+</tr>
+<tr>
+<td><code>tmpfile</code></td>
+<td>创建一个临时文件（在临时目录存放，随机文件名，返回句柄）</td>
+<td><code>$temp = tmpfile(); fwrite($temp, &quot;123456&quot;); fclose($temp);</code></td>
+</tr>
+<tr>
+<td><code>request()-&gt;file()-&gt;move()</code></td>
+<td>ThinkPHP文件上传</td>
+<td><code>$file = request()-&gt;file($name); $file-&gt;move($filepath);</code></td>
+</tr>
+<tr>
+<td><code>request()-&gt;file()-&gt;file()</code></td>
+<td>ThinkPHP文件上传</td>
+<td><code>$file = request()-&gt;file(&#39;upload&#39;);</code></td>
+</tr>
+<tr>
+<td><code>extractTo</code></td>
+<td>解压ZIP到目录</td>
+<td><code>$zip-&gt;extractTo(&#39;path/to/extract&#39;);</code></td>
+</tr>
+<tr>
+<td><code>DOMDocument loadXML simplexml_import_dom</code></td>
+<td>加载解析XML，可能存在XXE漏洞，通过<code>file_get_contents</code>获取客户端输入并加载XML内容</td>
+<td><code>&lt;?php $xmlfile = file_get_contents(&#39;php://input&#39;); $dom = new DOMDocument(); $dom-&gt;loadXML($xmlfile); ?&gt;</code></td>
+</tr>
+<tr>
+<td><code>simplexml_load_string</code></td>
+<td>加载解析XML字符串，可能存在XXE漏洞</td>
+<td><code>$xml = simplexml_load_string($_REQUEST[&#39;xml&#39;]); print_r($xml);</code></td>
+</tr>
+<tr>
+<td><code>simplexml_load_file</code></td>
+<td>读取文件并作为XML文档解析，可能存在XXE漏洞</td>
+<td><code>simplexml_load_file(&#39;file.xml&#39;);</code></td>
+</tr>
+<tr>
+<td><code>unserialize</code></td>
+<td>反序列化对象</td>
+<td><code>$data = unserialize($_POST[&#39;data&#39;]);</code></td>
+</tr>
+<tr>
+<td><strong><code>fgetcsv</code></strong></td>
+<td>读取并解析CSV格式的行</td>
+<td><code>$handle = fopen(&quot;data.csv&quot;, &quot;r&quot;); while (($data = fgetcsv($handle)) !== FALSE) &#123; print_r($data); &#125; fclose($handle);</code></td>
+</tr>
+<tr>
+<td><strong><code>file_exists</code></strong></td>
+<td>检查文件或目录是否存在</td>
+<td><code>if (file_exists(&quot;file.txt&quot;)) &#123; echo &quot;File exists&quot;; &#125;</code></td>
+</tr>
+<tr>
+<td><strong><code>is_readable</code></strong></td>
+<td>判断文件是否可读</td>
+<td><code>if (is_readable(&quot;file.txt&quot;)) &#123; echo &quot;File is readable&quot;; &#125;</code></td>
+</tr>
+<tr>
+<td><strong><code>is_writable</code></strong></td>
+<td>判断文件是否可写</td>
+<td><code>if (is_writable(&quot;file.txt&quot;)) &#123; echo &quot;File is writable&quot;; &#125;</code></td>
+</tr>
+<tr>
+<td><strong><code>flock</code></strong></td>
+<td>锁定文件防止并发读写</td>
+<td><code>$fp = fopen(&quot;file.txt&quot;, &quot;r+&quot;); if (flock($fp, LOCK_EX)) &#123; fwrite($fp, &quot;Lock test&quot;); flock($fp, LOCK_UN); &#125; fclose($fp);</code></td>
+</tr>
+<tr>
+<td><strong><code>readlink</code></strong></td>
+<td>返回符号链接指向的目标</td>
+<td><code>echo readlink(&quot;/path/to/symlink&quot;);</code></td>
+</tr>
+<tr>
+<td><strong><code>realpath</code></strong></td>
+<td>返回文件或目录的绝对路径</td>
+<td><code>echo realpath(&quot;test.txt&quot;);</code></td>
+</tr>
+<tr>
+<td><strong><code>chmod</code></strong></td>
+<td>改变文件或目录的权限</td>
+<td><code>chmod(&quot;file.txt&quot;, 0755);</code></td>
+</tr>
+<tr>
+<td><strong><code>chown</code></strong></td>
+<td>改变文件的所有者</td>
+<td><code>chown(&quot;file.txt&quot;, &quot;username&quot;);</code></td>
+</tr>
+</tbody></table>
+<h2 id="PHP原生过滤方法"><a href="#PHP原生过滤方法" class="headerlink" title="PHP原生过滤方法"></a>PHP原生过滤方法</h2><h3 id="1-命令注入防护"><a href="#1-命令注入防护" class="headerlink" title="1. 命令注入防护"></a>1. <strong>命令注入防护</strong></h3><ul>
+<li><strong><code>escapeshellarg</code></strong><ul>
+<li><strong>描述</strong>：将传入的参数添加单引号并转义原有的单引号，主要用于防止命令注入。处理后的字符串可安全地作为命令参数。</li>
+<li><strong>例子</strong>：传入<code>id</code>后处理为<code>&#39;id&#39;</code>。如果传入<code>&#39;id #</code>，处理后为<code>&#39;\&#39;id #&#39;</code>，防止命令注入。</li>
+<li><strong>用法</strong>：<code>escapeshellarg($arg);</code></li>
+</ul>
+</li>
+<li><strong><code>escapeshellcmd</code></strong><ul>
+<li><strong>描述</strong>：转义字符串中的特殊符号，用于防止命令注入。反斜线会在以下字符之前插入：<code>&amp;#;</code>|*?~&lt;&gt;^()[]{}$, \x0A 和 \xFF。’ 和 “ 仅在不配对时被转义。</li>
+<li><strong>例子</strong>：<code>escapeshellcmd(&#39;ls; rm -rf /&#39;)</code>将转义命令中的特殊字符，避免命令注入。</li>
+<li><strong>用法</strong>：<code>escapeshellcmd($cmd);</code></li>
+</ul>
+</li>
+</ul>
+<h3 id="2-SQL注入防护"><a href="#2-SQL注入防护" class="headerlink" title="2. SQL注入防护"></a>2. <strong>SQL注入防护</strong></h3><ul>
+<li><strong><code>addslashes</code></strong><ul>
+<li><strong>描述</strong>：在单引号（’）、双引号（”）、反斜线（\）与 NUL 前加上反斜线，用于防止SQL注入。</li>
+<li><strong>例子</strong>：<code>addslashes(&quot;O&#39;Reilly&quot;)</code>返回<code>O\&#39;Reilly</code>，可以减少SQL注入风险。</li>
+<li><strong>用法</strong>：<code>addslashes($input);</code></li>
+</ul>
+</li>
+<li><strong><code>mysqli::real_escape_string</code> &#x2F; <code>mysqli_real_escape_string</code></strong><ul>
+<li><strong>描述</strong>：这些函数在 NULL (<code>\x00</code>), 换行符 (<code>\n</code>), 回车符 (<code>\r</code>), 空格字符 (<code>\x1a</code>), 单引号 (<code>&#39;</code>), 双引号 (<code>&quot;</code>) 和反斜线 (<code>\</code>) 前加上反斜线，并考虑到当前数据库连接的字符集。用于防止SQL注入。</li>
+<li><strong>注意</strong>：处理后的字符串需要使用引号包裹后拼接到SQL语句中，否则仍可导致SQL注入。</li>
+<li><strong>例子</strong>：<code>$conn-&gt;real_escape_string($input);</code></li>
+</ul>
+</li>
+<li><strong><code>PDO::quote</code></strong><ul>
+<li><strong>描述</strong>：将字符串中的特殊字符进行转义，并为字符串添加引号。适用于防止SQL注入。</li>
+<li><strong>例子</strong>：<code>$pdo-&gt;quote(&quot;O&#39;Reilly&quot;);</code> 返回 <code>&#39;O\&#39;Reilly&#39;</code></li>
+<li><strong>用法</strong>：<code>$pdo-&gt;quote($input);</code></li>
+</ul>
+</li>
+<li><strong><code>PDO::prepare</code></strong><ul>
+<li><strong>描述</strong>：预处理SQL语句，确保参数传递时不会破坏SQL语句的结构，是防止SQL注入的最佳实践。</li>
+<li><strong>例子</strong>：<code>$stmt = $pdo-&gt;prepare(&#39;SELECT * FROM users WHERE id = :id&#39;);</code></li>
+<li><strong>用法</strong>：<code>$stmt-&gt;execute([&#39;:id&#39; =&gt; $id]);</code></li>
+</ul>
+</li>
+</ul>
+<h3 id="3-XSS防护"><a href="#3-XSS防护" class="headerlink" title="3. XSS防护"></a>3. <strong>XSS防护</strong></h3><ul>
+<li><strong><code>htmlspecialchars</code></strong><ul>
+<li><strong>描述</strong>：将特殊字符（如 <code>&lt;</code>, <code>&gt;</code>, <code>&amp;</code>, <code>&#39;</code>, <code>&quot;</code>）转义为HTML实体，防止恶意脚本通过HTML注入XSS攻击。</li>
+<li><strong>例子</strong>：<code>htmlspecialchars(&#39;&lt;script&gt;alert(&quot;XSS&quot;)&lt;/script&gt;&#39;)</code> 将输出 <code>&amp;lt;script&amp;gt;alert(&amp;quot;XSS&amp;quot;)&amp;lt;/script&amp;gt;</code></li>
+<li><strong>用法</strong>：<code>htmlspecialchars($input, ENT_QUOTES, &#39;UTF-8&#39;);</code></li>
+</ul>
+</li>
+<li><strong><code>htmlentities</code></strong><ul>
+<li><strong>描述</strong>：将所有的适合的字符转义为HTML实体，与<code>htmlspecialchars</code>类似，但更加严格。</li>
+<li><strong>例子</strong>：<code>htmlentities(&#39;&lt;b&gt;bold&lt;/b&gt;&#39;)</code> 返回 <code>&amp;lt;b&amp;gt;bold&amp;lt;/b&amp;gt;</code></li>
+<li><strong>用法</strong>：<code>htmlentities($input, ENT_QUOTES, &#39;UTF-8&#39;);</code></li>
+</ul>
+</li>
+</ul>
+<h3 id="4-数字类型过滤"><a href="#4-数字类型过滤" class="headerlink" title="4. 数字类型过滤"></a>4. <strong>数字类型过滤</strong></h3><ul>
+<li><strong><code>intval</code> &#x2F; <code>floatval</code> &#x2F; <code>(int)</code> &#x2F; <code>num+0</code></strong><ul>
+<li><strong>描述</strong>：将输入强制转换为整数或浮点数。通常用于确保输入为数字，防止SQL注入或逻辑漏洞。</li>
+<li><strong>例子</strong>：<ul>
+<li><code>intval(&#39;42abc&#39;)</code> 返回 <code>42</code></li>
+<li><code>floatval(&#39;42.42abc&#39;)</code> 返回 <code>42.42</code></li>
+<li><code>(int) &#39;123abc&#39;</code> 返回 <code>123</code></li>
+</ul>
+</li>
+<li><strong>用法</strong>：<code>intval($input);</code> 或 <code>(int)$input;</code></li>
+</ul>
+</li>
+</ul>
+<h3 id="5-其他防护配置项"><a href="#5-其他防护配置项" class="headerlink" title="5. 其他防护配置项"></a>5. <strong>其他防护配置项</strong></h3><ul>
+<li><strong>配置防止命令注入</strong>：<ul>
+<li><strong>禁用危险函数</strong>：通过PHP的配置文件<code>php.ini</code>，可以禁用危险函数如<code>system()</code>、<code>exec()</code>、<code>shell_exec()</code>等。</li>
+<li><strong>配置</strong>：<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">disable_functions</span> = <span class="string">&quot;exec, passthru, shell_exec, system, proc_open, popen, curl_exec&quot;</span></span><br></pre></td></tr></table></figure></li>
+<li><strong>限制文件操作</strong>：可以通过<code>open_basedir</code>限制PHP对特定目录的访问，防止通过路径注入或文件包含漏洞来执行恶意文件。</li>
+<li><strong>配置</strong>：<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">open_basedir</span> = <span class="string">&quot;/var/www/html:/tmp&quot;</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+</article>
+
+
+    <div class="blog-post-comments">
+        <div id="utterances_thread">
+            <noscript>Please enable JavaScript to view the comments.</noscript>
+        </div>
+    </div>
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/archives/">Writing</a></li>
+        
+          <li><a href="/search/">Search</a></li>
+        
+          <li><a href="/categories/">Categories</a></li>
+        
+          <li><a href="/idea/">Idea</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="https://github.com/g0dam">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#PHP-%E7%94%A8%E6%88%B7%E5%8F%AF%E6%8E%A7%E8%BE%93%E5%85%A5"><span class="toc-number">1.</span> <span class="toc-text">PHP 用户可控输入</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PHP-%E6%95%8F%E6%84%9F%E5%87%BD%E6%95%B0"><span class="toc-number">2.</span> <span class="toc-text">PHP 敏感函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E6%B3%A8%E5%85%A5-%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB"><span class="toc-number">3.</span> <span class="toc-text">代码注入&#x2F;文件包含</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SQL-LDAP%E6%B3%A8%E5%85%A5"><span class="toc-number">4.</span> <span class="toc-text">SQL&#x2F;LDAP注入</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96-SSRF"><span class="toc-number">5.</span> <span class="toc-text">文件读取&#x2F;SSRF</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0-%E5%86%99%E5%85%A5"><span class="toc-number">6.</span> <span class="toc-text">文件上传&#x2F;写入</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PHP%E5%8E%9F%E7%94%9F%E8%BF%87%E6%BB%A4%E6%96%B9%E6%B3%95"><span class="toc-number">7.</span> <span class="toc-text">PHP原生过滤方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%91%BD%E4%BB%A4%E6%B3%A8%E5%85%A5%E9%98%B2%E6%8A%A4"><span class="toc-number">7.1.</span> <span class="toc-text">1. 命令注入防护</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-SQL%E6%B3%A8%E5%85%A5%E9%98%B2%E6%8A%A4"><span class="toc-number">7.2.</span> <span class="toc-text">2. SQL注入防护</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-XSS%E9%98%B2%E6%8A%A4"><span class="toc-number">7.3.</span> <span class="toc-text">3. XSS防护</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E6%95%B0%E5%AD%97%E7%B1%BB%E5%9E%8B%E8%BF%87%E6%BB%A4"><span class="toc-number">7.4.</span> <span class="toc-text">4. 数字类型过滤</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E5%85%B6%E4%BB%96%E9%98%B2%E6%8A%A4%E9%85%8D%E7%BD%AE%E9%A1%B9"><span class="toc-number">7.5.</span> <span class="toc-text">5. 其他防护配置项</span></a></li></ol></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://g0dam.github.io/2024/10/02/WebSecurity/codeaudit/phpaudit/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://g0dam.github.io/2024/10/02/WebSecurity/codeaudit/phpaudit/&text=【Web安全】PHP代码审计"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://g0dam.github.io/2024/10/02/WebSecurity/codeaudit/phpaudit/&title=【Web安全】PHP代码审计"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://g0dam.github.io/2024/10/02/WebSecurity/codeaudit/phpaudit/&is_video=false&description=【Web安全】PHP代码审计"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【Web安全】PHP代码审计&body=Check out this article: https://g0dam.github.io/2024/10/02/WebSecurity/codeaudit/phpaudit/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://g0dam.github.io/2024/10/02/WebSecurity/codeaudit/phpaudit/&title=【Web安全】PHP代码审计"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://g0dam.github.io/2024/10/02/WebSecurity/codeaudit/phpaudit/&title=【Web安全】PHP代码审计"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://g0dam.github.io/2024/10/02/WebSecurity/codeaudit/phpaudit/&title=【Web安全】PHP代码审计"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://g0dam.github.io/2024/10/02/WebSecurity/codeaudit/phpaudit/&title=【Web安全】PHP代码审计"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://g0dam.github.io/2024/10/02/WebSecurity/codeaudit/phpaudit/&name=【Web安全】PHP代码审计&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://g0dam.github.io/2024/10/02/WebSecurity/codeaudit/phpaudit/&t=【Web安全】PHP代码审计"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2024
+    g0dam
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Categories</a></li><!--
+     --><!--
+       --><li><a href="/idea/">Idea</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/g0dam">Projects</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+    <script type="text/javascript">
+      var utterances_repo = 'owner/githubrepo';
+      var utterances_issue_term = 'pathname';
+      var utterances_label = 'Comment';
+      var utterances_theme = 'github-dark';
+
+      (function(){
+          var script = document.createElement('script');
+
+          script.src = 'https://utteranc.es/client.js';
+          script.setAttribute('repo', utterances_repo);
+          script.setAttribute('issue-term', 'pathname');
+          script.setAttribute('label', utterances_label);
+          script.setAttribute('theme', utterances_theme);
+          script.setAttribute('crossorigin', 'anonymous');
+          script.async = true;
+          (document.getElementById('utterances_thread')).appendChild(script);
+      }());
+  </script>
+
+</body>
+</html>
