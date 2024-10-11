@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="Web应用框架百度百科是这么解释的：Web应用框架（Web application framework）是一种开发框架，用来支持动态网站、网络应用程序及网络服务的开发。其类型有基于请求的和基于组件的两种框架。web框架可以分为基于请求的（request-based）和基于组件的（component-based）两大阵营。前者的代表有Struts和Spring MVC等，后者的成员则有JSF、Tap">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【Web安全】Web应用框架">
+<meta property="og:url" content="https://g0dam.github.io/2024/10/11/WebSecurity/framwork/webarchitecture/index.html">
+<meta property="og:site_name" content="g0dam">
+<meta property="og:description" content="Web应用框架百度百科是这么解释的：Web应用框架（Web application framework）是一种开发框架，用来支持动态网站、网络应用程序及网络服务的开发。其类型有基于请求的和基于组件的两种框架。web框架可以分为基于请求的（request-based）和基于组件的（component-based）两大阵营。前者的代表有Struts和Spring MVC等，后者的成员则有JSF、Tap">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-10-11T06:52:19.000Z">
+<meta property="article:modified_time" content="2024-10-11T07:35:34.956Z">
+<meta property="article:author" content="g0dam">
+<meta property="article:tag" content="null">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>【Web安全】Web应用框架</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+      <link rel="alternate" href="/true" title="g0dam" type="application/atom+xml" />
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Categories</a></li><!--
+     --><!--
+       --><li><a href="/idea/">Idea</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/g0dam">Projects</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2024/10/10/WebSecurity/codeaudit/phpaudit2/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://g0dam.github.io/2024/10/11/WebSecurity/framwork/webarchitecture/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://g0dam.github.io/2024/10/11/WebSecurity/framwork/webarchitecture/&text=【Web安全】Web应用框架"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://g0dam.github.io/2024/10/11/WebSecurity/framwork/webarchitecture/&title=【Web安全】Web应用框架"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://g0dam.github.io/2024/10/11/WebSecurity/framwork/webarchitecture/&is_video=false&description=【Web安全】Web应用框架"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【Web安全】Web应用框架&body=Check out this article: https://g0dam.github.io/2024/10/11/WebSecurity/framwork/webarchitecture/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://g0dam.github.io/2024/10/11/WebSecurity/framwork/webarchitecture/&title=【Web安全】Web应用框架"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://g0dam.github.io/2024/10/11/WebSecurity/framwork/webarchitecture/&title=【Web安全】Web应用框架"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://g0dam.github.io/2024/10/11/WebSecurity/framwork/webarchitecture/&title=【Web安全】Web应用框架"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://g0dam.github.io/2024/10/11/WebSecurity/framwork/webarchitecture/&title=【Web安全】Web应用框架"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://g0dam.github.io/2024/10/11/WebSecurity/framwork/webarchitecture/&name=【Web安全】Web应用框架&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://g0dam.github.io/2024/10/11/WebSecurity/framwork/webarchitecture/&t=【Web安全】Web应用框架"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Web%E5%BA%94%E7%94%A8%E6%A1%86%E6%9E%B6"><span class="toc-number">1.</span> <span class="toc-text">Web应用框架</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B6%89%E5%8F%8A%E6%A8%A1%E5%BC%8F"><span class="toc-number">2.</span> <span class="toc-text">涉及模式</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        【Web安全】Web应用框架
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">g0dam</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2024-10-11T06:52:19.000Z" class="dt-published" itemprop="datePublished">2024-10-11</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/Web-Security/">Web Security</a>
+    </div>
+
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h2 id="Web应用框架"><a href="#Web应用框架" class="headerlink" title="Web应用框架"></a>Web应用框架</h2><p>百度百科是这么解释的：<br>Web应用框架（Web application framework）是一种开发框架，用来支持动态网站、网络应用程序及网络服务的开发。其类型有基于请求的和基于组件的两种框架。<br>web框架可以分为基于请求的（request-based）和基于组件的（component-based）两大阵营。前者的代表有Struts和Spring MVC等，后者的成员则有JSF、Tapestry等等。</p>
+<ol>
+<li>基于请求的框架较早出现，它用以描述一个web应用程序结构的概念和传统的静态Internet站点一样，是将其机制扩展到动态内容的延伸。对一个提供HTML和图片等静态内容的网站，网络另一端的浏览器发出以URI形式指定的资源的请求，Web服务器解读请求，检查该资源是否存在于本地，如果是则返回该静态内容，否则通知浏览器没有找到。Web应用升级到动态内容领域后，这个模型只需要做一点修改。那就是web服务器收到一个URL请求（相较于静态情况下的资源，动态情况下更接近于对一种服务的请求和调用）后，判断该请求的类型，如果是静态资源，则照上面所述处理；如果是动态内容，则通过某种机制（CGI、调用常驻内存的模块、递送给另一个进程如Java容器）运行该动态内容对应的程序，最后由程序给出响应，返回浏览器。在这样一个直接与web底层机制交流的模型中，服务器端程序要收集客户端籍get或post方式提交的数据，转换，校验，然后以这些数据作为输入运行业务逻辑后生成动态的内容（包括HTML、JavaScript、CSS、图片等）。</li>
+<li>基于组件的框架采取了另一种思路，它把长久以来软件开发应用的组件思想引入到web开发。服务器返回的原本文档形式的网页被视为由一个个可独立工作、重复使用的组件构成。每个组件都能接受用户的输入，负责自己的显示。上面提到的服务器端程序所做的数据收集、转换、校验的工作都被下放给各个组件。现代web框架基本上都采用了模型、视图、控制器相分离的MVC架构，基于请求和基于组件两种类型大都会有一个控制器将用户的请求分派给负责业务逻辑的模型，运算的结果再以某个视图表现出来，所以两大分类框架的区别主要在视图部分，基于请求的框架仍然把视图也就是网页看作是一个文档整体，程序员要用HTML、Javascript和CSS这些底层的代码来写“文档”，而基于组件的框架则把视图看作由积木一样的构件拼成，积木的显示不用程序员操心（当然它们也是由另一些程序员开发出来的），只要设置好它绑定的数据和调整它的属性，把他们大大从编写HTML、Javascript和CSS这些界面的工作中解放出来。</li>
+</ol>
+<p>上面是百度百科的回答，下面我又找到了知乎一篇文章的描述：</p>
+<ol>
+<li>基于“组件”（Component ，GUI设计也常称控件）、事件驱动的架构，最常见的是微软的.NET。基本思想是把程序分成很多组件，每个组件都可以触发事件，调用特定的事件处理器来处理（比如在一个HTML按钮上设置onClick事件链接到一个PHP函数）。这种设计远离HTTP，HTTP请求完全抽象，映射到一个事件。事实上这种设计原本最常应用于传统桌面GUI程序的开发，例如Delphi，Java Swing等。所有表现层的组件比如窗口，或者HTML表单都可以由IDE来提供，我们只需要在IDE里点击或拖动鼠标就能够自动添加一个组件，并且添加一个相应的事件处理器。</li>
+<li>基于“WEB页面&#x2F;文件”，例如CGI和PHP&#x2F;ASP程序。程序的文件分别存储在不同的目录里，与URL相对应。当HTTP请求提交至服务器时，URL直接指向某个文件，然后由该文件来处理请求，并返回响应结果。比如<a target="_blank" rel="noopener" href="http://www.website.conm/news/readnews.php?id=1234%E5%8F%AF%E4%BB%A5%E6%83%B3%E5%83%8F%EF%BC%8C%E6%88%91%E4%BB%AC%E5%9C%A8%E7%AB%99%E7%82%B9%E6%A0%B9%E7%9B%AE%E5%BD%95%E7%9A%84news%E7%9B%AE%E5%BD%95%E4%B8%8B%E6%94%BE%E7%BD%AE%E4%B8%80%E4%B8%AAreadnews.php%E6%96%87%E4%BB%B6%E3%80%82%E8%BF%99%E7%A7%8D%E5%BC%80%E5%8F%91%E6%96%B9%E5%BC%8F%E6%9C%80%E8%87%AA%E7%84%B6%EF%BC%8C%E6%9C%80%E6%98%93%E7%90%86%E8%A7%A3%EF%BC%8C%E4%B9%9F%E6%98%AFPHP%E6%9C%80%E5%B8%B8%E7%94%A8%E7%9A%84%E6%96%B9%E5%BC%8F%E3%80%82%E8%A6%81%E6%B3%A8%E6%84%8F%E4%BA%A7%E7%94%9F%E7%9A%84URL%E5%AF%B9%E6%90%9C%E7%B4%A2%E5%BC%95%E6%93%8E%E4%B8%8D%E5%8F%8B%E5%A5%BD%EF%BC%8C%E4%B8%8D%E8%BF%87%E4%BD%A0%E5%8F%AF%E4%BB%A5%E7%94%A8%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%8F%90%E4%BE%9B%E7%9A%84URL%E9%87%8D%E5%86%99%E6%96%B9%E6%A1%88%E6%9D%A5%E5%A4%84%E7%90%86%EF%BC%8C%E4%BE%8B%E5%A6%82Apache%E7%9A%84mod_rewrite%E3%80%82">http://www.website.conm/news/readnews.php?id=1234可以想像，我们在站点根目录的news目录下放置一个readnews.php文件。这种开发方式最自然，最易理解，也是PHP最常用的方式。要注意产生的URL对搜索引擎不友好，不过你可以用服务器提供的URL重写方案来处理，例如Apache的mod_rewrite。</a></li>
+<li>基于“动作”(Action)。这是MVC架构的WEB程序所采用的最常见的方式。目前主流的WEB框架像Struts、Webwork(Java)，Ruby on Rails(Ruby),Zend Framework(PHP)等都采用这种设计。URL映射到控制器(controller)和控制器中的动作(action)，由action来处理请求并输出响应结果。这种设计和上面的基于文件的方式一样，都是请求&#x2F;响应驱动的方案，离不开HTTP。比如 <a target="_blank" rel="noopener" href="http://www.website.com/news/read/id/1234">http://www.website.com/news/read/id/1234</a> 可以想像在实际代码中，我们会有一个控制器newsController，其中有一个readAction。不同框架可能默认实现方式稍有不同，有的是一个Controller一个文件，其中有多个Action，有的是每个Action一个文件。这种方式的URL通常都很漂亮，对搜索引擎友好，因为很多框架都自带有URL重写功能。可以自由规定URL中controller、action及参数出现的位置。</li>
+</ol>
+<p>另外，还有更直接的基于URL的设计方案，那就是REST。通过人为规定URL的构成形式（比如Action限制成只有几种）来促进网站之间的互相访问，降低开发的复杂性，提高系统的可伸缩性。REST对于Web Services来说是一个创新。虽然本文讨论的是单个项目所采用的架构，而REST是为了解决网站之间的通讯问题，但REST的出现，会对单个项目的架构造成影响（很显然你在开发时就要构造规范的URL）。将来混用REST和MVC应该也是一种趋势。RoR提供很好的REST支持，Zend Framework也提供了Zend_Rest来支持REST，包括Server和Client。</p>
+<p>除了上面之外，我还总结有以下内容：<br>4. 微服务架构 (Microservices Architecture) 微服务架构是一种设计方法，其中应用程序被构建为一组小的服务，每个服务执行单一功能，运行在其自己的进程中，并通过轻量级通信机制（通常是HTTP资源API）进行通信。每个服务都围绕业务能力构建，并独立于其他服务进行部署。（Docker、Kubernetes、API Gateway）<br>5. 无服务器架构 (Serverless Architecture) 无服务器架构允许开发者编写和部署代码而不需要关注底层服务器。运行时，代码在状态为无的容器中执行，这些容器由云提供商动态管理。开发者只需关注代码和应用逻辑，而无需管理服务器或运行时环境。（AWS Lambda、Azure Functions、Google Cloud Functions）</p>
+<p>参考文章：<a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/2406698">深度解析四大主流软件架构模型：单体架构、分布式应用、微服务与Serverless的优缺点及场景应用</a></p>
+<h2 id="涉及模式"><a href="#涉及模式" class="headerlink" title="涉及模式"></a>涉及模式</h2><p><a target="_blank" rel="noopener" href="https://liaoxuefeng.com/books/java/design-patterns/creational/index.html">廖学锋的网站讲的设计模式</a><br><a target="_blank" rel="noopener" href="https://www.runoob.com/design-pattern/visitor-pattern.html">菜鸟教程设计模式</a><br><a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000030850326">图解九种设计模式</a></p>
+
+  </div>
+</article>
+
+
+    <div class="blog-post-comments">
+        <div id="utterances_thread">
+            <noscript>Please enable JavaScript to view the comments.</noscript>
+        </div>
+    </div>
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/archives/">Writing</a></li>
+        
+          <li><a href="/search/">Search</a></li>
+        
+          <li><a href="/categories/">Categories</a></li>
+        
+          <li><a href="/idea/">Idea</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="https://github.com/g0dam">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Web%E5%BA%94%E7%94%A8%E6%A1%86%E6%9E%B6"><span class="toc-number">1.</span> <span class="toc-text">Web应用框架</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B6%89%E5%8F%8A%E6%A8%A1%E5%BC%8F"><span class="toc-number">2.</span> <span class="toc-text">涉及模式</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://g0dam.github.io/2024/10/11/WebSecurity/framwork/webarchitecture/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://g0dam.github.io/2024/10/11/WebSecurity/framwork/webarchitecture/&text=【Web安全】Web应用框架"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://g0dam.github.io/2024/10/11/WebSecurity/framwork/webarchitecture/&title=【Web安全】Web应用框架"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://g0dam.github.io/2024/10/11/WebSecurity/framwork/webarchitecture/&is_video=false&description=【Web安全】Web应用框架"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【Web安全】Web应用框架&body=Check out this article: https://g0dam.github.io/2024/10/11/WebSecurity/framwork/webarchitecture/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://g0dam.github.io/2024/10/11/WebSecurity/framwork/webarchitecture/&title=【Web安全】Web应用框架"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://g0dam.github.io/2024/10/11/WebSecurity/framwork/webarchitecture/&title=【Web安全】Web应用框架"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://g0dam.github.io/2024/10/11/WebSecurity/framwork/webarchitecture/&title=【Web安全】Web应用框架"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://g0dam.github.io/2024/10/11/WebSecurity/framwork/webarchitecture/&title=【Web安全】Web应用框架"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://g0dam.github.io/2024/10/11/WebSecurity/framwork/webarchitecture/&name=【Web安全】Web应用框架&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://g0dam.github.io/2024/10/11/WebSecurity/framwork/webarchitecture/&t=【Web安全】Web应用框架"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2024
+    g0dam
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Categories</a></li><!--
+     --><!--
+       --><li><a href="/idea/">Idea</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/g0dam">Projects</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+    <script type="text/javascript">
+      var utterances_repo = 'owner/githubrepo';
+      var utterances_issue_term = 'pathname';
+      var utterances_label = 'Comment';
+      var utterances_theme = 'github-dark';
+
+      (function(){
+          var script = document.createElement('script');
+
+          script.src = 'https://utteranc.es/client.js';
+          script.setAttribute('repo', utterances_repo);
+          script.setAttribute('issue-term', 'pathname');
+          script.setAttribute('label', utterances_label);
+          script.setAttribute('theme', utterances_theme);
+          script.setAttribute('crossorigin', 'anonymous');
+          script.async = true;
+          (document.getElementById('utterances_thread')).appendChild(script);
+      }());
+  </script>
+
+</body>
+</html>
