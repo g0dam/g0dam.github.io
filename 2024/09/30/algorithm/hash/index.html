@@ -9,19 +9,19 @@
     <meta name="description" content="基础一般哈希表都是用来快速判断一个元素是否出现集合里。要枚举的话时间复杂度是O(n)，但如果使用哈希表的话， 只需要O(1)就可以做到。将学生姓名映射到哈希表上就涉及到了hash function ，也就是哈希函数。如果学生的数量大于哈希表的大小怎么办，此时就算哈希函数计算的再均匀，也避免不了会有几位学生的名字同时映射到哈希表 同一个索引下标的位置。 接下来哈希碰撞登场拉链法：拉链法就是要选择适当">
 <meta property="og:type" content="article">
 <meta property="og:title" content="【算法】哈希">
-<meta property="og:url" content="https://g0dam.github.io/2024/09/30/algorithm/hash/index.html">
+<meta property="og:url" content="https://godreams.cn/2024/09/30/algorithm/hash/index.html">
 <meta property="og:site_name" content="g0dam">
 <meta property="og:description" content="基础一般哈希表都是用来快速判断一个元素是否出现集合里。要枚举的话时间复杂度是O(n)，但如果使用哈希表的话， 只需要O(1)就可以做到。将学生姓名映射到哈希表上就涉及到了hash function ，也就是哈希函数。如果学生的数量大于哈希表的大小怎么办，此时就算哈希函数计算的再均匀，也避免不了会有几位学生的名字同时映射到哈希表 同一个索引下标的位置。 接下来哈希碰撞登场拉链法：拉链法就是要选择适当">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://g0dam.github.io/2024/09/30/algorithm/hash/image.png">
-<meta property="og:image" content="https://g0dam.github.io/2024/09/30/algorithm/hash/image-1.png">
-<meta property="og:image" content="https://g0dam.github.io/2024/09/30/algorithm/hash/image-2.png">
+<meta property="og:image" content="https://godreams.cn/2024/09/30/algorithm/hash/image.png">
+<meta property="og:image" content="https://godreams.cn/2024/09/30/algorithm/hash/image-1.png">
+<meta property="og:image" content="https://godreams.cn/2024/09/30/algorithm/hash/image-2.png">
 <meta property="article:published_time" content="2024-09-30T11:57:07.000Z">
 <meta property="article:modified_time" content="2024-10-11T02:52:02.525Z">
 <meta property="article:author" content="g0dam">
 <meta property="article:tag" content="哈希">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://g0dam.github.io/2024/09/30/algorithm/hash/image.png">
+<meta name="twitter:image" content="https://godreams.cn/2024/09/30/algorithm/hash/image.png">
     
     
       
@@ -110,17 +110,17 @@
     <br/>
     <div id="share" style="display: none">
       <ul>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://g0dam.github.io/2024/09/30/algorithm/hash/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://g0dam.github.io/2024/09/30/algorithm/hash/&text=【算法】哈希"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://g0dam.github.io/2024/09/30/algorithm/hash/&title=【算法】哈希"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://g0dam.github.io/2024/09/30/algorithm/hash/&is_video=false&description=【算法】哈希"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=【算法】哈希&body=Check out this article: https://g0dam.github.io/2024/09/30/algorithm/hash/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://g0dam.github.io/2024/09/30/algorithm/hash/&title=【算法】哈希"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://g0dam.github.io/2024/09/30/algorithm/hash/&title=【算法】哈希"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://g0dam.github.io/2024/09/30/algorithm/hash/&title=【算法】哈希"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://g0dam.github.io/2024/09/30/algorithm/hash/&title=【算法】哈希"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://g0dam.github.io/2024/09/30/algorithm/hash/&name=【算法】哈希&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://g0dam.github.io/2024/09/30/algorithm/hash/&t=【算法】哈希"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://godreams.cn/2024/09/30/algorithm/hash/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://godreams.cn/2024/09/30/algorithm/hash/&text=【算法】哈希"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://godreams.cn/2024/09/30/algorithm/hash/&title=【算法】哈希"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://godreams.cn/2024/09/30/algorithm/hash/&is_video=false&description=【算法】哈希"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【算法】哈希&body=Check out this article: https://godreams.cn/2024/09/30/algorithm/hash/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://godreams.cn/2024/09/30/algorithm/hash/&title=【算法】哈希"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://godreams.cn/2024/09/30/algorithm/hash/&title=【算法】哈希"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://godreams.cn/2024/09/30/algorithm/hash/&title=【算法】哈希"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://godreams.cn/2024/09/30/algorithm/hash/&title=【算法】哈希"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://godreams.cn/2024/09/30/algorithm/hash/&name=【算法】哈希&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://godreams.cn/2024/09/30/algorithm/hash/&t=【算法】哈希"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
@@ -328,17 +328,17 @@
 
     <div id="share-footer" style="display: none">
       <ul>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://g0dam.github.io/2024/09/30/algorithm/hash/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://g0dam.github.io/2024/09/30/algorithm/hash/&text=【算法】哈希"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://g0dam.github.io/2024/09/30/algorithm/hash/&title=【算法】哈希"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://g0dam.github.io/2024/09/30/algorithm/hash/&is_video=false&description=【算法】哈希"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=【算法】哈希&body=Check out this article: https://g0dam.github.io/2024/09/30/algorithm/hash/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://g0dam.github.io/2024/09/30/algorithm/hash/&title=【算法】哈希"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://g0dam.github.io/2024/09/30/algorithm/hash/&title=【算法】哈希"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://g0dam.github.io/2024/09/30/algorithm/hash/&title=【算法】哈希"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://g0dam.github.io/2024/09/30/algorithm/hash/&title=【算法】哈希"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://g0dam.github.io/2024/09/30/algorithm/hash/&name=【算法】哈希&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://g0dam.github.io/2024/09/30/algorithm/hash/&t=【算法】哈希"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://godreams.cn/2024/09/30/algorithm/hash/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://godreams.cn/2024/09/30/algorithm/hash/&text=【算法】哈希"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://godreams.cn/2024/09/30/algorithm/hash/&title=【算法】哈希"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://godreams.cn/2024/09/30/algorithm/hash/&is_video=false&description=【算法】哈希"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【算法】哈希&body=Check out this article: https://godreams.cn/2024/09/30/algorithm/hash/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://godreams.cn/2024/09/30/algorithm/hash/&title=【算法】哈希"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://godreams.cn/2024/09/30/algorithm/hash/&title=【算法】哈希"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://godreams.cn/2024/09/30/algorithm/hash/&title=【算法】哈希"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://godreams.cn/2024/09/30/algorithm/hash/&title=【算法】哈希"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://godreams.cn/2024/09/30/algorithm/hash/&name=【算法】哈希&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://godreams.cn/2024/09/30/algorithm/hash/&t=【算法】哈希"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
 </ul>
 
     </div>

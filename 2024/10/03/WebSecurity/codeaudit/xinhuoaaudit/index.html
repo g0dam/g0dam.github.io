@@ -9,20 +9,20 @@
     <meta name="description" content="https:&#x2F;&#x2F;www.freebuf.com&#x2F;articles&#x2F;web&#x2F;286380.html 信呼OA 审计admin qwer1234信呼OA是一款自主MVC的办公系统，官网：http:&#x2F;&#x2F;www.rockoa.com&#x2F; 入口分析index.php 中 include_once(&#39;config&#x2F;config.php&#39;); 跟进到 config&#x2F;config.php查看@ses">
 <meta property="og:type" content="article">
 <meta property="og:title" content="【代码审计】信呼OA V2.6.2 代码审计">
-<meta property="og:url" content="https://g0dam.github.io/2024/10/03/WebSecurity/codeaudit/xinhuoaaudit/index.html">
+<meta property="og:url" content="https://godreams.cn/2024/10/03/WebSecurity/codeaudit/xinhuoaaudit/index.html">
 <meta property="og:site_name" content="g0dam">
 <meta property="og:description" content="https:&#x2F;&#x2F;www.freebuf.com&#x2F;articles&#x2F;web&#x2F;286380.html 信呼OA 审计admin qwer1234信呼OA是一款自主MVC的办公系统，官网：http:&#x2F;&#x2F;www.rockoa.com&#x2F; 入口分析index.php 中 include_once(&#39;config&#x2F;config.php&#39;); 跟进到 config&#x2F;config.php查看@ses">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://g0dam.github.io/2024/10/03/WebSecurity/codeaudit/xinhuoaaudit/image.png">
-<meta property="og:image" content="https://g0dam.github.io/2024/10/03/WebSecurity/codeaudit/xinhuoaaudit/image-1.png">
-<meta property="og:image" content="https://g0dam.github.io/2024/10/03/WebSecurity/codeaudit/xinhuoaaudit/image-2.png">
+<meta property="og:image" content="https://godreams.cn/2024/10/03/WebSecurity/codeaudit/xinhuoaaudit/image.png">
+<meta property="og:image" content="https://godreams.cn/2024/10/03/WebSecurity/codeaudit/xinhuoaaudit/image-1.png">
+<meta property="og:image" content="https://godreams.cn/2024/10/03/WebSecurity/codeaudit/xinhuoaaudit/image-2.png">
 <meta property="article:published_time" content="2024-10-03T03:10:22.000Z">
-<meta property="article:modified_time" content="2024-10-03T14:12:43.931Z">
+<meta property="article:modified_time" content="2024-10-16T08:56:20.274Z">
 <meta property="article:author" content="g0dam">
 <meta property="article:tag" content="代码审计">
 <meta property="article:tag" content="OA">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://g0dam.github.io/2024/10/03/WebSecurity/codeaudit/xinhuoaaudit/image.png">
+<meta name="twitter:image" content="https://godreams.cn/2024/10/03/WebSecurity/codeaudit/xinhuoaaudit/image.png">
     
     
       
@@ -111,17 +111,17 @@
     <br/>
     <div id="share" style="display: none">
       <ul>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://g0dam.github.io/2024/10/03/WebSecurity/codeaudit/xinhuoaaudit/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://g0dam.github.io/2024/10/03/WebSecurity/codeaudit/xinhuoaaudit/&text=【代码审计】信呼OA V2.6.2 代码审计"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://g0dam.github.io/2024/10/03/WebSecurity/codeaudit/xinhuoaaudit/&title=【代码审计】信呼OA V2.6.2 代码审计"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://g0dam.github.io/2024/10/03/WebSecurity/codeaudit/xinhuoaaudit/&is_video=false&description=【代码审计】信呼OA V2.6.2 代码审计"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=【代码审计】信呼OA V2.6.2 代码审计&body=Check out this article: https://g0dam.github.io/2024/10/03/WebSecurity/codeaudit/xinhuoaaudit/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://g0dam.github.io/2024/10/03/WebSecurity/codeaudit/xinhuoaaudit/&title=【代码审计】信呼OA V2.6.2 代码审计"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://g0dam.github.io/2024/10/03/WebSecurity/codeaudit/xinhuoaaudit/&title=【代码审计】信呼OA V2.6.2 代码审计"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://g0dam.github.io/2024/10/03/WebSecurity/codeaudit/xinhuoaaudit/&title=【代码审计】信呼OA V2.6.2 代码审计"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://g0dam.github.io/2024/10/03/WebSecurity/codeaudit/xinhuoaaudit/&title=【代码审计】信呼OA V2.6.2 代码审计"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://g0dam.github.io/2024/10/03/WebSecurity/codeaudit/xinhuoaaudit/&name=【代码审计】信呼OA V2.6.2 代码审计&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://g0dam.github.io/2024/10/03/WebSecurity/codeaudit/xinhuoaaudit/&t=【代码审计】信呼OA V2.6.2 代码审计"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://godreams.cn/2024/10/03/WebSecurity/codeaudit/xinhuoaaudit/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://godreams.cn/2024/10/03/WebSecurity/codeaudit/xinhuoaaudit/&text=【代码审计】信呼OA V2.6.2 代码审计"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://godreams.cn/2024/10/03/WebSecurity/codeaudit/xinhuoaaudit/&title=【代码审计】信呼OA V2.6.2 代码审计"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://godreams.cn/2024/10/03/WebSecurity/codeaudit/xinhuoaaudit/&is_video=false&description=【代码审计】信呼OA V2.6.2 代码审计"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【代码审计】信呼OA V2.6.2 代码审计&body=Check out this article: https://godreams.cn/2024/10/03/WebSecurity/codeaudit/xinhuoaaudit/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://godreams.cn/2024/10/03/WebSecurity/codeaudit/xinhuoaaudit/&title=【代码审计】信呼OA V2.6.2 代码审计"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://godreams.cn/2024/10/03/WebSecurity/codeaudit/xinhuoaaudit/&title=【代码审计】信呼OA V2.6.2 代码审计"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://godreams.cn/2024/10/03/WebSecurity/codeaudit/xinhuoaaudit/&title=【代码审计】信呼OA V2.6.2 代码审计"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://godreams.cn/2024/10/03/WebSecurity/codeaudit/xinhuoaaudit/&title=【代码审计】信呼OA V2.6.2 代码审计"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://godreams.cn/2024/10/03/WebSecurity/codeaudit/xinhuoaaudit/&name=【代码审计】信呼OA V2.6.2 代码审计&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://godreams.cn/2024/10/03/WebSecurity/codeaudit/xinhuoaaudit/&t=【代码审计】信呼OA V2.6.2 代码审计"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
@@ -306,17 +306,17 @@
 
     <div id="share-footer" style="display: none">
       <ul>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://g0dam.github.io/2024/10/03/WebSecurity/codeaudit/xinhuoaaudit/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://g0dam.github.io/2024/10/03/WebSecurity/codeaudit/xinhuoaaudit/&text=【代码审计】信呼OA V2.6.2 代码审计"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://g0dam.github.io/2024/10/03/WebSecurity/codeaudit/xinhuoaaudit/&title=【代码审计】信呼OA V2.6.2 代码审计"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://g0dam.github.io/2024/10/03/WebSecurity/codeaudit/xinhuoaaudit/&is_video=false&description=【代码审计】信呼OA V2.6.2 代码审计"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=【代码审计】信呼OA V2.6.2 代码审计&body=Check out this article: https://g0dam.github.io/2024/10/03/WebSecurity/codeaudit/xinhuoaaudit/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://g0dam.github.io/2024/10/03/WebSecurity/codeaudit/xinhuoaaudit/&title=【代码审计】信呼OA V2.6.2 代码审计"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://g0dam.github.io/2024/10/03/WebSecurity/codeaudit/xinhuoaaudit/&title=【代码审计】信呼OA V2.6.2 代码审计"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://g0dam.github.io/2024/10/03/WebSecurity/codeaudit/xinhuoaaudit/&title=【代码审计】信呼OA V2.6.2 代码审计"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://g0dam.github.io/2024/10/03/WebSecurity/codeaudit/xinhuoaaudit/&title=【代码审计】信呼OA V2.6.2 代码审计"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://g0dam.github.io/2024/10/03/WebSecurity/codeaudit/xinhuoaaudit/&name=【代码审计】信呼OA V2.6.2 代码审计&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://g0dam.github.io/2024/10/03/WebSecurity/codeaudit/xinhuoaaudit/&t=【代码审计】信呼OA V2.6.2 代码审计"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://godreams.cn/2024/10/03/WebSecurity/codeaudit/xinhuoaaudit/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://godreams.cn/2024/10/03/WebSecurity/codeaudit/xinhuoaaudit/&text=【代码审计】信呼OA V2.6.2 代码审计"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://godreams.cn/2024/10/03/WebSecurity/codeaudit/xinhuoaaudit/&title=【代码审计】信呼OA V2.6.2 代码审计"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://godreams.cn/2024/10/03/WebSecurity/codeaudit/xinhuoaaudit/&is_video=false&description=【代码审计】信呼OA V2.6.2 代码审计"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【代码审计】信呼OA V2.6.2 代码审计&body=Check out this article: https://godreams.cn/2024/10/03/WebSecurity/codeaudit/xinhuoaaudit/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://godreams.cn/2024/10/03/WebSecurity/codeaudit/xinhuoaaudit/&title=【代码审计】信呼OA V2.6.2 代码审计"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://godreams.cn/2024/10/03/WebSecurity/codeaudit/xinhuoaaudit/&title=【代码审计】信呼OA V2.6.2 代码审计"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://godreams.cn/2024/10/03/WebSecurity/codeaudit/xinhuoaaudit/&title=【代码审计】信呼OA V2.6.2 代码审计"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://godreams.cn/2024/10/03/WebSecurity/codeaudit/xinhuoaaudit/&title=【代码审计】信呼OA V2.6.2 代码审计"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://godreams.cn/2024/10/03/WebSecurity/codeaudit/xinhuoaaudit/&name=【代码审计】信呼OA V2.6.2 代码审计&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://godreams.cn/2024/10/03/WebSecurity/codeaudit/xinhuoaaudit/&t=【代码审计】信呼OA V2.6.2 代码审计"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
