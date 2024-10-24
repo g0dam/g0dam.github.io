@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="想法出发点是在有很多的逻辑漏洞需要我们手动去测试，比如越权漏洞，需要我们修改参数并重放，对比返回数据包的差异，这些简单重复的工作完全可以自动化完成。除此之外还可以自动化实现的漏洞包括：  信息泄漏：敏感信息数据可以利用ai识别 验证码回显漏洞：在某些登陆或需要验证的场景下，后端会将验证码返回到前端，前端输入任意账号即可实现登陆或其它敏感操作 安全机制绕过漏洞：常见于返回包中，返回包修改为：200后">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【工具开发】Burpsuite 插件开发">
+<meta property="og:url" content="https://godreams.cn/2024/10/24/tools/aiassist/index.html">
+<meta property="og:site_name" content="g0dam">
+<meta property="og:description" content="想法出发点是在有很多的逻辑漏洞需要我们手动去测试，比如越权漏洞，需要我们修改参数并重放，对比返回数据包的差异，这些简单重复的工作完全可以自动化完成。除此之外还可以自动化实现的漏洞包括：  信息泄漏：敏感信息数据可以利用ai识别 验证码回显漏洞：在某些登陆或需要验证的场景下，后端会将验证码返回到前端，前端输入任意账号即可实现登陆或其它敏感操作 安全机制绕过漏洞：常见于返回包中，返回包修改为：200后">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-10-24T07:04:02.000Z">
+<meta property="article:modified_time" content="2024-10-24T08:12:21.230Z">
+<meta property="article:author" content="g0dam">
+<meta property="article:tag" content="burpsuite">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>【工具开发】Burpsuite 插件开发</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+      <link rel="alternate" href="/true" title="g0dam" type="application/atom+xml" />
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Categories</a></li><!--
+     --><!--
+       --><li><a href="/idea/">Idea</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/g0dam">Projects</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2024/10/24/tools/burpsuite-plugins2/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://godreams.cn/2024/10/24/tools/aiassist/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://godreams.cn/2024/10/24/tools/aiassist/&text=【工具开发】Burpsuite 插件开发"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://godreams.cn/2024/10/24/tools/aiassist/&title=【工具开发】Burpsuite 插件开发"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://godreams.cn/2024/10/24/tools/aiassist/&is_video=false&description=【工具开发】Burpsuite 插件开发"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【工具开发】Burpsuite 插件开发&body=Check out this article: https://godreams.cn/2024/10/24/tools/aiassist/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://godreams.cn/2024/10/24/tools/aiassist/&title=【工具开发】Burpsuite 插件开发"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://godreams.cn/2024/10/24/tools/aiassist/&title=【工具开发】Burpsuite 插件开发"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://godreams.cn/2024/10/24/tools/aiassist/&title=【工具开发】Burpsuite 插件开发"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://godreams.cn/2024/10/24/tools/aiassist/&title=【工具开发】Burpsuite 插件开发"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://godreams.cn/2024/10/24/tools/aiassist/&name=【工具开发】Burpsuite 插件开发&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://godreams.cn/2024/10/24/tools/aiassist/&t=【工具开发】Burpsuite 插件开发"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%83%B3%E6%B3%95"><span class="toc-number">1.</span> <span class="toc-text">想法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%87%AA%E5%8A%A8%E5%8C%96%E8%B6%8A%E6%9D%83%E6%BC%8F%E6%B4%9E%E5%88%A4%E6%96%AD"><span class="toc-number">2.</span> <span class="toc-text">自动化越权漏洞判断</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%8E%B0%E6%9C%89%E5%B7%A5%E5%85%B7"><span class="toc-number">2.1.</span> <span class="toc-text">现有工具</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A8%A1%E5%9D%97%E8%AE%BE%E8%AE%A1"><span class="toc-number">2.2.</span> <span class="toc-text">模块设计</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%A1%B9%E7%9B%AE%E6%9E%B6%E6%9E%84"><span class="toc-number">2.2.1.</span> <span class="toc-text">项目架构</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%A1%B9%E7%9B%AE%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84"><span class="toc-number">2.2.2.</span> <span class="toc-text">项目文件结构</span></a></li></ol></li></ol></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        【工具开发】Burpsuite 插件开发
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">g0dam</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2024-10-24T07:04:02.000Z" class="dt-published" itemprop="datePublished">2024-10-24</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/Tools/">Tools</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/burpsuite/" rel="tag">burpsuite</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h2 id="想法"><a href="#想法" class="headerlink" title="想法"></a>想法</h2><p>出发点是在有很多的逻辑漏洞需要我们手动去测试，比如越权漏洞，需要我们修改参数并重放，对比返回数据包的差异，这些简单重复的工作完全可以自动化完成。除此之外还可以自动化实现的漏洞包括：</p>
+<ul>
+<li>信息泄漏：敏感信息数据可以利用ai识别</li>
+<li>验证码回显漏洞：在某些登陆或需要验证的场景下，后端会将验证码返回到前端，前端输入任意账号即可实现登陆或其它敏感操作</li>
+<li>安全机制绕过漏洞：常见于返回包中，返回包修改为：200后，即可绕过后端的登陆失败等问题</li>
+<li>任意用户伪造：需要多个数据包协同，一个数据包修改请求带有用户名，如果可以直接获取到返回的cookie就可以使用这个cookie访问其他的页面</li>
+</ul>
+<h2 id="自动化越权漏洞判断"><a href="#自动化越权漏洞判断" class="headerlink" title="自动化越权漏洞判断"></a>自动化越权漏洞判断</h2><p><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/2235686">https://cloud.tencent.com/developer/article/2235686</a></p>
+<p>从手工测试角度触发主要是有两步</p>
+<ol>
+<li>修改请求包<ul>
+<li>需要明确请求包具体修改哪里，修改的数据类型是什么</li>
+<li>请求包是否有鉴权字段，这个字段哪里来的</li>
+</ul>
+</li>
+<li>判断返回包<ul>
+<li>返回包不能仅仅判断是否相同，因为每次请求可能不一样，应当判断返回包的详细度，或者可以通过关键user相关信息判断</li>
+</ul>
+</li>
+</ol>
+<h3 id="现有工具"><a href="#现有工具" class="headerlink" title="现有工具"></a>现有工具</h3><p><a target="_blank" rel="noopener" href="https://github.com/Quitten/Autorize">https://github.com/Quitten/Autorize</a><br><a target="_blank" rel="noopener" href="https://github.com/sule01u/AutorizePro">https://github.com/sule01u/AutorizePro</a></p>
+<ol>
+<li><strong>工具标志忽略</strong>（<code>tool_needs_to_be_ignored</code>）：<ul>
+<li>检查是否应忽略来自特定Burp Suite工具（如Spider, Proxy, Target）的请求，基于用户配置。</li>
+</ul>
+</li>
+<li><strong>捕获和记录Cookie和授权头</strong>（<code>capture_last_cookie_header</code>, <code>capture_last_authorization_header</code>）：<ul>
+<li>从HTTP请求或响应中捕获最后一次使用的Cookie和授权头，方便后续请求的复用。</li>
+</ul>
+</li>
+<li><strong>304状态码防御</strong>（<code>handle_304_status_code_prevention</code>）：<ul>
+<li>修改请求头以避免服务器返回304状态码，这可能影响对响应内容的检测。</li>
+</ul>
+</li>
+<li><strong>消息过滤</strong>（<code>message_passed_interception_filters</code>）：<ul>
+<li>应用一系列自定义过滤规则，确定是否应处理特定的HTTP请求或响应。这包括URL包含&#x2F;不包含特定文本或正则表达式、请求体和响应体的内容检测等。</li>
+</ul>
+</li>
+<li><strong>越权检测和授权校验</strong>（<code>handle_message</code>, <code>checkAuthorization</code>, <code>send_request_to_autorize</code>）：<ul>
+<li>主要逻辑入口，处理传入的消息，判断是否符合处理条件，然后执行越权检测。</li>
+<li><code>send_request_to_autorize</code> 是在原始请求基础上修改后发送的功能，用来模拟未授权或重新授权的请求。</li>
+</ul>
+</li>
+<li><strong>自定义逻辑处理响应</strong>（<code>auth_enforced_via_enforcement_detectors</code>, <code>is_json_response</code>, <code>checkBypass</code>）：<ul>
+<li>根据设置的检测逻辑（状态码、头部、响应体等）来确定是否实施了授权。</li>
+<li><code>checkBypass</code> 方法比较授权前后的状态码和内容，以确定是否存在越权或授权绕过。</li>
+</ul>
+</li>
+</ol>
+<p>越权漏洞的检测依赖于比较修改前后的请求响应。如果修改用户授权信息（如Cookie或Authorization header）后，得到的响应与原响应相似，说明系统未能正确实施访问控制，从而存在越权问题。</p>
+<h3 id="模块设计"><a href="#模块设计" class="headerlink" title="模块设计"></a>模块设计</h3><p>设计一个Burp Suite插件以使用AI进行越权检测并预留扩展性用于未来增加更多逻辑漏洞检测，需要有一个清晰且模块化的架构。以下是一个基础的设计方案，包括主要组件和相关文件的建议。</p>
+<h4 id="项目架构"><a href="#项目架构" class="headerlink" title="项目架构"></a>项目架构</h4><ol>
+<li><p><strong>核心模块（Core Module）</strong>:</p>
+<ul>
+<li><strong>AuthorizationChecker</strong>：主类，管理插件的生命周期，包括初始化和插件的主要逻辑。</li>
+<li><strong>RequestInterceptor</strong>：处理和修改传入的HTTP请求。</li>
+<li><strong>ResponseAnalyzer</strong>：分析HTTP响应，判断是否存在越权或其他漏洞。</li>
+<li><strong>AIModelInterface</strong>：与外部AI服务交互的接口，用于提交请求和接收判断结果。</li>
+</ul>
+</li>
+<li><p><strong>配置管理（Configuration Management）</strong>:</p>
+<ul>
+<li><strong>ConfigLoader</strong>：加载和管理用户配置。</li>
+<li><strong>PluginSettings</strong>：提供一个界面用于用户设置插件参数。</li>
+</ul>
+</li>
+<li><p><strong>用户界面（User Interface）</strong>:</p>
+<ul>
+<li><strong>SettingsPanel</strong>：设置面板，允许用户配置插件行为。</li>
+<li><strong>ResultsPanel</strong>：展示检测结果和日志信息。</li>
+</ul>
+</li>
+<li><p><strong>工具类（Utility Classes）</strong>:</p>
+<ul>
+<li><strong>HttpUtilities</strong>：提供HTTP请求和响应处理的共用工具方法，如解析、构建请求等。</li>
+<li><strong>SecurityUtils</strong>：提供安全相关的辅助功能，如加密、解密等。</li>
+</ul>
+</li>
+<li><p><strong>API客户端（API Client）</strong>:</p>
+<ul>
+<li><strong>ApiClient</strong>：与AI服务后端进行通信的客户端。</li>
+</ul>
+</li>
+<li><p><strong>数据模型（Data Models）</strong>:</p>
+<ul>
+<li><strong>RequestModel</strong>：表示一个HTTP请求的数据模型。</li>
+<li><strong>ResponseModel</strong>：表示一个HTTP响应的数据模型。</li>
+</ul>
+</li>
+</ol>
+<h4 id="项目文件结构"><a href="#项目文件结构" class="headerlink" title="项目文件结构"></a>项目文件结构</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">+-- src/</span><br><span class="line">|   +-- main/</span><br><span class="line">|       +-- java/</span><br><span class="line">|           +-- com/</span><br><span class="line">|               +-- yourcompany/</span><br><span class="line">|                   +-- burp/</span><br><span class="line">|                       +-- core/</span><br><span class="line">|                           |-- AuthorizationChecker.java</span><br><span class="line">|                           |-- RequestInterceptor.java</span><br><span class="line">|                           |-- ResponseAnalyzer.java</span><br><span class="line">|                           |-- AIModelInterface.java</span><br><span class="line">|                       +-- config/</span><br><span class="line">|                           |-- ConfigLoader.java</span><br><span class="line">|                           |-- PluginSettings.java</span><br><span class="line">|                       +-- ui/</span><br><span class="line">|                           |-- SettingsPanel.java</span><br><span class="line">|                           |-- ResultsPanel.java</span><br><span class="line">|                       +-- utils/</span><br><span class="line">|                           |-- HttpUtilities.java</span><br><span class="line">|                           |-- SecurityUtils.java</span><br><span class="line">|                       +-- api/</span><br><span class="line">|                           |-- ApiClient.java</span><br><span class="line">|                       +-- models/</span><br><span class="line">|                           |-- RequestModel.java</span><br><span class="line">|                           |-- ResponseModel.java</span><br><span class="line">+-- resources/</span><br><span class="line">|   +-- META-INF/</span><br><span class="line">|       |-- manifest.mf</span><br><span class="line">+-- build.gradle</span><br><span class="line">+-- settings.gradle</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+  </div>
+</article>
+
+
+    <div class="blog-post-comments">
+        <div id="utterances_thread">
+            <noscript>Please enable JavaScript to view the comments.</noscript>
+        </div>
+    </div>
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/archives/">Writing</a></li>
+        
+          <li><a href="/search/">Search</a></li>
+        
+          <li><a href="/categories/">Categories</a></li>
+        
+          <li><a href="/idea/">Idea</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="https://github.com/g0dam">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%83%B3%E6%B3%95"><span class="toc-number">1.</span> <span class="toc-text">想法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%87%AA%E5%8A%A8%E5%8C%96%E8%B6%8A%E6%9D%83%E6%BC%8F%E6%B4%9E%E5%88%A4%E6%96%AD"><span class="toc-number">2.</span> <span class="toc-text">自动化越权漏洞判断</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%8E%B0%E6%9C%89%E5%B7%A5%E5%85%B7"><span class="toc-number">2.1.</span> <span class="toc-text">现有工具</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A8%A1%E5%9D%97%E8%AE%BE%E8%AE%A1"><span class="toc-number">2.2.</span> <span class="toc-text">模块设计</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%A1%B9%E7%9B%AE%E6%9E%B6%E6%9E%84"><span class="toc-number">2.2.1.</span> <span class="toc-text">项目架构</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%A1%B9%E7%9B%AE%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84"><span class="toc-number">2.2.2.</span> <span class="toc-text">项目文件结构</span></a></li></ol></li></ol></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://godreams.cn/2024/10/24/tools/aiassist/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://godreams.cn/2024/10/24/tools/aiassist/&text=【工具开发】Burpsuite 插件开发"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://godreams.cn/2024/10/24/tools/aiassist/&title=【工具开发】Burpsuite 插件开发"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://godreams.cn/2024/10/24/tools/aiassist/&is_video=false&description=【工具开发】Burpsuite 插件开发"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【工具开发】Burpsuite 插件开发&body=Check out this article: https://godreams.cn/2024/10/24/tools/aiassist/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://godreams.cn/2024/10/24/tools/aiassist/&title=【工具开发】Burpsuite 插件开发"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://godreams.cn/2024/10/24/tools/aiassist/&title=【工具开发】Burpsuite 插件开发"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://godreams.cn/2024/10/24/tools/aiassist/&title=【工具开发】Burpsuite 插件开发"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://godreams.cn/2024/10/24/tools/aiassist/&title=【工具开发】Burpsuite 插件开发"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://godreams.cn/2024/10/24/tools/aiassist/&name=【工具开发】Burpsuite 插件开发&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://godreams.cn/2024/10/24/tools/aiassist/&t=【工具开发】Burpsuite 插件开发"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2024
+    g0dam
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Categories</a></li><!--
+     --><!--
+       --><li><a href="/idea/">Idea</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/g0dam">Projects</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+    <script type="text/javascript">
+      var utterances_repo = 'owner/githubrepo';
+      var utterances_issue_term = 'pathname';
+      var utterances_label = 'Comment';
+      var utterances_theme = 'github-dark';
+
+      (function(){
+          var script = document.createElement('script');
+
+          script.src = 'https://utteranc.es/client.js';
+          script.setAttribute('repo', utterances_repo);
+          script.setAttribute('issue-term', 'pathname');
+          script.setAttribute('label', utterances_label);
+          script.setAttribute('theme', utterances_theme);
+          script.setAttribute('crossorigin', 'anonymous');
+          script.async = true;
+          (document.getElementById('utterances_thread')).appendChild(script);
+      }());
+  </script>
+
+</body>
+</html>
