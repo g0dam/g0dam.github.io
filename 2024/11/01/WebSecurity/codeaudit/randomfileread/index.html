@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="https:&#x2F;&#x2F;www.dkewl.com&#x2F;code&#x2F;detail3016.html 直接看后端源码很清楚的有个thinkphpThinkPHP 是一个国内流行的 PHP 框架，主要用于快速开发中小型应用，尤其是为国内 PHP 开发者设计。它以高效、简单、灵活和轻量级为特点，支持 MVC 模式（Model-View-Controller），并且易于扩展和修改。以下是对 ThinkPHP 框架结构和">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【代码审计】某微信小程序商城后台存在SSRF漏洞">
+<meta property="og:url" content="https://godreams.cn/2024/11/01/WebSecurity/codeaudit/randomfileread/index.html">
+<meta property="og:site_name" content="g0dam">
+<meta property="og:description" content="https:&#x2F;&#x2F;www.dkewl.com&#x2F;code&#x2F;detail3016.html 直接看后端源码很清楚的有个thinkphpThinkPHP 是一个国内流行的 PHP 框架，主要用于快速开发中小型应用，尤其是为国内 PHP 开发者设计。它以高效、简单、灵活和轻量级为特点，支持 MVC 模式（Model-View-Controller），并且易于扩展和修改。以下是对 ThinkPHP 框架结构和">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://godreams.cn/2024/11/01/WebSecurity/codeaudit/randomfileread/image.png">
+<meta property="og:image" content="https://godreams.cn/2024/11/01/WebSecurity/codeaudit/randomfileread/image-1.png">
+<meta property="og:image" content="https://godreams.cn/2024/11/01/WebSecurity/codeaudit/randomfileread/image-2.png">
+<meta property="og:image" content="https://godreams.cn/2024/11/01/WebSecurity/codeaudit/randomfileread/image-3.png">
+<meta property="article:published_time" content="2024-11-01T11:01:51.000Z">
+<meta property="article:modified_time" content="2024-11-02T06:41:21.013Z">
+<meta property="article:author" content="g0dam">
+<meta property="article:tag" content="代码审计">
+<meta property="article:tag" content="OA">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://godreams.cn/2024/11/01/WebSecurity/codeaudit/randomfileread/image.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>【代码审计】某微信小程序商城后台存在SSRF漏洞</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+      <link rel="alternate" href="/true" title="g0dam" type="application/atom+xml" />
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Categories</a></li><!--
+     --><!--
+       --><li><a href="/idea/">Idea</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/g0dam">Projects</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2024/11/01/code/javanetwork/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://godreams.cn/2024/11/01/WebSecurity/codeaudit/randomfileread/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://godreams.cn/2024/11/01/WebSecurity/codeaudit/randomfileread/&text=【代码审计】某微信小程序商城后台存在SSRF漏洞"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://godreams.cn/2024/11/01/WebSecurity/codeaudit/randomfileread/&title=【代码审计】某微信小程序商城后台存在SSRF漏洞"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://godreams.cn/2024/11/01/WebSecurity/codeaudit/randomfileread/&is_video=false&description=【代码审计】某微信小程序商城后台存在SSRF漏洞"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【代码审计】某微信小程序商城后台存在SSRF漏洞&body=Check out this article: https://godreams.cn/2024/11/01/WebSecurity/codeaudit/randomfileread/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://godreams.cn/2024/11/01/WebSecurity/codeaudit/randomfileread/&title=【代码审计】某微信小程序商城后台存在SSRF漏洞"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://godreams.cn/2024/11/01/WebSecurity/codeaudit/randomfileread/&title=【代码审计】某微信小程序商城后台存在SSRF漏洞"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://godreams.cn/2024/11/01/WebSecurity/codeaudit/randomfileread/&title=【代码审计】某微信小程序商城后台存在SSRF漏洞"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://godreams.cn/2024/11/01/WebSecurity/codeaudit/randomfileread/&title=【代码审计】某微信小程序商城后台存在SSRF漏洞"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://godreams.cn/2024/11/01/WebSecurity/codeaudit/randomfileread/&name=【代码审计】某微信小程序商城后台存在SSRF漏洞&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://godreams.cn/2024/11/01/WebSecurity/codeaudit/randomfileread/&t=【代码审计】某微信小程序商城后台存在SSRF漏洞"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%B4%E6%8E%A5%E7%9C%8B%E5%90%8E%E7%AB%AF%E6%BA%90%E7%A0%81"><span class="toc-number">1.</span> <span class="toc-text">直接看后端源码</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84"><span class="toc-number">1.1.</span> <span class="toc-text">1. 目录结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-ThinkPHP-%E6%A0%B8%E5%BF%83%E7%BB%93%E6%9E%84"><span class="toc-number">1.2.</span> <span class="toc-text">2. ThinkPHP 核心结构</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-%E6%8E%A7%E5%88%B6%E5%99%A8%EF%BC%88Controller%EF%BC%89"><span class="toc-number">1.2.1.</span> <span class="toc-text">1) 控制器（Controller）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-%E6%A8%A1%E5%9E%8B%EF%BC%88Model%EF%BC%89"><span class="toc-number">1.2.2.</span> <span class="toc-text">2) 模型（Model）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-%E8%A7%86%E5%9B%BE%EF%BC%88View%EF%BC%89"><span class="toc-number">1.2.3.</span> <span class="toc-text">3) 视图（View）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-%E9%85%8D%E7%BD%AE%EF%BC%88Config%EF%BC%89"><span class="toc-number">1.2.4.</span> <span class="toc-text">4) 配置（Config）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-%E8%B7%AF%E7%94%B1%EF%BC%88Route%EF%BC%89"><span class="toc-number">1.2.5.</span> <span class="toc-text">5) 路由（Route）</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%92%88%E5%AF%B9%E8%BF%99%E4%B8%AA%E6%BA%90%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90"><span class="toc-number">1.3.</span> <span class="toc-text">针对这个源代码分析</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SSRF-%E6%BC%8F%E6%B4%9E%E7%82%B9"><span class="toc-number">2.</span> <span class="toc-text">SSRF 漏洞点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8"><span class="toc-number">3.</span> <span class="toc-text">漏洞利用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E8%AF%BB%E5%8F%96%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%9C%AC%E5%9C%B0%E6%96%87%E4%BB%B6%EF%BC%88%E4%BD%BF%E7%94%A8-file-%E5%8D%8F%E8%AE%AE%EF%BC%89"><span class="toc-number">3.1.</span> <span class="toc-text">1. 读取服务器本地文件（使用 file:&#x2F;&#x2F; 协议）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E6%8E%A2%E6%B5%8B%E5%86%85%E7%BD%91%E4%B8%BB%E6%9C%BA%E5%92%8C%E7%AB%AF%E5%8F%A3"><span class="toc-number">3.2.</span> <span class="toc-text">2. 探测内网主机和端口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E8%AE%BF%E9%97%AE%E5%86%85%E7%BD%91%E6%9C%8D%E5%8A%A1"><span class="toc-number">3.3.</span> <span class="toc-text">3. 访问内网服务</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E7%BB%95%E8%BF%87%E9%98%B2%E7%81%AB%E5%A2%99%E9%99%90%E5%88%B6"><span class="toc-number">3.4.</span> <span class="toc-text">4. 绕过防火墙限制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E5%88%A9%E7%94%A8%E7%89%B9%E5%AE%9A%E5%8D%8F%E8%AE%AE"><span class="toc-number">3.5.</span> <span class="toc-text">5. 利用特定协议</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%9B%E4%B8%80%E6%AD%A5%E6%B8%97%E9%80%8F"><span class="toc-number">4.</span> <span class="toc-text">进一步渗透</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        【代码审计】某微信小程序商城后台存在SSRF漏洞
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">g0dam</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2024-11-01T11:01:51.000Z" class="dt-published" itemprop="datePublished">2024-11-01</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/Web-Security/">Web Security</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/OA/" rel="tag">OA</a>, <a class="p-category" href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/" rel="tag">代码审计</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p><a target="_blank" rel="noopener" href="https://www.dkewl.com/code/detail3016.html">https://www.dkewl.com/code/detail3016.html</a></p>
+<h2 id="直接看后端源码"><a href="#直接看后端源码" class="headerlink" title="直接看后端源码"></a>直接看后端源码</h2><p>很清楚的有个thinkphp<br>ThinkPHP 是一个国内流行的 PHP 框架，主要用于快速开发中小型应用，尤其是为国内 PHP 开发者设计。它以高效、简单、灵活和轻量级为特点，支持 MVC 模式（Model-View-Controller），并且易于扩展和修改。以下是对 ThinkPHP 框架结构和核心内容的详细介绍：</p>
+<h3 id="1-目录结构"><a href="#1-目录结构" class="headerlink" title="1. 目录结构"></a>1. 目录结构</h3><p>在 ThinkPHP 框架中，目录结构大体如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">项目根目录</span><br><span class="line">├── application/       # 应用目录，主要放置项目的业务逻辑代码</span><br><span class="line">│   ├── common/        # 公共模块，存放公共函数、类库等</span><br><span class="line">│   ├── config/        # 配置文件目录</span><br><span class="line">│   ├── controller/    # 控制器目录，MVC 中的 Controller</span><br><span class="line">│   ├── model/         # 模型目录，MVC 中的 Model</span><br><span class="line">│   ├── view/          # 视图目录，MVC 中的 View</span><br><span class="line">│   ├── route/         # 路由文件目录</span><br><span class="line">│   └── ...</span><br><span class="line">├── extend/            # 扩展目录，存放第三方库或自定义扩展</span><br><span class="line">├── public/            # Web 根目录，存放入口文件和静态资源</span><br><span class="line">├── runtime/           # 运行时目录，存放缓存、日志等文件</span><br><span class="line">└── thinkphp/          # 核心框架文件目录</span><br></pre></td></tr></table></figure>
+
+<p>每个目录的主要作用如下：</p>
+<ul>
+<li><strong>application</strong>：项目的主应用目录，包含所有业务逻辑。</li>
+<li><strong>common</strong>：项目的公共模块，适用于多个模块之间共享的内容。</li>
+<li><strong>config</strong>：存放项目的全局配置文件。</li>
+<li><strong>controller</strong>：控制器目录，负责接收请求并调用模型处理数据。</li>
+<li><strong>model</strong>：模型目录，负责数据处理和业务逻辑。</li>
+<li><strong>view</strong>：视图目录，负责展示数据。</li>
+<li><strong>route</strong>：存放路由文件，定义 URL 路由规则。</li>
+<li><strong>extend</strong>：可扩展的目录，可以放入第三方库或自定义类库。</li>
+<li><strong>public</strong>：Web 访问目录，入口文件（如 <code>index.php</code>）放置在此。</li>
+<li><strong>runtime</strong>：运行时目录，存放缓存和日志文件。</li>
+<li><strong>thinkphp</strong>：ThinkPHP 框架的核心文件。</li>
+</ul>
+<h3 id="2-ThinkPHP-核心结构"><a href="#2-ThinkPHP-核心结构" class="headerlink" title="2. ThinkPHP 核心结构"></a>2. ThinkPHP 核心结构</h3><p>ThinkPHP 框架主要由以下几个核心模块组成：</p>
+<h4 id="1-控制器（Controller）"><a href="#1-控制器（Controller）" class="headerlink" title="1) 控制器（Controller）"></a>1) 控制器（Controller）</h4><p>控制器是 MVC 模式中的 “C”，是用户请求的直接接收者。ThinkPHP 中的控制器通常继承自 <code>Think\Controller</code>，并通过 URL 调用。一个简单的控制器文件结构如下：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title class_">app</span>\<span class="title class_">index</span>\<span class="title class_">controller</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">use</span> <span class="title">think</span>\<span class="title">Controller</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Index</span> <span class="keyword">extends</span> <span class="title">Controller</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">index</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;Hello, ThinkPHP!&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-模型（Model）"><a href="#2-模型（Model）" class="headerlink" title="2) 模型（Model）"></a>2) 模型（Model）</h4><p>模型是 MVC 模式中的 “M”，用于处理数据逻辑、数据库操作等。ThinkPHP 使用 ORM（对象关系映射）方式处理数据库数据。通常模型类继承自 <code>think\Model</code>，并使用简单的语法完成数据库操作：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">namespace</span> <span class="title class_">app</span>\<span class="title class_">index</span>\<span class="title class_">model</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">use</span> <span class="title">think</span>\<span class="title">Model</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">User</span> <span class="keyword">extends</span> <span class="title">Model</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 可以定义数据表的额外操作或业务逻辑</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>常用方法包括 <code>find()</code>、<code>select()</code>、<code>insert()</code>、<code>update()</code> 等。</p>
+<h4 id="3-视图（View）"><a href="#3-视图（View）" class="headerlink" title="3) 视图（View）"></a>3) 视图（View）</h4><p>视图是 MVC 模式中的 “V”，负责显示数据给用户。ThinkPHP 支持多种模板引擎，如原生的 PHP、Smarty、Twig 等，默认使用 ThinkPHP 自带的模板引擎。视图文件一般是 <code>.html</code> 文件，位于 <code>view</code> 目录中，通过控制器进行调用渲染：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">fetch</span>(<span class="string">&#x27;index&#x27;</span>); <span class="comment">// 渲染 index.html</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="4-配置（Config）"><a href="#4-配置（Config）" class="headerlink" title="4) 配置（Config）"></a>4) 配置（Config）</h4><p>ThinkPHP 使用配置文件进行环境的控制。配置文件主要位于 <code>application/config.php</code>，可以配置数据库、缓存、路由等信息。配置支持数组格式，且可以按需覆盖：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span> [</span><br><span class="line">    <span class="comment">// 数据库配置</span></span><br><span class="line">    <span class="string">&#x27;database&#x27;</span> =&gt; [</span><br><span class="line">        <span class="string">&#x27;type&#x27;</span>     =&gt; <span class="string">&#x27;mysql&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;hostname&#x27;</span> =&gt; <span class="string">&#x27;127.0.0.1&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;database&#x27;</span> =&gt; <span class="string">&#x27;test_db&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;username&#x27;</span> =&gt; <span class="string">&#x27;root&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;password&#x27;</span> =&gt; <span class="string">&#x27;root&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;hostport&#x27;</span> =&gt; <span class="string">&#x27;3306&#x27;</span>,</span><br><span class="line">    ],</span><br><span class="line">    <span class="comment">// 路由配置</span></span><br><span class="line">    <span class="string">&#x27;route&#x27;</span>    =&gt; [</span><br><span class="line">        <span class="string">&#x27;pathinfo_depr&#x27;</span> =&gt; <span class="string">&#x27;/&#x27;</span>,</span><br><span class="line">    ],</span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+
+<h4 id="5-路由（Route）"><a href="#5-路由（Route）" class="headerlink" title="5) 路由（Route）"></a>5) 路由（Route）</h4><p>路由用于定义 URL 访问模式。ThinkPHP 支持 RESTful 风格的路由，并提供灵活的 URL 定义方式。路由配置文件一般位于 <code>route</code> 目录中，定义 URL 到控制器方法的映射：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">use</span> <span class="title">think</span>\<span class="title">facade</span>\<span class="title">Route</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 定义简单路由</span></span><br><span class="line"><span class="title class_">Route</span>::<span class="title function_ invoke__">rule</span>(<span class="string">&#x27;hello/:name&#x27;</span>, <span class="string">&#x27;index/index/hello&#x27;</span>);</span><br></pre></td></tr></table></figure>
+<h3 id="针对这个源代码分析"><a href="#针对这个源代码分析" class="headerlink" title="针对这个源代码分析"></a>针对这个源代码分析</h3><ol>
+<li>**<code>404.html</code>**：通常是自定义的 404 错误页面。</li>
+<li>**<code>数据库.sql</code>**：数据库文件，包含初始化或结构数据。</li>
+<li>**<code>composer.json</code> 和 <code>composer.lock</code>**：Composer 依赖管理文件，说明该框架使用 Composer 来管理 PHP 包。</li>
+<li>**<code>index.php</code>**：通常是入口文件，用于接收请求并启动框架。</li>
+<li>**<code>log.json</code>**：可能是日志文件，记录框架操作信息。</li>
+<li>**<code>README.txt</code>**：说明文件，可能包含关于框架的基本信息和使用说明。</li>
+<li>**<code>sql.txt</code>**：另一份 SQL 文件，可能包含不同的数据库表结构或数据。</li>
+<li>**<code>version.php</code>**：版本控制文件，标记当前框架版本。</li>
+<li>**<code>.htaccess</code>**：Apache 配置文件，用于 URL 重写或其他配置。</li>
+</ol>
+<p>从目录结构来看，这个基于 ThinkPHP 二次开发的框架包含以下重要目录：</p>
+<ol>
+<li>**<code>addons</code>**：通常是插件或扩展模块的目录，用于增强框架的功能。</li>
+<li>**<code>application</code>**：主要应用程序目录，包含核心业务逻辑代码（如控制器、模型、视图）。</li>
+<li>**<code>attachs</code>**：一般用于存储附件或上传的文件。</li>
+<li>**<code>data</code>**：用于存储数据文件，如缓存、日志等。</li>
+<li>**<code>lang</code>**：语言包目录，支持多语言功能。</li>
+<li>**<code>runtime</code>**：运行时目录，存储缓存和临时文件。</li>
+<li>**<code>static</code>**：静态资源目录，包含 CSS、JavaScript 和图片等前端资源。</li>
+<li>**<code>thinkphp</code>**：框架核心文件，包含 ThinkPHP 的原始文件和库。</li>
+<li>**<code>vendor</code>**：第三方依赖目录，由 Composer 管理的 PHP 包通常存放在这里。</li>
+</ol>
+<p><code>application</code> 目录包含了一些主要配置文件和核心业务模块：</p>
+<ol>
+<li><p><strong>配置文件</strong>：</p>
+<ul>
+<li><strong><code>command.php</code><strong>、</strong><code>common.php</code><strong>、</strong><code>config.php</code><strong>、</strong><code>crons.php</code><strong>、</strong><code>database.php</code><strong>、</strong><code>route.php</code><strong>、</strong><code>tags.php</code></strong> 等文件，用于配置框架的核心功能，包括数据库、路由、计划任务等。</li>
+</ul>
+</li>
+<li><p><strong>业务模块</strong>：</p>
+<ul>
+<li>**<code>admin/behavior</code>**：可能定义了行为扩展或中间件，例如 <strong><code>Cron.php</code></strong> 文件，可能用于定时任务的行为控制。</li>
+<li>**<code>admin/controller</code>**：包含控制器文件，例如 <strong><code>Ad.php</code></strong> 和 **<code>Admin.php</code>**，负责后台管理功能的业务逻辑。</li>
+</ul>
+</li>
+</ol>
+<h2 id="SSRF-漏洞点"><a href="#SSRF-漏洞点" class="headerlink" title="SSRF 漏洞点"></a>SSRF 漏洞点</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 1. CURL相关</span></span><br><span class="line"><span class="title function_ invoke__">curl_setopt</span>()</span><br><span class="line"><span class="title function_ invoke__">curl_exec</span>()</span><br><span class="line"></span><br><span class="line"><span class="comment">// 2. 文件操作相关</span></span><br><span class="line"><span class="title function_ invoke__">file_get_contents</span>()</span><br><span class="line"><span class="title function_ invoke__">fopen</span>()</span><br><span class="line"><span class="title function_ invoke__">readfile</span>()</span><br><span class="line"><span class="title function_ invoke__">file</span>()</span><br><span class="line"><span class="title function_ invoke__">fread</span>()</span><br><span class="line"><span class="title function_ invoke__">fgets</span>()</span><br><span class="line"></span><br><span class="line"><span class="comment">// 3. 图片处理相关</span></span><br><span class="line"><span class="title function_ invoke__">imagecreatefromurl</span>()</span><br><span class="line"><span class="title function_ invoke__">getimagesize</span>()</span><br><span class="line"></span><br><span class="line"><span class="comment">// 4. 其他网络操作</span></span><br><span class="line"><span class="title function_ invoke__">fsockopen</span>()</span><br><span class="line"><span class="title function_ invoke__">socket_connect</span>()</span><br><span class="line"><span class="title function_ invoke__">stream_socket_client</span>()</span><br><span class="line"></span><br><span class="line"><span class="comment">// 5. XML相关</span></span><br><span class="line"><span class="title function_ invoke__">simplexml_load_file</span>()</span><br><span class="line"><span class="title class_">DOMDocument</span>::<span class="title function_ invoke__">load</span>()</span><br><span class="line"><span class="title class_">XMLReader</span>::<span class="title function_ invoke__">open</span>()</span><br></pre></td></tr></table></figure>
+<p>PHP中可能有上述函数存在SSRF，检索<code>curl_setopt()</code>，发现使用的地方还是挺多的。<br><img src="/2024/11/01/WebSecurity/codeaudit/randomfileread/image.png"><br>但重点关注 application 目录下的</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getaccess_token</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="variable">$config</span> = <span class="title function_ invoke__">model</span>(<span class="string">&#x27;Setting&#x27;</span>)-&gt;<span class="title function_ invoke__">fetchAll2</span>();</span><br><span class="line">       <span class="variable">$url</span> = <span class="string">&quot;https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&amp;appid=&quot;</span> . <span class="variable">$config</span>[<span class="string">&#x27;wxapp&#x27;</span>][<span class="string">&#x27;appid&#x27;</span>] . <span class="string">&quot;&amp;secret=&quot;</span> . <span class="variable">$config</span>[<span class="string">&#x27;wxapp&#x27;</span>][<span class="string">&#x27;appsecret&#x27;</span>] . <span class="string">&quot;&quot;</span>;</span><br><span class="line">       <span class="variable">$ch</span> = <span class="title function_ invoke__">curl_init</span>();</span><br><span class="line">       <span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$ch</span>, CURLOPT_URL, <span class="variable">$url</span>);</span><br><span class="line">       <span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$ch</span>, CURLOPT_RETURNTRANSFER, <span class="number">1</span>);</span><br><span class="line">       <span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$ch</span>, CURLOPT_SSL_VERIFYPEER, <span class="number">0</span>);</span><br><span class="line">       <span class="variable">$data</span> = <span class="title function_ invoke__">curl_exec</span>(<span class="variable">$ch</span>);</span><br><span class="line">       <span class="title function_ invoke__">curl_close</span>(<span class="variable">$ch</span>);</span><br><span class="line">       <span class="variable">$data</span> = <span class="title function_ invoke__">json_decode</span>(<span class="variable">$data</span>, <span class="literal">true</span>);</span><br><span class="line">       <span class="keyword">return</span> <span class="variable">$data</span>[<span class="string">&#x27;access_token&#x27;</span>];</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<p>这是第一处的，发现没有参数可控，放弃了。<br>第二处，url是可控的，直接实现任意文件读取</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">httpRequest</span>(<span class="params"><span class="variable">$url</span>,<span class="variable">$data</span> = <span class="literal">null</span></span>)</span>&#123;</span><br><span class="line">	<span class="variable">$curl</span> = <span class="title function_ invoke__">curl_init</span>();</span><br><span class="line">	<span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$curl</span>,CURLOPT_URL,<span class="variable">$url</span>);</span><br><span class="line">	<span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$curl</span>,CURLOPT_SSL_VERIFYPEER,<span class="literal">FALSE</span>);</span><br><span class="line">	<span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$curl</span>,CURLOPT_SSL_VERIFYHOST,<span class="literal">FALSE</span>);</span><br><span class="line">	<span class="keyword">if</span>(!<span class="keyword">empty</span>(<span class="variable">$data</span>))&#123;</span><br><span class="line">		<span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$curl</span>,CURLOPT_POST,<span class="number">1</span>);</span><br><span class="line">		<span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$curl</span>,CURLOPT_POSTFIELDS,<span class="variable">$data</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$curl</span>,CURLOPT_RETURNTRANSFER,<span class="literal">true</span>);</span><br><span class="line">	<span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$curl</span>,CURLOPT_RETURNTRANSFER,<span class="number">1</span>);</span><br><span class="line">	<span class="variable">$output</span> = <span class="title function_ invoke__">curl_exec</span>(<span class="variable">$curl</span>);</span><br><span class="line">	<span class="title function_ invoke__">curl_close</span>(<span class="variable">$curl</span>);</span><br><span class="line">	<span class="keyword">return</span> <span class="variable">$output</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="漏洞利用"><a href="#漏洞利用" class="headerlink" title="漏洞利用"></a>漏洞利用</h2><p>SSRF 漏洞可能导致的危害：</p>
+<h3 id="1-读取服务器本地文件（使用-file-协议）"><a href="#1-读取服务器本地文件（使用-file-协议）" class="headerlink" title="1. 读取服务器本地文件（使用 file:// 协议）"></a>1. 读取服务器本地文件（使用 <code>file://</code> 协议）</h3><p>攻击者可以利用 <code>file://</code> 协议来读取服务器上的本地文件。通过指定 <code>file://</code> 协议，攻击者可以访问系统中的敏感文件，例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">httpRequest(&quot;file:///etc/passwd&quot;);</span><br><span class="line">httpRequest(&quot;file:///C:/Windows/system32/drivers/etc/hosts&quot;);</span><br></pre></td></tr></table></figure>
+<p>这类请求可以泄露操作系统配置文件、密码文件等敏感信息，帮助攻击者进一步攻击或发现漏洞。</p>
+<h3 id="2-探测内网主机和端口"><a href="#2-探测内网主机和端口" class="headerlink" title="2. 探测内网主机和端口"></a>2. 探测内网主机和端口</h3><p>SSRF 可以让攻击者通过请求不同的内网 IP 地址和端口，对内部网络进行端口扫描，从而了解网络拓扑结构。例如，攻击者可以通过请求内网地址来发现哪些服务在运行：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">httpRequest(&quot;http://192.168.0.1:22&quot;);  // 尝试连接 SSH 服务</span><br><span class="line">httpRequest(&quot;http://192.168.0.1:3306&quot;); // 尝试连接数据库</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-访问内网服务"><a href="#3-访问内网服务" class="headerlink" title="3. 访问内网服务"></a>3. 访问内网服务</h3><p>SSRF 漏洞允许攻击者访问内网中的受保护服务和 API，这些服务通常不对外开放。例如，企业内部的管理面板、数据库接口或其他敏感系统。攻击者可以通过指定内网地址，利用 SSRF 请求来与这些服务通信，从而获取敏感数据或执行命令：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">httpRequest(&quot;http://127.0.0.1:8080/admin&quot;);</span><br><span class="line">httpRequest(&quot;http://192.168.1.2:5000/internal-api&quot;);</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-绕过防火墙限制"><a href="#4-绕过防火墙限制" class="headerlink" title="4. 绕过防火墙限制"></a>4. 绕过防火墙限制</h3><p>很多情况下，服务器所在的防火墙策略会禁止直接访问外部网络，但允许服务器与内网通信。SSRF 漏洞使得攻击者能够通过服务器发出请求，绕过防火墙限制访问内网或其他受保护资源。<br>例如，如果服务器在 DMZ 区域（外网与内网之间的隔离区），攻击者可能利用 SSRF 绕过 DMZ，直接访问内网资源，这会带来严重的安全威胁。</p>
+<h3 id="5-利用特定协议"><a href="#5-利用特定协议" class="headerlink" title="5. 利用特定协议"></a>5. 利用特定协议</h3><p>利用 <code>file://</code>、<code>dict://</code>、<code>gopher://</code> 等协议的 SSRF 攻击可以带来严重的安全威胁，尤其是在服务器支持这些协议的情况下。以下是这些协议的具体利用方式及可能带来的危害：</p>
+<p><code>file://</code> 协议，攻击者可以访问服务器上的本地文件并读取其内容。这对系统中的敏感文件（如配置文件、密码文件等）构成直接威胁。例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">httpRequest(&quot;file:///etc/passwd&quot;);  // 读取 Linux 系统上的用户信息文件</span><br><span class="line">httpRequest(&quot;file:///C:/Windows/system32/drivers/etc/hosts&quot;);  // 读取 Windows 系统的 hosts 文件</span><br></pre></td></tr></table></figure>
+
+<p><code>dict://</code> 协议是一个用于查询字典服务器的协议。在 SSRF 攻击中，攻击者可以利用它来发起对特定端口的请求，以便执行端口扫描或请求未授权的服务。例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">httpRequest(&quot;dict://127.0.0.1:3306&quot;);  // 可能用于检测数据库服务</span><br><span class="line">httpRequest(&quot;dict://internal-service.local:11211&quot;);  // 检测内网 memcached 服务</span><br></pre></td></tr></table></figure>
+
+<p><code>gopher://</code> 协议是一种较老的协议，但在 SSRF 攻击中非常强大，因为它可以创建任意的 TCP 连接。攻击者可以利用它构造复杂的请求，比如向数据库、Redis、HTTP 服务等发送自定义指令。示例包括：</p>
+<ul>
+<li><p><strong>Redis 未授权访问</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">httpRequest(&quot;gopher://127.0.0.1:6379/_SET%20test%20&#x27;hello&#x27;&quot;);</span><br></pre></td></tr></table></figure>
+<p>通过构造 <code>gopher://</code> 请求，攻击者可以直接向 Redis 发送命令，可能导致数据篡改、配置更改甚至持久化攻击脚本。</p>
+</li>
+<li><p><strong>HTTP 请求劫持</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">httpRequest(&quot;gopher://internal-api.local:80/_GET%20/admin%20HTTP/1.1%0AHost:internal-api.local%0A&quot;);</span><br></pre></td></tr></table></figure>
+<p>通过 <code>gopher://</code> 协议构造 HTTP 请求，可以让服务器向内网的 HTTP 服务发送请求，访问管理员页面或内部接口。</p>
+</li>
+</ul>
+<p>除以上常见协议外，许多系统可能还支持其他协议，攻击者可以利用它们来实现多种攻击效果。例如：</p>
+<ul>
+<li>**<code>ftp://</code>**：攻击者可以尝试连接 FTP 服务，探测是否存在未授权访问，甚至下载或上传文件。</li>
+<li>**<code>http://</code> 与 <code>https://</code>**：可以访问服务器内部接口、管理页面、API 等。</li>
+<li>**<code>ldap://</code>**：如果服务器支持 LDAP 连接，攻击者可能尝试利用此协议连接目录服务以收集内部用户信息。</li>
+</ul>
+<p>验证：<br><img src="/2024/11/01/WebSecurity/codeaudit/randomfileread/image-1.png" alt="探测出数据库版本"></p>
+<h2 id="进一步渗透"><a href="#进一步渗透" class="headerlink" title="进一步渗透"></a>进一步渗透</h2><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/Yb528970805/article/details/132853787">https://blog.csdn.net/Yb528970805/article/details/132853787</a><br><a target="_blank" rel="noopener" href="https://www.freebuf.com/articles/web/337617.html">https://www.freebuf.com/articles/web/337617.html</a><br><a target="_blank" rel="noopener" href="https://www.freebuf.com/articles/web/371127.html">https://www.freebuf.com/articles/web/371127.html</a></p>
+<p>可以利用ssrf进行文件读取，尝试进行进一步渗透搜集<br><img src="/2024/11/01/WebSecurity/codeaudit/randomfileread/image-2.png"><br>可以看到后端还是有很多服务的<br>www (UID 1000) Web server user Home: &#x2F;home&#x2F;www<br>mysql (UID 1001) Database service user Home: &#x2F;home&#x2F;mysql<br>springboot (UID 1002) Java application user Home: &#x2F;home&#x2F;springboot<br>redis (UID 1003) Redis service user Home: &#x2F;home&#x2F;redis</p>
+<p><img src="/2024/11/01/WebSecurity/codeaudit/randomfileread/image-3.png" alt="报错"></p>
+<p>尝试读了一些其他的文件，也不太行，就拐回去看源码了<br>分析源码可以看到配置文件里的 数据库帐号密码、公众和secretKey</p>
+
+  </div>
+</article>
+
+
+    <div class="blog-post-comments">
+        <div id="utterances_thread">
+            <noscript>Please enable JavaScript to view the comments.</noscript>
+        </div>
+    </div>
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/archives/">Writing</a></li>
+        
+          <li><a href="/search/">Search</a></li>
+        
+          <li><a href="/categories/">Categories</a></li>
+        
+          <li><a href="/idea/">Idea</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="https://github.com/g0dam">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%B4%E6%8E%A5%E7%9C%8B%E5%90%8E%E7%AB%AF%E6%BA%90%E7%A0%81"><span class="toc-number">1.</span> <span class="toc-text">直接看后端源码</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84"><span class="toc-number">1.1.</span> <span class="toc-text">1. 目录结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-ThinkPHP-%E6%A0%B8%E5%BF%83%E7%BB%93%E6%9E%84"><span class="toc-number">1.2.</span> <span class="toc-text">2. ThinkPHP 核心结构</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-%E6%8E%A7%E5%88%B6%E5%99%A8%EF%BC%88Controller%EF%BC%89"><span class="toc-number">1.2.1.</span> <span class="toc-text">1) 控制器（Controller）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-%E6%A8%A1%E5%9E%8B%EF%BC%88Model%EF%BC%89"><span class="toc-number">1.2.2.</span> <span class="toc-text">2) 模型（Model）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-%E8%A7%86%E5%9B%BE%EF%BC%88View%EF%BC%89"><span class="toc-number">1.2.3.</span> <span class="toc-text">3) 视图（View）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-%E9%85%8D%E7%BD%AE%EF%BC%88Config%EF%BC%89"><span class="toc-number">1.2.4.</span> <span class="toc-text">4) 配置（Config）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-%E8%B7%AF%E7%94%B1%EF%BC%88Route%EF%BC%89"><span class="toc-number">1.2.5.</span> <span class="toc-text">5) 路由（Route）</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%92%88%E5%AF%B9%E8%BF%99%E4%B8%AA%E6%BA%90%E4%BB%A3%E7%A0%81%E5%88%86%E6%9E%90"><span class="toc-number">1.3.</span> <span class="toc-text">针对这个源代码分析</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SSRF-%E6%BC%8F%E6%B4%9E%E7%82%B9"><span class="toc-number">2.</span> <span class="toc-text">SSRF 漏洞点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8"><span class="toc-number">3.</span> <span class="toc-text">漏洞利用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E8%AF%BB%E5%8F%96%E6%9C%8D%E5%8A%A1%E5%99%A8%E6%9C%AC%E5%9C%B0%E6%96%87%E4%BB%B6%EF%BC%88%E4%BD%BF%E7%94%A8-file-%E5%8D%8F%E8%AE%AE%EF%BC%89"><span class="toc-number">3.1.</span> <span class="toc-text">1. 读取服务器本地文件（使用 file:&#x2F;&#x2F; 协议）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E6%8E%A2%E6%B5%8B%E5%86%85%E7%BD%91%E4%B8%BB%E6%9C%BA%E5%92%8C%E7%AB%AF%E5%8F%A3"><span class="toc-number">3.2.</span> <span class="toc-text">2. 探测内网主机和端口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E8%AE%BF%E9%97%AE%E5%86%85%E7%BD%91%E6%9C%8D%E5%8A%A1"><span class="toc-number">3.3.</span> <span class="toc-text">3. 访问内网服务</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E7%BB%95%E8%BF%87%E9%98%B2%E7%81%AB%E5%A2%99%E9%99%90%E5%88%B6"><span class="toc-number">3.4.</span> <span class="toc-text">4. 绕过防火墙限制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E5%88%A9%E7%94%A8%E7%89%B9%E5%AE%9A%E5%8D%8F%E8%AE%AE"><span class="toc-number">3.5.</span> <span class="toc-text">5. 利用特定协议</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%9B%E4%B8%80%E6%AD%A5%E6%B8%97%E9%80%8F"><span class="toc-number">4.</span> <span class="toc-text">进一步渗透</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://godreams.cn/2024/11/01/WebSecurity/codeaudit/randomfileread/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://godreams.cn/2024/11/01/WebSecurity/codeaudit/randomfileread/&text=【代码审计】某微信小程序商城后台存在SSRF漏洞"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://godreams.cn/2024/11/01/WebSecurity/codeaudit/randomfileread/&title=【代码审计】某微信小程序商城后台存在SSRF漏洞"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://godreams.cn/2024/11/01/WebSecurity/codeaudit/randomfileread/&is_video=false&description=【代码审计】某微信小程序商城后台存在SSRF漏洞"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【代码审计】某微信小程序商城后台存在SSRF漏洞&body=Check out this article: https://godreams.cn/2024/11/01/WebSecurity/codeaudit/randomfileread/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://godreams.cn/2024/11/01/WebSecurity/codeaudit/randomfileread/&title=【代码审计】某微信小程序商城后台存在SSRF漏洞"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://godreams.cn/2024/11/01/WebSecurity/codeaudit/randomfileread/&title=【代码审计】某微信小程序商城后台存在SSRF漏洞"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://godreams.cn/2024/11/01/WebSecurity/codeaudit/randomfileread/&title=【代码审计】某微信小程序商城后台存在SSRF漏洞"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://godreams.cn/2024/11/01/WebSecurity/codeaudit/randomfileread/&title=【代码审计】某微信小程序商城后台存在SSRF漏洞"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://godreams.cn/2024/11/01/WebSecurity/codeaudit/randomfileread/&name=【代码审计】某微信小程序商城后台存在SSRF漏洞&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://godreams.cn/2024/11/01/WebSecurity/codeaudit/randomfileread/&t=【代码审计】某微信小程序商城后台存在SSRF漏洞"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2024
+    g0dam
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Categories</a></li><!--
+     --><!--
+       --><li><a href="/idea/">Idea</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/g0dam">Projects</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+    <script type="text/javascript">
+      var utterances_repo = 'owner/githubrepo';
+      var utterances_issue_term = 'pathname';
+      var utterances_label = 'Comment';
+      var utterances_theme = 'github-dark';
+
+      (function(){
+          var script = document.createElement('script');
+
+          script.src = 'https://utteranc.es/client.js';
+          script.setAttribute('repo', utterances_repo);
+          script.setAttribute('issue-term', 'pathname');
+          script.setAttribute('label', utterances_label);
+          script.setAttribute('theme', utterances_theme);
+          script.setAttribute('crossorigin', 'anonymous');
+          script.async = true;
+          (document.getElementById('utterances_thread')).appendChild(script);
+      }());
+  </script>
+
+</body>
+</html>
