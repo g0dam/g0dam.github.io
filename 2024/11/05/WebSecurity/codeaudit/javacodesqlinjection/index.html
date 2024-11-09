@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="JDBC 拼接不当造成 SQL 注入1. JDBC的两种SQL执行方法：Statement vs PrepareStatement在JDBC中，有两种常用的执行SQL语句的方法：Statement和PrepareStatement。  Statement：  Statement是直接拼接SQL语句执行的，每次执行时都需要对SQL语句重新进行编译，开销较大。 不安全，容易受到SQL注入攻击的影响，因">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【代码审计】Java代码审计SQL注入">
+<meta property="og:url" content="https://godreams.cn/2024/11/05/WebSecurity/codeaudit/javacodesqlinjection/index.html">
+<meta property="og:site_name" content="g0dam">
+<meta property="og:description" content="JDBC 拼接不当造成 SQL 注入1. JDBC的两种SQL执行方法：Statement vs PrepareStatement在JDBC中，有两种常用的执行SQL语句的方法：Statement和PrepareStatement。  Statement：  Statement是直接拼接SQL语句执行的，每次执行时都需要对SQL语句重新进行编译，开销较大。 不安全，容易受到SQL注入攻击的影响，因">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://godreams.cn/2024/11/05/WebSecurity/codeaudit/javacodesqlinjection/image.png">
+<meta property="article:published_time" content="2024-11-05T11:01:48.000Z">
+<meta property="article:modified_time" content="2024-11-08T04:46:14.066Z">
+<meta property="article:author" content="g0dam">
+<meta property="article:tag" content="代码审计">
+<meta property="article:tag" content="PHP">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://godreams.cn/2024/11/05/WebSecurity/codeaudit/javacodesqlinjection/image.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>【代码审计】Java代码审计SQL注入</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+      <link rel="alternate" href="/true" title="g0dam" type="application/atom+xml" />
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Categories</a></li><!--
+     --><!--
+       --><li><a href="/idea/">Idea</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/g0dam">Projects</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/2024/11/08/WebSecurity/codeaudit/javacodemcms/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2024/11/04/code/javanio/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://godreams.cn/2024/11/05/WebSecurity/codeaudit/javacodesqlinjection/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://godreams.cn/2024/11/05/WebSecurity/codeaudit/javacodesqlinjection/&text=【代码审计】Java代码审计SQL注入"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://godreams.cn/2024/11/05/WebSecurity/codeaudit/javacodesqlinjection/&title=【代码审计】Java代码审计SQL注入"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://godreams.cn/2024/11/05/WebSecurity/codeaudit/javacodesqlinjection/&is_video=false&description=【代码审计】Java代码审计SQL注入"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【代码审计】Java代码审计SQL注入&body=Check out this article: https://godreams.cn/2024/11/05/WebSecurity/codeaudit/javacodesqlinjection/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://godreams.cn/2024/11/05/WebSecurity/codeaudit/javacodesqlinjection/&title=【代码审计】Java代码审计SQL注入"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://godreams.cn/2024/11/05/WebSecurity/codeaudit/javacodesqlinjection/&title=【代码审计】Java代码审计SQL注入"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://godreams.cn/2024/11/05/WebSecurity/codeaudit/javacodesqlinjection/&title=【代码审计】Java代码审计SQL注入"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://godreams.cn/2024/11/05/WebSecurity/codeaudit/javacodesqlinjection/&title=【代码审计】Java代码审计SQL注入"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://godreams.cn/2024/11/05/WebSecurity/codeaudit/javacodesqlinjection/&name=【代码审计】Java代码审计SQL注入&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://godreams.cn/2024/11/05/WebSecurity/codeaudit/javacodesqlinjection/&t=【代码审计】Java代码审计SQL注入"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#JDBC-%E6%8B%BC%E6%8E%A5%E4%B8%8D%E5%BD%93%E9%80%A0%E6%88%90-SQL-%E6%B3%A8%E5%85%A5"><span class="toc-number">1.</span> <span class="toc-text">JDBC 拼接不当造成 SQL 注入</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-JDBC%E7%9A%84%E4%B8%A4%E7%A7%8DSQL%E6%89%A7%E8%A1%8C%E6%96%B9%E6%B3%95%EF%BC%9AStatement-vs-PrepareStatement"><span class="toc-number">1.1.</span> <span class="toc-text">1. JDBC的两种SQL执行方法：Statement vs PrepareStatement</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E4%BD%BF%E7%94%A8Statement%E6%8B%BC%E6%8E%A5SQL%E8%AF%AD%E5%8F%A5%E7%9A%84%E7%A4%BA%E4%BE%8B%E4%B8%8E%E5%88%86%E6%9E%90"><span class="toc-number">1.2.</span> <span class="toc-text">2. 使用Statement拼接SQL语句的示例与分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-PrepareStatement%E7%9A%84%E9%94%99%E8%AF%AF%E7%94%A8%E6%B3%95%E7%A4%BA%E4%BE%8B"><span class="toc-number">1.3.</span> <span class="toc-text">3. PrepareStatement的错误用法示例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E6%AD%A3%E7%A1%AE%E4%BD%BF%E7%94%A8PrepareStatement%E9%81%BF%E5%85%8DSQL%E6%B3%A8%E5%85%A5"><span class="toc-number">1.4.</span> <span class="toc-text">4. 正确使用PrepareStatement避免SQL注入</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MyBatis-%E6%A1%86%E6%9E%B6%E4%BB%A3%E7%A0%81%E6%B3%A8%E5%85%A5"><span class="toc-number">2.</span> <span class="toc-text">MyBatis 框架代码注入</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-MyBatis-%E6%A1%86%E6%9E%B6%E7%9A%84%E7%AE%80%E4%BB%8B"><span class="toc-number">2.1.</span> <span class="toc-text">1. MyBatis 框架的简介</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-MyBatis-%E4%B8%AD%E7%9A%84%E4%B8%A4%E7%A7%8D-SQL-%E5%8F%82%E6%95%B0%E4%BC%A0%E9%80%92%E6%96%B9%E5%BC%8F%EF%BC%9A-%E5%92%8C"><span class="toc-number">2.2.</span> <span class="toc-text">2. MyBatis 中的两种 SQL 参数传递方式：#{} 和 ${}</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-SQL-%E6%B3%A8%E5%85%A5%E9%A3%8E%E9%99%A9%E5%88%86%E6%9E%90"><span class="toc-number">2.3.</span> <span class="toc-text">3. SQL 注入风险分析</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-%E7%9A%84%E5%AE%89%E5%85%A8%E6%80%A7"><span class="toc-number">2.3.1.</span> <span class="toc-text">使用 #{} 的安全性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-%E7%9A%84-SQL-%E6%B3%A8%E5%85%A5%E9%A3%8E%E9%99%A9"><span class="toc-number">2.3.2.</span> <span class="toc-text">使用 ${} 的 SQL 注入风险</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-MyBatis-%E4%BD%BF%E7%94%A8%E4%B8%AD%E7%9A%84%E5%AE%89%E5%85%A8%E5%BB%BA%E8%AE%AE"><span class="toc-number">2.4.</span> <span class="toc-text">6. MyBatis 使用中的安全建议</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#6-1-%E9%81%BF%E5%85%8D%E5%9C%A8%E5%8A%A8%E6%80%81-SQL-%E4%B8%AD%E7%9B%B4%E6%8E%A5%E4%BD%BF%E7%94%A8"><span class="toc-number">2.4.1.</span> <span class="toc-text">6.1 避免在动态 SQL 中直接使用 ${}</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6-2-%E4%BD%BF%E7%94%A8-sql-%E6%A0%87%E7%AD%BE%E5%A4%8D%E7%94%A8%E5%AE%89%E5%85%A8%E6%9F%A5%E8%AF%A2%E7%89%87%E6%AE%B5"><span class="toc-number">2.4.2.</span> <span class="toc-text">6.2 使用 sql 标签复用安全查询片段</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Hibernate-%E6%A1%86%E6%9E%B6%E6%B3%A8%E5%85%A5"><span class="toc-number">3.</span> <span class="toc-text">Hibernate 框架注入</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-Hibernate-%E6%A1%86%E6%9E%B6%E6%A6%82%E8%BF%B0"><span class="toc-number">3.1.</span> <span class="toc-text">1. Hibernate 框架概述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-HQL-%E4%B8%8E-SQL-%E6%B3%A8%E5%85%A5"><span class="toc-number">3.2.</span> <span class="toc-text">2. HQL 与 SQL 注入</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#HQL-%E6%B3%A8%E5%85%A5%E7%A4%BA%E4%BE%8B"><span class="toc-number">3.2.1.</span> <span class="toc-text">HQL 注入示例</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E9%A2%84%E9%98%B2-HQL-%E6%B3%A8%E5%85%A5%E7%9A%84%E5%8F%82%E6%95%B0%E7%BB%91%E5%AE%9A%E6%96%B9%E5%BC%8F"><span class="toc-number">3.3.</span> <span class="toc-text">3. 预防 HQL 注入的参数绑定方式</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#3-1-%E4%BD%8D%E7%BD%AE%E5%8F%82%E6%95%B0%EF%BC%88Positional-Parameter%EF%BC%89"><span class="toc-number">3.3.1.</span> <span class="toc-text">3.1 位置参数（Positional Parameter）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-2-%E5%91%BD%E5%90%8D%E5%8F%82%E6%95%B0%EF%BC%88Named-Parameter%EF%BC%89"><span class="toc-number">3.3.2.</span> <span class="toc-text">3.2 命名参数（Named Parameter）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-3-%E5%91%BD%E5%90%8D%E5%8F%82%E6%95%B0%E5%88%97%E8%A1%A8%EF%BC%88Named-Parameter-List%EF%BC%89"><span class="toc-number">3.3.3.</span> <span class="toc-text">3.3 命名参数列表（Named Parameter List）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-4-%E7%B1%BB%E5%AE%9E%E4%BE%8B%EF%BC%88JavaBean%EF%BC%89"><span class="toc-number">3.3.4.</span> <span class="toc-text">3.4 类实例（JavaBean）</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E4%BD%BF%E7%94%A8%E5%8E%9F%E7%94%9F-SQL-%E7%9A%84%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="toc-number">3.4.</span> <span class="toc-text">4. 使用原生 SQL 的注意事项</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%8D%E5%AE%89%E5%85%A8%E7%9A%84%E5%8E%9F%E7%94%9F-SQL-%E6%8B%BC%E6%8E%A5%E7%A4%BA%E4%BE%8B"><span class="toc-number">3.4.1.</span> <span class="toc-text">不安全的原生 SQL 拼接示例</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%89%E5%85%A8%E7%9A%84%E5%8E%9F%E7%94%9F-SQL-%E5%8F%82%E6%95%B0%E7%BB%91%E5%AE%9A"><span class="toc-number">3.4.2.</span> <span class="toc-text">安全的原生 SQL 参数绑定</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E5%85%B6%E4%BB%96%E5%AE%89%E5%85%A8%E5%BB%BA%E8%AE%AE"><span class="toc-number">3.5.</span> <span class="toc-text">5. 其他安全建议</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#5-1-%E4%BD%BF%E7%94%A8-Criteria-API"><span class="toc-number">3.5.1.</span> <span class="toc-text">5.1 使用 Criteria API</span></a></li></ol></li></ol></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        【代码审计】Java代码审计SQL注入
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">g0dam</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2024-11-05T11:01:48.000Z" class="dt-published" itemprop="datePublished">2024-11-05</time>
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/PHP/" rel="tag">PHP</a>, <a class="p-category" href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/" rel="tag">代码审计</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h2 id="JDBC-拼接不当造成-SQL-注入"><a href="#JDBC-拼接不当造成-SQL-注入" class="headerlink" title="JDBC 拼接不当造成 SQL 注入"></a>JDBC 拼接不当造成 SQL 注入</h2><h3 id="1-JDBC的两种SQL执行方法：Statement-vs-PrepareStatement"><a href="#1-JDBC的两种SQL执行方法：Statement-vs-PrepareStatement" class="headerlink" title="1. JDBC的两种SQL执行方法：Statement vs PrepareStatement"></a>1. JDBC的两种SQL执行方法：<code>Statement</code> vs <code>PrepareStatement</code></h3><p>在JDBC中，有两种常用的执行SQL语句的方法：<code>Statement</code>和<code>PrepareStatement</code>。</p>
+<ul>
+<li><p><strong>Statement</strong>：</p>
+<ul>
+<li><code>Statement</code>是直接拼接SQL语句执行的，每次执行时都需要对SQL语句重新进行编译，开销较大。</li>
+<li>不安全，容易受到SQL注入攻击的影响，因为用户输入的内容可以直接插入到SQL语句中并执行。</li>
+</ul>
+</li>
+<li><p><strong>PrepareStatement</strong>：</p>
+<ul>
+<li><code>PrepareStatement</code>会对SQL语句进行预编译，效率更高，安全性更好。</li>
+<li>支持参数化查询，使用<code>?</code>作为占位符，将用户输入的参数作为独立的元素传递给数据库，可以防止SQL注入。</li>
+<li>然而，如果开发者使用<code>PrepareStatement</code>时仍采用字符串拼接的方式构建SQL语句，则仍然存在SQL注入风险。</li>
+</ul>
+</li>
+</ul>
+<h3 id="2-使用Statement拼接SQL语句的示例与分析"><a href="#2-使用Statement拼接SQL语句的示例与分析" class="headerlink" title="2. 使用Statement拼接SQL语句的示例与分析"></a>2. 使用<code>Statement</code>拼接SQL语句的示例与分析</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.example.demo.jdbcinjection;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.springframework.beans.factory.annotation.Value;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RequestMapping;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RequestParam;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.bind.annotation.RestController;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.sql.*;</span><br><span class="line"></span><br><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@RequestMapping(&quot;/jdbcsql&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">JdbcDynamicController</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="type">String</span> <span class="variable">driver</span> <span class="operator">=</span> <span class="string">&quot;com.mysql.cj.jdbc.Driver&quot;</span>;</span><br><span class="line">    <span class="meta">@Value(&quot;$&#123;spring.datasource.url&#125;&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> String url;</span><br><span class="line">    <span class="meta">@Value(&quot;$&#123;spring.datasource.username&#125;&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> String user;</span><br><span class="line">    <span class="meta">@Value(&quot;$&#123;spring.datasource.password&#125;&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> String password;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@RequestMapping(&quot;/dynamic&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">jdbcdynamic</span><span class="params">(<span class="meta">@RequestParam(&quot;id&quot;)</span> String id)</span> <span class="keyword">throws</span> ClassNotFoundException, SQLException&#123;</span><br><span class="line">        <span class="type">StringBuilder</span> <span class="variable">result</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">StringBuilder</span>();</span><br><span class="line">        Class.forName(driver);</span><br><span class="line">        <span class="type">Connection</span> <span class="variable">conn</span> <span class="operator">=</span> DriverManager.getConnection(url, user, password);</span><br><span class="line">        <span class="type">Statement</span> <span class="variable">statement</span> <span class="operator">=</span> conn.createStatement();</span><br><span class="line">        <span class="type">String</span> <span class="variable">sql</span> <span class="operator">=</span> <span class="string">&quot;select * from user where id = &#x27;&quot;</span> + id + <span class="string">&quot;&#x27;&quot;</span>;</span><br><span class="line">        <span class="type">ResultSet</span> <span class="variable">rs</span> <span class="operator">=</span> statement.executeQuery(sql);</span><br><span class="line">        <span class="keyword">while</span> (rs.next())&#123;</span><br><span class="line">            <span class="type">String</span> <span class="variable">rsUsername</span> <span class="operator">=</span> rs.getString(<span class="string">&quot;username&quot;</span>);</span><br><span class="line">            <span class="type">String</span> <span class="variable">rsPassword</span> <span class="operator">=</span> rs.getString(<span class="string">&quot;password&quot;</span>);</span><br><span class="line">            <span class="type">String</span> <span class="variable">info</span> <span class="operator">=</span> String.format(<span class="string">&quot;%s: %s\n&quot;</span>, rsUsername, rsPassword);</span><br><span class="line">            result.append(info);</span><br><span class="line">        &#125;</span><br><span class="line">        rs.close();</span><br><span class="line">        conn.close();</span><br><span class="line">        <span class="keyword">return</span> result.toString();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="/2024/11/05/WebSecurity/codeaudit/javacodesqlinjection/image.png"><br>我在数据库里使用下面语句创建了数据库插入了一些模拟数据：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> DATABASE IF <span class="keyword">NOT</span> <span class="keyword">EXISTS</span> java;</span><br><span class="line">USE java;</span><br><span class="line"></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> IF <span class="keyword">NOT</span> <span class="keyword">EXISTS</span> <span class="keyword">user</span> (</span><br><span class="line">    id <span class="type">VARCHAR</span>(<span class="number">255</span>) <span class="keyword">PRIMARY</span> KEY,</span><br><span class="line">    username <span class="type">VARCHAR</span>(<span class="number">255</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">    password <span class="type">VARCHAR</span>(<span class="number">255</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span></span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> <span class="keyword">user</span> (id, username, password) <span class="keyword">VALUES</span></span><br><span class="line">(<span class="string">&#x27;1&#x27;</span>, <span class="string">&#x27;user1&#x27;</span>, <span class="string">&#x27;password1&#x27;</span>),</span><br><span class="line">(<span class="string">&#x27;2&#x27;</span>, <span class="string">&#x27;user2&#x27;</span>, <span class="string">&#x27;password2&#x27;</span>),</span><br><span class="line">(<span class="string">&#x27;3&#x27;</span>, <span class="string">&#x27;user3&#x27;</span>, <span class="string">&#x27;password3&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>SQL注入分析</strong>：<ul>
+<li><code>req.getParameter(&quot;id&quot;)</code>获取了用户输入的参数，直接拼接到<code>sql</code>语句中。</li>
+<li>如果用户输入<code>1%27%20or%201=1%23</code>作为<code>id</code>参数，SQL语句将变成：<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> <span class="operator">*</span> <span class="keyword">from</span> <span class="keyword">user</span> <span class="keyword">where</span> id <span class="operator">=</span> <span class="string">&#x27;1&#x27;</span> <span class="keyword">or</span> <span class="number">1</span><span class="operator">=</span><span class="number">1</span> #<span class="string">&#x27;</span></span><br></pre></td></tr></table></figure></li>
+<li>这个条件<code>1=1</code>恒为真，因此数据库将返回所有用户信息，导致信息泄露。</li>
+</ul>
+</li>
+</ul>
+<h3 id="3-PrepareStatement的错误用法示例"><a href="#3-PrepareStatement的错误用法示例" class="headerlink" title="3. PrepareStatement的错误用法示例"></a>3. <code>PrepareStatement</code>的错误用法示例</h3><p>即使使用了<code>PrepareStatement</code>，如果开发者将用户输入通过拼接方式插入到SQL语句中，仍然会出现SQL注入问题。以下代码展示了这种错误用法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">String</span> <span class="variable">sql</span> <span class="operator">=</span> <span class="string">&quot;select * from user where id = &quot;</span> + req.getParameter(<span class="string">&quot;id&quot;</span>);</span><br><span class="line">out.println(sql);</span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="type">PreparedStatement</span> <span class="variable">pstt</span> <span class="operator">=</span> con.prepareStatement(sql);</span><br><span class="line">    <span class="type">ResultSet</span> <span class="variable">rs</span> <span class="operator">=</span> pstt.executeQuery();</span><br><span class="line">    <span class="keyword">while</span> (rs.next()) &#123;</span><br><span class="line">        out.println(<span class="string">&quot;&lt;br&gt; id: &quot;</span> + rs.getObject(<span class="string">&quot;id&quot;</span>));</span><br><span class="line">        out.println(<span class="string">&quot;&lt;br&gt; name: &quot;</span> + rs.getObject(<span class="string">&quot;name&quot;</span>));</span><br><span class="line">    &#125;</span><br><span class="line">&#125; <span class="keyword">catch</span> (SQLException throwables) &#123;</span><br><span class="line">    throwables.printStackTrace();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>问题分析</strong>：<ul>
+<li>这里虽然使用了<code>PreparedStatement</code>，但<code>sql</code>语句仍然通过拼接构造。这意味着在SQL执行前，用户的输入已经插入到SQL语句中。</li>
+<li>用户仍然可以通过输入类似<code>1 OR 1=1</code>的字符串来注入SQL，导致和上例相同的风险。</li>
+</ul>
+</li>
+</ul>
+<h3 id="4-正确使用PrepareStatement避免SQL注入"><a href="#4-正确使用PrepareStatement避免SQL注入" class="headerlink" title="4. 正确使用PrepareStatement避免SQL注入"></a>4. 正确使用<code>PrepareStatement</code>避免SQL注入</h3><p>正确的方式是使用<code>?</code>作为占位符，并在执行SQL时将用户输入的参数绑定到占位符上。<code>PrepareStatement</code>会对每个参数的类型和内容进行严格检查，避免将用户输入当作SQL语句的一部分来解析。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">PrintWriter</span> <span class="variable">out</span> <span class="operator">=</span> resp.getWriter();</span><br><span class="line"><span class="type">String</span> <span class="variable">sql</span> <span class="operator">=</span> <span class="string">&quot;select * from user where id = ?&quot;</span>;</span><br><span class="line">out.println(sql);</span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    <span class="type">PreparedStatement</span> <span class="variable">pstt</span> <span class="operator">=</span> con.prepareStatement(sql);</span><br><span class="line">    pstt.setInt(<span class="number">1</span>, Integer.parseInt(req.getParameter(<span class="string">&quot;id&quot;</span>))); <span class="comment">// 使用占位符并绑定参数</span></span><br><span class="line">    <span class="type">ResultSet</span> <span class="variable">rs</span> <span class="operator">=</span> pstt.executeQuery();</span><br><span class="line">    <span class="keyword">while</span> (rs.next()) &#123;</span><br><span class="line">        out.println(<span class="string">&quot;&lt;br&gt; id: &quot;</span> + rs.getObject(<span class="string">&quot;id&quot;</span>));</span><br><span class="line">        out.println(<span class="string">&quot;&lt;br&gt; name: &quot;</span> + rs.getObject(<span class="string">&quot;name&quot;</span>));</span><br><span class="line">    &#125;</span><br><span class="line">&#125; <span class="keyword">catch</span> (SQLException throwables) &#123;</span><br><span class="line">    throwables.printStackTrace();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="MyBatis-框架代码注入"><a href="#MyBatis-框架代码注入" class="headerlink" title="MyBatis 框架代码注入"></a>MyBatis 框架代码注入</h2><h3 id="1-MyBatis-框架的简介"><a href="#1-MyBatis-框架的简介" class="headerlink" title="1. MyBatis 框架的简介"></a>1. MyBatis 框架的简介</h3><p>MyBatis 是一种将 SQL 语句嵌入到 XML 配置文件中的持久层框架，它通过将 SQL 语句和 Java 代码分离，使 SQL 语句的管理更加直观、易于修改，同时支持 SQL 参数化查询。这一特点可以在一定程度上提高 SQL 安全性，但也可能引入新的安全隐患，特别是在不正确使用 <code>#&#123;&#125;</code> 和 <code>$&#123;&#125;</code> 占位符的情况下。</p>
+<h3 id="2-MyBatis-中的两种-SQL-参数传递方式：-和"><a href="#2-MyBatis-中的两种-SQL-参数传递方式：-和" class="headerlink" title="2. MyBatis 中的两种 SQL 参数传递方式：#{} 和 ${}"></a>2. MyBatis 中的两种 SQL 参数传递方式：<code>#&#123;&#125;</code> 和 <code>$&#123;&#125;</code></h3><p>在 MyBatis 中，开发者可以通过 <code>#&#123;&#125;</code> 和 <code>$&#123;&#125;</code> 两种方式传递参数：</p>
+<ul>
+<li><p>**<code>#&#123;Parameter&#125;</code>**：使用 <code>#&#123;&#125;</code> 传参的方式会自动将参数替换为 SQL 中的占位符 <code>?</code>，并在执行时进行预编译。因此，参数作为独立数据传入 SQL 执行环境，不会被解析为 SQL 的一部分。</p>
+<ul>
+<li>这种方式是参数化查询的安全方式，有效防止 SQL 注入。</li>
+<li>例如：<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;getUsername&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;com.z1ng.bean.User&quot;</span>&gt;</span></span><br><span class="line">    SELECT id, name, age FROM user WHERE name = #&#123;name&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br></pre></td></tr></table></figure></li>
+<li><strong>执行过程</strong>：<ul>
+<li>当用户输入 <code>name = &quot;z1ng&quot;</code> 时，MyBatis 会将其转换为 SQL 查询：<code>SELECT id, name, age FROM user WHERE name = ?</code></li>
+<li>在数据库执行时，<code>z1ng</code> 会作为参数绑定到 SQL 中的 <code>?</code>，防止 SQL 注入。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>**<code>$&#123;Parameter&#125;</code>**：使用 <code>$&#123;&#125;</code> 传参的方式会直接将参数值拼接到 SQL 语句中，而不会经过预编译。这意味着参数会被解析为 SQL 语句的一部分，容易产生 SQL 注入风险。</p>
+<ul>
+<li><strong>不安全的方式</strong>，不建议用于直接处理用户输入的变量。</li>
+<li>例如：<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;getUsername&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;com.z1ng.bean.User&quot;</span>&gt;</span></span><br><span class="line">    SELECT id, name, age FROM user WHERE name = $&#123;name&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br></pre></td></tr></table></figure></li>
+<li><strong>执行过程</strong>：<ul>
+<li>当用户输入 <code>name = &quot;&#39;aaaa&#39; OR 1=1&quot;</code> 时，MyBatis 会将其直接拼接到 SQL 中，生成 <code>SELECT id, name, age FROM user WHERE name = &#39;aaaa&#39; OR 1=1</code>。</li>
+<li>由于 <code>OR 1=1</code> 始终为真，SQL 语句将返回所有数据，从而导致 SQL 注入。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Mapper</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">UserMapper</span> &#123;</span><br><span class="line">    List&lt;User&gt; <span class="title function_">orderbyInjection</span><span class="params">(<span class="meta">@RequestParam(&quot;sort&quot;)</span> String sort)</span>;</span><br><span class="line">    <span class="meta">@Select(&quot;select * from user where id in ($&#123;params&#125;)&quot;)</span></span><br><span class="line">    List&lt;User&gt; <span class="title function_">inInjection</span><span class="params">(<span class="meta">@Param(&quot;params&quot;)</span>String params)</span>;</span><br><span class="line">    List&lt;User&gt; <span class="title function_">likeInjection</span><span class="params">(<span class="meta">@Param(&quot;username&quot;)</span> String username)</span>;</span><br><span class="line"><span class="comment">//Mybatis查询SQL语句的另一种使用注解方式，这也是存在SQL注入的。</span></span><br><span class="line"><span class="comment">//@Select(&quot;select * from users where username = &#x27;$&#123;username&#125;&#x27;&quot;)</span></span><br><span class="line"><span class="comment">//List&lt;User&gt; likeInjection(@Param(&quot;username&quot;) String username);</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=<span class="string">&quot;1.0&quot;</span> encoding=<span class="string">&quot;UTF-8&quot;</span>?&gt;</span></span><br><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">mapper</span> <span class="keyword">PUBLIC</span> <span class="string">&quot;-//mybatis.org//DTD Mapper 3.0//EN&quot;</span></span></span><br><span class="line"><span class="meta"><span class="string">&quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">mapper</span> <span class="attr">namespace</span>=<span class="string">&quot;com.example.sqlinjection.mybatisinjection.UserMapper&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">resultMap</span> <span class="attr">type</span>=<span class="string">&quot;com.example.sqlinjection.mybatisinjection.User&quot;</span> <span class="attr">id</span>=<span class="string">&quot;User&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">id</span> <span class="attr">column</span>=<span class="string">&quot;id&quot;</span> <span class="attr">property</span>=<span class="string">&quot;id&quot;</span> <span class="attr">javaType</span>=<span class="string">&quot;java.lang.Integer&quot;</span> <span class="attr">jdbcType</span>=<span class="string">&quot;NUMERIC&quot;</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">id</span> <span class="attr">column</span>=<span class="string">&quot;username&quot;</span> <span class="attr">property</span>=<span class="string">&quot;username&quot;</span> <span class="attr">javaType</span>=<span class="string">&quot;java.lang.String&quot;</span> <span class="attr">jdbcType</span>=<span class="string">&quot;VARCHAR&quot;</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">id</span> <span class="attr">column</span>=<span class="string">&quot;password&quot;</span> <span class="attr">property</span>=<span class="string">&quot;password&quot;</span> <span class="attr">javaType</span>=<span class="string">&quot;java.lang.String&quot;</span> <span class="attr">jdbcType</span>=<span class="string">&quot;VARCHAR&quot;</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">resultMap</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;orderbyInjection&quot;</span> <span class="attr">parameterType</span>=<span class="string">&quot;String&quot;</span> <span class="attr">resultMap</span>=<span class="string">&quot;User&quot;</span>&gt;</span></span><br><span class="line">select * from user order by $&#123;sort&#125; asc</span><br><span class="line"><span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;likeInjection&quot;</span> <span class="attr">parameterType</span>=<span class="string">&quot;String&quot;</span> <span class="attr">resultMap</span>=<span class="string">&quot;User&quot;</span>&gt;</span></span><br><span class="line">select * from user where username like &#x27;%$&#123;username&#125;%&#x27;</span><br><span class="line"><span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">mapper</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="3-SQL-注入风险分析"><a href="#3-SQL-注入风险分析" class="headerlink" title="3. SQL 注入风险分析"></a>3. SQL 注入风险分析</h3><h4 id="使用-的安全性"><a href="#使用-的安全性" class="headerlink" title="使用 #{} 的安全性"></a>使用 <code>#&#123;&#125;</code> 的安全性</h4><ul>
+<li>当我们在 MyBatis 中使用 <code>#&#123;&#125;</code> 传参时，MyBatis 会将参数转换为 SQL 语句的 <code>?</code> 占位符，并在执行时绑定实际的参数值。这种方式确保了用户输入和 SQL 语句的分离，因此即使用户输入恶意数据，也不会对 SQL 语句的逻辑产生影响。</li>
+<li>例如，当用户输入 <code>name = &quot;z1ng&#39; OR &#39;1&#39;=&#39;1&quot;</code>，SQL 语句将是：<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> id, name, age <span class="keyword">FROM</span> <span class="keyword">user</span> <span class="keyword">WHERE</span> name <span class="operator">=</span> ?</span><br></pre></td></tr></table></figure>
+在执行时，数据库会将 <code>name</code> 作为参数来处理，而不会改变 SQL 语句本身，从而有效防止了 SQL 注入。</li>
+</ul>
+<h4 id="使用-的-SQL-注入风险"><a href="#使用-的-SQL-注入风险" class="headerlink" title="使用 ${} 的 SQL 注入风险"></a>使用 <code>$&#123;&#125;</code> 的 SQL 注入风险</h4><ul>
+<li>直接拼接用户输入的字符串会让 SQL 语句变得极其脆弱，用户可以通过恶意构造的输入来操纵查询逻辑。</li>
+<li>例如，在 MyBatis 中，如果使用 <code>$&#123;name&#125;</code>，则输入 <code>&quot;z1ng&#39; OR &#39;1&#39;=&#39;1&quot;</code> 会使 SQL 语句变为：<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> id, name, age <span class="keyword">FROM</span> <span class="keyword">user</span> <span class="keyword">WHERE</span> name <span class="operator">=</span> <span class="string">&#x27;z1ng&#x27;</span> <span class="keyword">OR</span> <span class="string">&#x27;1&#x27;</span><span class="operator">=</span><span class="string">&#x27;1&#x27;</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>SQL 语句的逻辑已被篡改，将查询所有数据，从而导致数据泄露。</li>
+</ul>
+</li>
+</ul>
+<h3 id="6-MyBatis-使用中的安全建议"><a href="#6-MyBatis-使用中的安全建议" class="headerlink" title="6. MyBatis 使用中的安全建议"></a>6. MyBatis 使用中的安全建议</h3><h4 id="6-1-避免在动态-SQL-中直接使用"><a href="#6-1-避免在动态-SQL-中直接使用" class="headerlink" title="6.1 避免在动态 SQL 中直接使用 ${}"></a>6.1 避免在动态 SQL 中直接使用 <code>$&#123;&#125;</code></h4><ul>
+<li>MyBatis 支持动态 SQL（如 <code>&lt;if&gt;</code>、<code>&lt;choose&gt;</code>、<code>&lt;where&gt;</code> 等标签），在构建动态 SQL 时也需要特别小心，避免使用 <code>$&#123;&#125;</code> 来插入用户输入。</li>
+<li>例如，在 MyBatis 的动态查询中使用 <code>#&#123;&#125;</code> 参数可以确保用户输入的数据安全。<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;getUserByCondition&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;com.example.User&quot;</span>&gt;</span></span><br><span class="line">    SELECT * FROM users</span><br><span class="line">    <span class="tag">&lt;<span class="name">where</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">if</span> <span class="attr">test</span>=<span class="string">&quot;username != null&quot;</span>&gt;</span></span><br><span class="line">            AND username = #&#123;username&#125;</span><br><span class="line">        <span class="tag">&lt;/<span class="name">if</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">if</span> <span class="attr">test</span>=<span class="string">&quot;age != null&quot;</span>&gt;</span></span><br><span class="line">            AND age = #&#123;age&#125;</span><br><span class="line">        <span class="tag">&lt;/<span class="name">if</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">where</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="6-2-使用-sql-标签复用安全查询片段"><a href="#6-2-使用-sql-标签复用安全查询片段" class="headerlink" title="6.2 使用 sql 标签复用安全查询片段"></a>6.2 使用 <code>sql</code> 标签复用安全查询片段</h4><ul>
+<li>MyBatis 支持将查询片段定义在 <code>&lt;sql&gt;</code> 标签中，避免开发者在多个位置拼接相似 SQL 语句，有助于规范化 SQL 查询结构，降低出错风险。<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">sql</span> <span class="attr">id</span>=<span class="string">&quot;userColumns&quot;</span>&gt;</span></span><br><span class="line">    id, username, age, email</span><br><span class="line"><span class="tag">&lt;/<span class="name">sql</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;getUserById&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;com.example.User&quot;</span>&gt;</span></span><br><span class="line">    SELECT <span class="tag">&lt;<span class="name">include</span> <span class="attr">refid</span>=<span class="string">&quot;userColumns&quot;</span>/&gt;</span> FROM users WHERE id = #&#123;id&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="Hibernate-框架注入"><a href="#Hibernate-框架注入" class="headerlink" title="Hibernate 框架注入"></a><strong>Hibernate</strong> 框架注入</h2><h3 id="1-Hibernate-框架概述"><a href="#1-Hibernate-框架概述" class="headerlink" title="1. Hibernate 框架概述"></a>1. Hibernate 框架概述</h3><p>Hibernate 是一种持久层框架，实现了 Java 持久化 API（JPA）规范，用于在 Java 类和数据库表之间进行映射。Hibernate 允许开发者通过操作 Java 对象来与数据库交互，而无需编写原生 SQL 语句。Hibernate 主要通过 HQL 查询语言和 Criteria API 进行对象持久化，支持自动将 Java 数据类型映射到 SQL 数据类型。</p>
+<p>Hibernate 需要一个配置文件（hibernate.cfg.xml），其中包含了数据库连接信息和一些基本的 Hibernate 设置。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=<span class="string">&quot;1.0&quot;</span> encoding=<span class="string">&quot;UTF-8&quot;</span>?&gt;</span></span><br><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">hibernate-configuration</span> <span class="keyword">PUBLIC</span></span></span><br><span class="line"><span class="meta">        <span class="string">&quot;-//Hibernate/Hibernate Configuration DTD 3.0//EN&quot;</span></span></span><br><span class="line"><span class="meta">        <span class="string">&quot;http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">hibernate-configuration</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">session-factory</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;hibernate.dialect&quot;</span>&gt;</span>org.hibernate.dialect.MySQLDialect<span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;hibernate.connection.driver_class&quot;</span>&gt;</span>com.mysql.cj.jdbc.Driver<span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;hibernate.connection.url&quot;</span>&gt;</span>jdbc:mysql://localhost:3306/mydb<span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;hibernate.connection.username&quot;</span>&gt;</span>root<span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;hibernate.connection.password&quot;</span>&gt;</span>password<span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;hibernate.hbm2ddl.auto&quot;</span>&gt;</span>update<span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;hibernate.show_sql&quot;</span>&gt;</span>true<span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">session-factory</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">hibernate-configuration</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>在 Hibernate 中，Java 类通常使用注解来表示实体，并将其与数据库表相关联。例如，以下是一个简单的 User 类及其数据库映射：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> javax.persistence.Entity;</span><br><span class="line"><span class="keyword">import</span> javax.persistence.GeneratedValue;</span><br><span class="line"><span class="keyword">import</span> javax.persistence.GenerationType;</span><br><span class="line"><span class="keyword">import</span> javax.persistence.Id;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Entity</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">User</span> &#123;</span><br><span class="line">    <span class="meta">@Id</span> <span class="comment">// @Id 指定了主键。</span></span><br><span class="line">    <span class="meta">@GeneratedValue(strategy = GenerationType.IDENTITY)</span>  <span class="comment">// @GeneratedValue 配置了主键的生成策略。</span></span><br><span class="line">    <span class="keyword">private</span> Long id;</span><br><span class="line">    <span class="keyword">private</span> String username;</span><br><span class="line">    <span class="keyword">private</span> String password;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Getters and setters</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Hibernate 提供了 Session 对象，用于管理和操作实体</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.hibernate.Session;</span><br><span class="line"><span class="keyword">import</span> org.hibernate.SessionFactory;</span><br><span class="line"><span class="keyword">import</span> org.hibernate.cfg.Configuration;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Main</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="comment">// 创建 SessionFactory</span></span><br><span class="line">        <span class="type">SessionFactory</span> <span class="variable">sessionFactory</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Configuration</span>().configure().buildSessionFactory();</span><br><span class="line">        <span class="comment">// 获取 Session</span></span><br><span class="line">        <span class="type">Session</span> <span class="variable">session</span> <span class="operator">=</span> sessionFactory.openSession();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 开启事务</span></span><br><span class="line">        session.beginTransaction();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 创建用户</span></span><br><span class="line">        <span class="type">User</span> <span class="variable">user</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">User</span>();</span><br><span class="line">        user.setUsername(<span class="string">&quot;admin&quot;</span>);</span><br><span class="line">        user.setPassword(<span class="string">&quot;12345&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 保存用户到数据库</span></span><br><span class="line">        session.save(user);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 提交事务</span></span><br><span class="line">        session.getTransaction().commit();</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 关闭 Session</span></span><br><span class="line">        session.close();</span><br><span class="line">        sessionFactory.close();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Hibernate 提供了 HQL（Hibernate Query Language）和 Criteria API 来查询数据库。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// HQL查询</span></span><br><span class="line">List&lt;User&gt; users = session.createQuery(<span class="string">&quot;from User where username = :username&quot;</span>, User.class)</span><br><span class="line">                          .setParameter(<span class="string">&quot;username&quot;</span>, <span class="string">&quot;admin&quot;</span>)</span><br><span class="line">                          .getResultList();</span><br><span class="line"></span><br><span class="line"><span class="comment">// Criteria 查询</span></span><br><span class="line"><span class="type">CriteriaBuilder</span> <span class="variable">builder</span> <span class="operator">=</span> session.getCriteriaBuilder();</span><br><span class="line">CriteriaQuery&lt;User&gt; query = builder.createQuery(User.class);</span><br><span class="line">Root&lt;User&gt; root = query.from(User.class);</span><br><span class="line">query.select(root).where(builder.equal(root.get(<span class="string">&quot;username&quot;</span>), <span class="string">&quot;admin&quot;</span>));</span><br><span class="line">List&lt;User&gt; users = session.createQuery(query).getResultList();</span><br></pre></td></tr></table></figure>
+<h3 id="2-HQL-与-SQL-注入"><a href="#2-HQL-与-SQL-注入" class="headerlink" title="2. HQL 与 SQL 注入"></a>2. HQL 与 SQL 注入</h3><h4 id="HQL-注入示例"><a href="#HQL-注入示例" class="headerlink" title="HQL 注入示例"></a>HQL 注入示例</h4><p>以下代码展示了不安全的 HQL 查询，开发者直接将用户输入拼接到查询语句中：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">factory = <span class="keyword">new</span> <span class="title class_">Configuration</span>().configure().buildSessionFactory();</span><br><span class="line"><span class="type">Session</span> <span class="variable">session</span> <span class="operator">=</span> factory.openSession();</span><br><span class="line"><span class="type">Transaction</span> <span class="variable">tx</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    tx = session.beginTransaction();</span><br><span class="line">    <span class="type">String</span> <span class="variable">parameter</span> <span class="operator">=</span> <span class="string">&quot; zaaaa&#x27; or &#x27;1&#x27;=&#x27;1 &quot;</span>;</span><br><span class="line">    List&lt;User&gt; users = session.createQuery(<span class="string">&quot;FROM User WHERE name = &#x27;&quot;</span> + parameter + <span class="string">&quot;&#x27;&quot;</span>, User.class).getResultList();</span><br><span class="line">    <span class="keyword">for</span> (User user : users) &#123;</span><br><span class="line">        System.out.println(user.toString());</span><br><span class="line">    &#125;</span><br><span class="line">    tx.commit();</span><br><span class="line">&#125; <span class="keyword">catch</span> (HibernateException e) &#123;</span><br><span class="line">    <span class="keyword">if</span> (tx != <span class="literal">null</span>) tx.rollback();</span><br><span class="line">    e.printStackTrace();</span><br><span class="line">&#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">    session.close();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>注入风险分析</strong>：<ul>
+<li>变量 <code>parameter</code> 是用户输入的内容，当用户输入 <code>&quot;zaaaa&#39; or &#39;1&#39;=&#39;1&quot;</code> 时，最终拼接成的 HQL 语句为：<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">FROM</span> <span class="keyword">User</span> <span class="keyword">WHERE</span> name <span class="operator">=</span> <span class="string">&#x27;zaaaa&#x27;</span> <span class="keyword">OR</span> <span class="string">&#x27;1&#x27;</span><span class="operator">=</span><span class="string">&#x27;1&#x27;</span></span><br></pre></td></tr></table></figure></li>
+<li>因为 <code>OR &#39;1&#39;=&#39;1&#39;</code> 恒为真，查询将返回表中所有用户的记录。</li>
+<li>此处，用户通过注入语句控制了查询的逻辑，可能导致数据泄露。</li>
+</ul>
+</li>
+</ul>
+<h3 id="3-预防-HQL-注入的参数绑定方式"><a href="#3-预防-HQL-注入的参数绑定方式" class="headerlink" title="3. 预防 HQL 注入的参数绑定方式"></a>3. 预防 HQL 注入的参数绑定方式</h3><p>在 Hibernate 中，安全的参数绑定方式包括位置参数、命名参数、命名参数列表和类实例。这些方法均采用预编译，确保参数化查询，有效防止 SQL 注入。</p>
+<h4 id="3-1-位置参数（Positional-Parameter）"><a href="#3-1-位置参数（Positional-Parameter）" class="headerlink" title="3.1 位置参数（Positional Parameter）"></a>3.1 位置参数（Positional Parameter）</h4><p>位置参数通过 <code>?</code> 占位符指定参数位置，然后使用 <code>setParameter</code> 方法绑定参数值。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">String</span> <span class="variable">parameter</span> <span class="operator">=</span> <span class="string">&quot;z1ng&quot;</span>;</span><br><span class="line">Query&lt;User&gt; query = session.createQuery(<span class="string">&quot;FROM User WHERE name = ?1&quot;</span>, User.class);</span><br><span class="line">query.setParameter(<span class="number">1</span>, parameter);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>执行过程</strong>：<ul>
+<li><code>?1</code> 表示第一个参数位置，在查询时将自动绑定 <code>parameter</code> 的值。</li>
+<li>位置参数的预编译可以确保输入被当作数据处理，而不是查询语句的一部分，从而避免 SQL 注入。</li>
+</ul>
+</li>
+</ul>
+<h4 id="3-2-命名参数（Named-Parameter）"><a href="#3-2-命名参数（Named-Parameter）" class="headerlink" title="3.2 命名参数（Named Parameter）"></a>3.2 命名参数（Named Parameter）</h4><p>命名参数通过 <code>:parameterName</code> 格式指定参数名，并使用 <code>setParameter</code> 方法绑定具体值。相比位置参数，命名参数更具可读性。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">String</span> <span class="variable">parameter</span> <span class="operator">=</span> <span class="string">&quot;z1ng&quot;</span>;</span><br><span class="line">Query&lt;User&gt; query = session.createQuery(<span class="string">&quot;FROM User WHERE name = :name&quot;</span>, User.class);</span><br><span class="line">query.setParameter(<span class="string">&quot;name&quot;</span>, parameter);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>执行过程</strong>：<ul>
+<li><code>:name</code> 为命名参数，占位符被替换为 <code>parameter</code> 的值。</li>
+<li>Hibernate 会将 <code>parameter</code> 作为数据绑定到查询语句，不会影响查询逻辑。</li>
+</ul>
+</li>
+</ul>
+<h4 id="3-3-命名参数列表（Named-Parameter-List）"><a href="#3-3-命名参数列表（Named-Parameter-List）" class="headerlink" title="3.3 命名参数列表（Named Parameter List）"></a>3.3 命名参数列表（Named Parameter List）</h4><p>命名参数列表允许绑定集合或数组作为查询参数，适用于 IN 查询等多值场景。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">List&lt;String&gt; names = Arrays.asList(<span class="string">&quot;z1ng&quot;</span>, <span class="string">&quot;z2ng&quot;</span>);</span><br><span class="line">Query&lt;User&gt; query = session.createQuery(<span class="string">&quot;FROM User WHERE name IN (:names)&quot;</span>, User.class);</span><br><span class="line">query.setParameter(<span class="string">&quot;names&quot;</span>, names);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>执行过程</strong>：<ul>
+<li>Hibernate 会将 <code>names</code> 列表中每个元素作为独立参数绑定到查询，防止任何单一值干扰查询结构。</li>
+</ul>
+</li>
+</ul>
+<h4 id="3-4-类实例（JavaBean）"><a href="#3-4-类实例（JavaBean）" class="headerlink" title="3.4 类实例（JavaBean）"></a>3.4 类实例（JavaBean）</h4><p>通过类实例绑定参数，将对象的属性直接映射到查询参数中。可以使用 <code>setProperties</code> 方法批量绑定对象属性，避免逐个指定参数值。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">user1.setName(<span class="string">&quot;z1ng&quot;</span>);</span><br><span class="line">Query&lt;User&gt; query = session.createQuery(<span class="string">&quot;FROM User WHERE name = :name&quot;</span>, User.class);</span><br><span class="line">query.setProperties(user1);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>执行过程</strong>：<ul>
+<li>该方法会根据 <code>user1</code> 对象的属性自动绑定查询参数，确保查询安全。</li>
+</ul>
+</li>
+</ul>
+<h3 id="4-使用原生-SQL-的注意事项"><a href="#4-使用原生-SQL-的注意事项" class="headerlink" title="4. 使用原生 SQL 的注意事项"></a>4. 使用原生 SQL 的注意事项</h3><p>Hibernate 还支持直接执行原生 SQL 语句。当使用原生 SQL 时，拼接用户输入会导致和 JDBC 中相同的 SQL 注入风险。建议采用参数绑定方式执行原生 SQL 查询。</p>
+<h4 id="不安全的原生-SQL-拼接示例"><a href="#不安全的原生-SQL-拼接示例" class="headerlink" title="不安全的原生 SQL 拼接示例"></a>不安全的原生 SQL 拼接示例</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">String</span> <span class="variable">parameter</span> <span class="operator">=</span> <span class="string">&quot;z1ng&quot;</span>;</span><br><span class="line">Query&lt;User&gt; query = session.createNativeQuery(<span class="string">&quot;SELECT * FROM user WHERE name = &#x27;&quot;</span> + parameter + <span class="string">&quot;&#x27;&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>注入风险</strong>：<ul>
+<li>直接将 <code>parameter</code> 拼接到 SQL 语句中，恶意用户可以通过输入 <code>z1ng&#39; OR &#39;1&#39;=&#39;1</code> 改变查询逻辑。</li>
+</ul>
+</li>
+</ul>
+<h4 id="安全的原生-SQL-参数绑定"><a href="#安全的原生-SQL-参数绑定" class="headerlink" title="安全的原生 SQL 参数绑定"></a>安全的原生 SQL 参数绑定</h4><p>通过参数绑定，可以避免拼接用户输入带来的注入风险：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">String</span> <span class="variable">parameter</span> <span class="operator">=</span> <span class="string">&quot;z1ng&quot;</span>;</span><br><span class="line">Query&lt;User&gt; query = session.createNativeQuery(<span class="string">&quot;SELECT * FROM user WHERE name = :name&quot;</span>, User.class);</span><br><span class="line">query.setParameter(<span class="string">&quot;name&quot;</span>, parameter);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>执行过程</strong>：<ul>
+<li>使用 <code>:name</code> 参数占位符，<code>parameter</code> 值将作为独立数据绑定，确保查询逻辑安全。</li>
+</ul>
+</li>
+</ul>
+<h3 id="5-其他安全建议"><a href="#5-其他安全建议" class="headerlink" title="5. 其他安全建议"></a>5. 其他安全建议</h3><h4 id="5-1-使用-Criteria-API"><a href="#5-1-使用-Criteria-API" class="headerlink" title="5.1 使用 Criteria API"></a>5.1 使用 Criteria API</h4><p>Hibernate 提供的 Criteria API 可以动态构建查询，避免手动拼接 SQL 或 HQL 语句，进而降低 SQL 注入的可能性。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">CriteriaBuilder</span> <span class="variable">cb</span> <span class="operator">=</span> session.getCriteriaBuilder();</span><br><span class="line">CriteriaQuery&lt;User&gt; cq = cb.createQuery(User.class);</span><br><span class="line">Root&lt;User&gt; root = cq.from(User.class);</span><br><span class="line">cq.select(root).where(cb.equal(root.get(<span class="string">&quot;name&quot;</span>), parameter));</span><br><span class="line">List&lt;User&gt; results = session.createQuery(cq).getResultList();</span><br></pre></td></tr></table></figure>
+  </div>
+</article>
+
+
+    <div class="blog-post-comments">
+        <div id="utterances_thread">
+            <noscript>Please enable JavaScript to view the comments.</noscript>
+        </div>
+    </div>
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/archives/">Writing</a></li>
+        
+          <li><a href="/search/">Search</a></li>
+        
+          <li><a href="/categories/">Categories</a></li>
+        
+          <li><a href="/idea/">Idea</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="https://github.com/g0dam">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#JDBC-%E6%8B%BC%E6%8E%A5%E4%B8%8D%E5%BD%93%E9%80%A0%E6%88%90-SQL-%E6%B3%A8%E5%85%A5"><span class="toc-number">1.</span> <span class="toc-text">JDBC 拼接不当造成 SQL 注入</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-JDBC%E7%9A%84%E4%B8%A4%E7%A7%8DSQL%E6%89%A7%E8%A1%8C%E6%96%B9%E6%B3%95%EF%BC%9AStatement-vs-PrepareStatement"><span class="toc-number">1.1.</span> <span class="toc-text">1. JDBC的两种SQL执行方法：Statement vs PrepareStatement</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E4%BD%BF%E7%94%A8Statement%E6%8B%BC%E6%8E%A5SQL%E8%AF%AD%E5%8F%A5%E7%9A%84%E7%A4%BA%E4%BE%8B%E4%B8%8E%E5%88%86%E6%9E%90"><span class="toc-number">1.2.</span> <span class="toc-text">2. 使用Statement拼接SQL语句的示例与分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-PrepareStatement%E7%9A%84%E9%94%99%E8%AF%AF%E7%94%A8%E6%B3%95%E7%A4%BA%E4%BE%8B"><span class="toc-number">1.3.</span> <span class="toc-text">3. PrepareStatement的错误用法示例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E6%AD%A3%E7%A1%AE%E4%BD%BF%E7%94%A8PrepareStatement%E9%81%BF%E5%85%8DSQL%E6%B3%A8%E5%85%A5"><span class="toc-number">1.4.</span> <span class="toc-text">4. 正确使用PrepareStatement避免SQL注入</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MyBatis-%E6%A1%86%E6%9E%B6%E4%BB%A3%E7%A0%81%E6%B3%A8%E5%85%A5"><span class="toc-number">2.</span> <span class="toc-text">MyBatis 框架代码注入</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-MyBatis-%E6%A1%86%E6%9E%B6%E7%9A%84%E7%AE%80%E4%BB%8B"><span class="toc-number">2.1.</span> <span class="toc-text">1. MyBatis 框架的简介</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-MyBatis-%E4%B8%AD%E7%9A%84%E4%B8%A4%E7%A7%8D-SQL-%E5%8F%82%E6%95%B0%E4%BC%A0%E9%80%92%E6%96%B9%E5%BC%8F%EF%BC%9A-%E5%92%8C"><span class="toc-number">2.2.</span> <span class="toc-text">2. MyBatis 中的两种 SQL 参数传递方式：#{} 和 ${}</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-SQL-%E6%B3%A8%E5%85%A5%E9%A3%8E%E9%99%A9%E5%88%86%E6%9E%90"><span class="toc-number">2.3.</span> <span class="toc-text">3. SQL 注入风险分析</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-%E7%9A%84%E5%AE%89%E5%85%A8%E6%80%A7"><span class="toc-number">2.3.1.</span> <span class="toc-text">使用 #{} 的安全性</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-%E7%9A%84-SQL-%E6%B3%A8%E5%85%A5%E9%A3%8E%E9%99%A9"><span class="toc-number">2.3.2.</span> <span class="toc-text">使用 ${} 的 SQL 注入风险</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-MyBatis-%E4%BD%BF%E7%94%A8%E4%B8%AD%E7%9A%84%E5%AE%89%E5%85%A8%E5%BB%BA%E8%AE%AE"><span class="toc-number">2.4.</span> <span class="toc-text">6. MyBatis 使用中的安全建议</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#6-1-%E9%81%BF%E5%85%8D%E5%9C%A8%E5%8A%A8%E6%80%81-SQL-%E4%B8%AD%E7%9B%B4%E6%8E%A5%E4%BD%BF%E7%94%A8"><span class="toc-number">2.4.1.</span> <span class="toc-text">6.1 避免在动态 SQL 中直接使用 ${}</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#6-2-%E4%BD%BF%E7%94%A8-sql-%E6%A0%87%E7%AD%BE%E5%A4%8D%E7%94%A8%E5%AE%89%E5%85%A8%E6%9F%A5%E8%AF%A2%E7%89%87%E6%AE%B5"><span class="toc-number">2.4.2.</span> <span class="toc-text">6.2 使用 sql 标签复用安全查询片段</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Hibernate-%E6%A1%86%E6%9E%B6%E6%B3%A8%E5%85%A5"><span class="toc-number">3.</span> <span class="toc-text">Hibernate 框架注入</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-Hibernate-%E6%A1%86%E6%9E%B6%E6%A6%82%E8%BF%B0"><span class="toc-number">3.1.</span> <span class="toc-text">1. Hibernate 框架概述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-HQL-%E4%B8%8E-SQL-%E6%B3%A8%E5%85%A5"><span class="toc-number">3.2.</span> <span class="toc-text">2. HQL 与 SQL 注入</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#HQL-%E6%B3%A8%E5%85%A5%E7%A4%BA%E4%BE%8B"><span class="toc-number">3.2.1.</span> <span class="toc-text">HQL 注入示例</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E9%A2%84%E9%98%B2-HQL-%E6%B3%A8%E5%85%A5%E7%9A%84%E5%8F%82%E6%95%B0%E7%BB%91%E5%AE%9A%E6%96%B9%E5%BC%8F"><span class="toc-number">3.3.</span> <span class="toc-text">3. 预防 HQL 注入的参数绑定方式</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#3-1-%E4%BD%8D%E7%BD%AE%E5%8F%82%E6%95%B0%EF%BC%88Positional-Parameter%EF%BC%89"><span class="toc-number">3.3.1.</span> <span class="toc-text">3.1 位置参数（Positional Parameter）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-2-%E5%91%BD%E5%90%8D%E5%8F%82%E6%95%B0%EF%BC%88Named-Parameter%EF%BC%89"><span class="toc-number">3.3.2.</span> <span class="toc-text">3.2 命名参数（Named Parameter）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-3-%E5%91%BD%E5%90%8D%E5%8F%82%E6%95%B0%E5%88%97%E8%A1%A8%EF%BC%88Named-Parameter-List%EF%BC%89"><span class="toc-number">3.3.3.</span> <span class="toc-text">3.3 命名参数列表（Named Parameter List）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-4-%E7%B1%BB%E5%AE%9E%E4%BE%8B%EF%BC%88JavaBean%EF%BC%89"><span class="toc-number">3.3.4.</span> <span class="toc-text">3.4 类实例（JavaBean）</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E4%BD%BF%E7%94%A8%E5%8E%9F%E7%94%9F-SQL-%E7%9A%84%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="toc-number">3.4.</span> <span class="toc-text">4. 使用原生 SQL 的注意事项</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%8D%E5%AE%89%E5%85%A8%E7%9A%84%E5%8E%9F%E7%94%9F-SQL-%E6%8B%BC%E6%8E%A5%E7%A4%BA%E4%BE%8B"><span class="toc-number">3.4.1.</span> <span class="toc-text">不安全的原生 SQL 拼接示例</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%89%E5%85%A8%E7%9A%84%E5%8E%9F%E7%94%9F-SQL-%E5%8F%82%E6%95%B0%E7%BB%91%E5%AE%9A"><span class="toc-number">3.4.2.</span> <span class="toc-text">安全的原生 SQL 参数绑定</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E5%85%B6%E4%BB%96%E5%AE%89%E5%85%A8%E5%BB%BA%E8%AE%AE"><span class="toc-number">3.5.</span> <span class="toc-text">5. 其他安全建议</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#5-1-%E4%BD%BF%E7%94%A8-Criteria-API"><span class="toc-number">3.5.1.</span> <span class="toc-text">5.1 使用 Criteria API</span></a></li></ol></li></ol></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://godreams.cn/2024/11/05/WebSecurity/codeaudit/javacodesqlinjection/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://godreams.cn/2024/11/05/WebSecurity/codeaudit/javacodesqlinjection/&text=【代码审计】Java代码审计SQL注入"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://godreams.cn/2024/11/05/WebSecurity/codeaudit/javacodesqlinjection/&title=【代码审计】Java代码审计SQL注入"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://godreams.cn/2024/11/05/WebSecurity/codeaudit/javacodesqlinjection/&is_video=false&description=【代码审计】Java代码审计SQL注入"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【代码审计】Java代码审计SQL注入&body=Check out this article: https://godreams.cn/2024/11/05/WebSecurity/codeaudit/javacodesqlinjection/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://godreams.cn/2024/11/05/WebSecurity/codeaudit/javacodesqlinjection/&title=【代码审计】Java代码审计SQL注入"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://godreams.cn/2024/11/05/WebSecurity/codeaudit/javacodesqlinjection/&title=【代码审计】Java代码审计SQL注入"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://godreams.cn/2024/11/05/WebSecurity/codeaudit/javacodesqlinjection/&title=【代码审计】Java代码审计SQL注入"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://godreams.cn/2024/11/05/WebSecurity/codeaudit/javacodesqlinjection/&title=【代码审计】Java代码审计SQL注入"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://godreams.cn/2024/11/05/WebSecurity/codeaudit/javacodesqlinjection/&name=【代码审计】Java代码审计SQL注入&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://godreams.cn/2024/11/05/WebSecurity/codeaudit/javacodesqlinjection/&t=【代码审计】Java代码审计SQL注入"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2024
+    g0dam
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Categories</a></li><!--
+     --><!--
+       --><li><a href="/idea/">Idea</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/g0dam">Projects</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+    <script type="text/javascript">
+      var utterances_repo = 'owner/githubrepo';
+      var utterances_issue_term = 'pathname';
+      var utterances_label = 'Comment';
+      var utterances_theme = 'github-dark';
+
+      (function(){
+          var script = document.createElement('script');
+
+          script.src = 'https://utteranc.es/client.js';
+          script.setAttribute('repo', utterances_repo);
+          script.setAttribute('issue-term', 'pathname');
+          script.setAttribute('label', utterances_label);
+          script.setAttribute('theme', utterances_theme);
+          script.setAttribute('crossorigin', 'anonymous');
+          script.async = true;
+          (document.getElementById('utterances_thread')).appendChild(script);
+      }());
+  </script>
+
+</body>
+</html>
