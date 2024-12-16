@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>【Android系统开发】把Pytorch集成到android系统当中</title>
+      <link href="/2024/12/16/code/pytorchAndroid/"/>
+      <url>/2024/12/16/code/pytorchAndroid/</url>
+      
+        <content type="html"><![CDATA[<h2 id="需求"><a href="#需求" class="headerlink" title="需求"></a>需求</h2><p>最近都在搞论文，需要在android系统上跑模型，所以需要把pytorch集成到android系统当中。简单记录下</p><h2 id="方案"><a href="#方案" class="headerlink" title="方案"></a>方案</h2><p>我找了很多方案，官网说可以自己编译pytorch，但是环境配置很复杂【<a href="https://zhuanlan.zhihu.com/p/650169531%E3%80%91%EF%BC%8C%E5%8F%91%E7%8E%B0%E5%85%B6%E5%AE%9E%E5%8F%AF%E4%BB%A5%E7%9B%B4%E6%8E%A5%E4%B8%8B%E8%BD%BDaar%E6%96%87%E4%BB%B6">https://zhuanlan.zhihu.com/p/650169531】，发现其实可以直接下载aar文件</a><br><a href="https://repo1.maven.org/maven2/org/pytorch/pytorch_android/1.10.0/pytorch_android-1.10.0.aar">https://repo1.maven.org/maven2/org/pytorch/pytorch_android/1.10.0/pytorch_android-1.10.0.aar</a></p><p>刚开始尝试从aar文件当中提取so文件以及头文件，集成进Adnroid里面<br>参考了这些博客：<a href="https://blog.csdn.net/zuguorui/article/details/96464821">https://blog.csdn.net/zuguorui/article/details/96464821</a> 发现也是不行，具体原因忘记了</p><p>接下来直接从官网下载的pytorchaar文件，分析下来这个方案可行的原因主要是我是在framwork层，本身是可以集成java环境的，直接在java层调用pytorch的api</p><h2 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h2><p>参考了这篇博客，基本步骤是一样的：<a href="https://blog.csdn.net/DKBDKBDKB/article/details/104153094%EF%BC%8C%E4%BD%86%E8%BF%99%E4%B8%AA%E5%8D%9A%E5%AE%A2%E9%87%8C%E9%9D%A2%E7%BC%BA%E4%BA%86%E7%82%B9%E4%B8%9C%E8%A5%BF">https://blog.csdn.net/DKBDKBDKB/article/details/104153094，但这个博客里面缺了点东西</a></p><ol><li>在framworks&#x2F;base下新建一个目录，例如：pytorch，将aar文件放在这个目录下，并新建一个文件 Adnroid.bp 修改其中内容如下<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">android_library_import &#123;</span><br><span class="line">    name: &quot;services.pytorch&quot;,</span><br><span class="line">    aars: [&quot;pytorch_android-1.10.0.aar&quot;],</span><br><span class="line">    sdk_version: &quot;current&quot;,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li><li>之后在base目录下的Android.bp文件里的java_library当中的static_libs添加一行<code>&quot;services.pytorch&quot;,</code>，这样就完成一大半了</li></ol><p>之后我编译却发现不行。。。 尝试了很多次</p><p>奥对了 我还在代码当中引用了pytorch</p><p>之后使用在编译系统时使用make clean<br>报错不被允许，参考下面的内容修改 build&#x2F;soong&#x2F;scripts&#x2F;check_boot_jars&#x2F;package_allowed_list.txt<br><a href="https://stackoverflow.com/questions/77813438/add-an-external-aar-library-to-aosp-for-internal-use-from-java-in-frameworks-bas">https://stackoverflow.com/questions/77813438/add-an-external-aar-library-to-aosp-for-internal-use-from-java-in-frameworks-bas</a></p><p>添加：</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">org\.torch</span><br><span class="line">org\.torch\..*</span><br></pre></td></tr></table></figure><p>解决报错</p>]]></content>
+      
+      
+      <categories>
+          
+          <category> Code </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> Android </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>【论文精读】MINER:A Hybrid Data-Driven Approach for REST API Fuzzing</title>
       <link href="/2024/11/28/PaperReading/MINER/"/>
       <url>/2024/11/28/PaperReading/MINER/</url>
