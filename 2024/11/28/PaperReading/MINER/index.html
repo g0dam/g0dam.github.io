@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="Introduction早期的工作利用先前捕获的API流量和手动定义的规则来生成测试请求。最近，为了更好地自动推断请求类型之间的依赖关系并构造请求序列，提出了REST API模糊测试来测试云服务。通常  REST API fuzzer的生成策略处理两个主要问题，即如何构造序列模板以及如何在模板中生成每个请求。生成后，fuzzer发送ready-to-use请求序列来测试目标云服务; 对于序列中的每">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【论文精读】MINER:A Hybrid Data-Driven Approach for REST API Fuzzing">
+<meta property="og:url" content="https://godreams.cn/2024/11/28/PaperReading/MINER/index.html">
+<meta property="og:site_name" content="g0dam">
+<meta property="og:description" content="Introduction早期的工作利用先前捕获的API流量和手动定义的规则来生成测试请求。最近，为了更好地自动推断请求类型之间的依赖关系并构造请求序列，提出了REST API模糊测试来测试云服务。通常  REST API fuzzer的生成策略处理两个主要问题，即如何构造序列模板以及如何在模板中生成每个请求。生成后，fuzzer发送ready-to-use请求序列来测试目标云服务; 对于序列中的每">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-11-28T01:42:43.000Z">
+<meta property="article:modified_time" content="2024-11-28T02:40:10.325Z">
+<meta property="article:author" content="g0dam">
+<meta property="article:tag" content="论文精读">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>【论文精读】MINER:A Hybrid Data-Driven Approach for REST API Fuzzing</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+      <link rel="alternate" href="/true" title="g0dam" type="application/atom+xml" />
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Categories</a></li><!--
+     --><!--
+       --><li><a href="/idea/">Idea</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/g0dam">Projects</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2024/11/25/tools/c2improve/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://godreams.cn/2024/11/28/PaperReading/MINER/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://godreams.cn/2024/11/28/PaperReading/MINER/&text=【论文精读】MINER:A Hybrid Data-Driven Approach for REST API Fuzzing"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://godreams.cn/2024/11/28/PaperReading/MINER/&title=【论文精读】MINER:A Hybrid Data-Driven Approach for REST API Fuzzing"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://godreams.cn/2024/11/28/PaperReading/MINER/&is_video=false&description=【论文精读】MINER:A Hybrid Data-Driven Approach for REST API Fuzzing"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【论文精读】MINER:A Hybrid Data-Driven Approach for REST API Fuzzing&body=Check out this article: https://godreams.cn/2024/11/28/PaperReading/MINER/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://godreams.cn/2024/11/28/PaperReading/MINER/&title=【论文精读】MINER:A Hybrid Data-Driven Approach for REST API Fuzzing"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://godreams.cn/2024/11/28/PaperReading/MINER/&title=【论文精读】MINER:A Hybrid Data-Driven Approach for REST API Fuzzing"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://godreams.cn/2024/11/28/PaperReading/MINER/&title=【论文精读】MINER:A Hybrid Data-Driven Approach for REST API Fuzzing"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://godreams.cn/2024/11/28/PaperReading/MINER/&title=【论文精读】MINER:A Hybrid Data-Driven Approach for REST API Fuzzing"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://godreams.cn/2024/11/28/PaperReading/MINER/&name=【论文精读】MINER:A Hybrid Data-Driven Approach for REST API Fuzzing&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://godreams.cn/2024/11/28/PaperReading/MINER/&t=【论文精读】MINER:A Hybrid Data-Driven Approach for REST API Fuzzing"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Introduction"><span class="toc-number">1.</span> <span class="toc-text">Introduction</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        【论文精读】MINER:A Hybrid Data-Driven Approach for REST API Fuzzing
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">g0dam</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2024-11-28T01:42:43.000Z" class="dt-published" itemprop="datePublished">2024-11-28</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/Paper-Reading/">Paper Reading</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/%E8%AE%BA%E6%96%87%E7%B2%BE%E8%AF%BB/" rel="tag">论文精读</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><p>早期的工作利用先前捕获的API流量和手动定义的规则来生成测试请求。最近，为了更好地自动推断请求类型之间的依赖关系并构造请求序列，提出了REST API模糊测试来测试云服务。通常</p>
+<ol>
+<li>REST API fuzzer的生成策略处理两个主要问题，即如何构造序列模板以及如何在模板中生成每个请求。生成后，fuzzer发送ready-to-use请求序列来测试目标云服务;</li>
+<li>对于序列中的每个请求，云服务首先检查请求是否符合语法和语义。如果不是，它返回一个40x范围的响应。相反，云服务根据请求执行行为，例如，云服务在收到DELETE请求时删除资源。如果云服务行为正常，例如，它根据请求成功地删除了指定的资源，它将返回一个20x Range的响应。否则，云服务行为异常，例如，它试图删除不存在的资源并导致错误状态。然后，它返回一个50x范围的响应;</li>
+<li>fuzzer分析对每个请求的响应，推断云服务的触发状态;</li>
+<li>fuzzer收集触发错误状态的唯一请求序列，例如响应在50x范围内或违反安全规则的序列。按照上述步骤，REST API模糊器将使用生成的请求序列探索可访问的云服务状态。</li>
+</ol>
+<p>现有工作的不足：</p>
+<ol>
+<li>现有的fuzzers通常无法扩展请求序列模板。它们的序列扩展过程经常放弃已构建的序列模板，从空模板开始，这给构建更大长度的序列带来了挑战;</li>
+<li>当在序列模板中生成请求时，现有的fuzzers随机选择请求参数的值。它们无法确定应该更改哪个参数或应该分配什么参数值，即请求上的键更改。</li>
+</ol>
+<p>本文工作的内容：</p>
+<ol>
+<li>面向长度的序列构建:MINER利用历史数据指导序列生成。具体来说，MINER收集在过去的模糊处理过程中已成功生成请求并通过云服务检查的序列模板，作为序列扩展过程的初始模板。然后，MINER利用概率函数在扩展过程中为长度较大的序列模板分配更多的选择次数;</li>
+<li>基于注意模型的请求生成:为了提高请求生成质量，对于每一个通过检查的有效请求，MINER首先收集其参数和使用值作为关键突变。其次，MINER构建了一个注意力模型，该模型是最先进的神经网络模型之一，用于学习关键突变之间的隐含关系。然后，MINER利用该模型生成更多样化的所需键突变组合，从而构建高质量的请求以通过检查，并探索云服务的不同状态;</li>
+<li>请求参数违例检查:MINER实现了一个额外的安全规则检查器来捕获不正确的参数使用错误。通过使用这个检查器，MINER生成一个带有未定义参数的新请求来测试云服务。例如，MINER可以构造一个包含未定义参数的PUT请求，该参数来自POST请求。如果请求得到的响应在50x范围内，MINER推断触发了不正确的参数使用错误，并在本地记录使用的请求，以便进一步分析。</li>
+</ol>
+
+  </div>
+</article>
+
+
+    <div class="blog-post-comments">
+        <div id="utterances_thread">
+            <noscript>Please enable JavaScript to view the comments.</noscript>
+        </div>
+    </div>
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/archives/">Writing</a></li>
+        
+          <li><a href="/search/">Search</a></li>
+        
+          <li><a href="/categories/">Categories</a></li>
+        
+          <li><a href="/idea/">Idea</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="https://github.com/g0dam">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Introduction"><span class="toc-number">1.</span> <span class="toc-text">Introduction</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://godreams.cn/2024/11/28/PaperReading/MINER/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://godreams.cn/2024/11/28/PaperReading/MINER/&text=【论文精读】MINER:A Hybrid Data-Driven Approach for REST API Fuzzing"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://godreams.cn/2024/11/28/PaperReading/MINER/&title=【论文精读】MINER:A Hybrid Data-Driven Approach for REST API Fuzzing"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://godreams.cn/2024/11/28/PaperReading/MINER/&is_video=false&description=【论文精读】MINER:A Hybrid Data-Driven Approach for REST API Fuzzing"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【论文精读】MINER:A Hybrid Data-Driven Approach for REST API Fuzzing&body=Check out this article: https://godreams.cn/2024/11/28/PaperReading/MINER/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://godreams.cn/2024/11/28/PaperReading/MINER/&title=【论文精读】MINER:A Hybrid Data-Driven Approach for REST API Fuzzing"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://godreams.cn/2024/11/28/PaperReading/MINER/&title=【论文精读】MINER:A Hybrid Data-Driven Approach for REST API Fuzzing"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://godreams.cn/2024/11/28/PaperReading/MINER/&title=【论文精读】MINER:A Hybrid Data-Driven Approach for REST API Fuzzing"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://godreams.cn/2024/11/28/PaperReading/MINER/&title=【论文精读】MINER:A Hybrid Data-Driven Approach for REST API Fuzzing"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://godreams.cn/2024/11/28/PaperReading/MINER/&name=【论文精读】MINER:A Hybrid Data-Driven Approach for REST API Fuzzing&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://godreams.cn/2024/11/28/PaperReading/MINER/&t=【论文精读】MINER:A Hybrid Data-Driven Approach for REST API Fuzzing"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2024
+    g0dam
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Categories</a></li><!--
+     --><!--
+       --><li><a href="/idea/">Idea</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/g0dam">Projects</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+    <script type="text/javascript">
+      var utterances_repo = 'owner/githubrepo';
+      var utterances_issue_term = 'pathname';
+      var utterances_label = 'Comment';
+      var utterances_theme = 'github-dark';
+
+      (function(){
+          var script = document.createElement('script');
+
+          script.src = 'https://utteranc.es/client.js';
+          script.setAttribute('repo', utterances_repo);
+          script.setAttribute('issue-term', 'pathname');
+          script.setAttribute('label', utterances_label);
+          script.setAttribute('theme', utterances_theme);
+          script.setAttribute('crossorigin', 'anonymous');
+          script.async = true;
+          (document.getElementById('utterances_thread')).appendChild(script);
+      }());
+  </script>
+
+</body>
+</html>
