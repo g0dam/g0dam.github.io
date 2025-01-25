@@ -6,18 +6,18 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="HandheldFriendly" content="True">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
-    <meta name="description" content="CVE-2024-38819https:&#x2F;&#x2F;spring.io&#x2F;security&#x2F;cve-2024-38819通过功能性 Web 框架 WebMvc.fn 或 WebFlux.fn 提供静态资源的应用程序容易受到路径遍历攻击。攻击者可以构建恶意 HTTP 请求，并获取文件系统上任何文件，这些文件也可以被运行 Spring 应用程序的进程访问。这与 CVE-2024-38816 类似，但输入不同。">
+    <meta name="description" content="2024年12月16日，放出来了poc：https:&#x2F;&#x2F;mp.weixin.qq.com&#x2F;s&#x2F;g64YdLFa_o3GZDic9WfkIQ CVE-2024-38819https:&#x2F;&#x2F;spring.io&#x2F;security&#x2F;cve-2024-38819通过功能性 Web 框架 WebMvc.fn 或 WebFlux.fn 提供静态资源的应用程序容易受到路径遍历攻击。攻击者可以构建恶意 HTTP 请求">
 <meta property="og:type" content="article">
 <meta property="og:title" content="【CVE分析】2024年10月份">
 <meta property="og:url" content="https://godreams.cn/2024/10/18/WebSecurity/cve/20241018/index.html">
 <meta property="og:site_name" content="g0dam">
-<meta property="og:description" content="CVE-2024-38819https:&#x2F;&#x2F;spring.io&#x2F;security&#x2F;cve-2024-38819通过功能性 Web 框架 WebMvc.fn 或 WebFlux.fn 提供静态资源的应用程序容易受到路径遍历攻击。攻击者可以构建恶意 HTTP 请求，并获取文件系统上任何文件，这些文件也可以被运行 Spring 应用程序的进程访问。这与 CVE-2024-38816 类似，但输入不同。">
+<meta property="og:description" content="2024年12月16日，放出来了poc：https:&#x2F;&#x2F;mp.weixin.qq.com&#x2F;s&#x2F;g64YdLFa_o3GZDic9WfkIQ CVE-2024-38819https:&#x2F;&#x2F;spring.io&#x2F;security&#x2F;cve-2024-38819通过功能性 Web 框架 WebMvc.fn 或 WebFlux.fn 提供静态资源的应用程序容易受到路径遍历攻击。攻击者可以构建恶意 HTTP 请求">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="https://godreams.cn/2024/10/18/WebSecurity/cve/20241018/image.png">
 <meta property="og:image" content="https://godreams.cn/2024/10/18/WebSecurity/cve/20241018/image-1.png">
 <meta property="og:image" content="https://godreams.cn/2024/10/18/WebSecurity/cve/20241018/image-2.png">
 <meta property="article:published_time" content="2024-10-18T10:05:33.000Z">
-<meta property="article:modified_time" content="2024-10-18T12:09:38.627Z">
+<meta property="article:modified_time" content="2024-12-16T07:22:39.287Z">
 <meta property="article:author" content="g0dam">
 <meta property="article:tag" content="CVE">
 <meta name="twitter:card" content="summary">
@@ -177,7 +177,8 @@
   
 
   <div class="content e-content" itemprop="articleBody">
-    <h2 id="CVE-2024-38819"><a href="#CVE-2024-38819" class="headerlink" title="CVE-2024-38819"></a>CVE-2024-38819</h2><p><a target="_blank" rel="noopener" href="https://spring.io/security/cve-2024-38819">https://spring.io/security/cve-2024-38819</a><br>通过功能性 Web 框架 WebMvc.fn 或 WebFlux.fn 提供静态资源的应用程序容易受到路径遍历攻击。攻击者可以构建恶意 HTTP 请求，并获取文件系统上任何文件，这些文件也可以被运行 Spring 应用程序的进程访问。<br>这与 CVE-2024-38816 类似，但输入不同。</p>
+    <p>2024年12月16日，放出来了poc：<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/g64YdLFa_o3GZDic9WfkIQ">https://mp.weixin.qq.com/s/g64YdLFa_o3GZDic9WfkIQ</a></p>
+<h2 id="CVE-2024-38819"><a href="#CVE-2024-38819" class="headerlink" title="CVE-2024-38819"></a>CVE-2024-38819</h2><p><a target="_blank" rel="noopener" href="https://spring.io/security/cve-2024-38819">https://spring.io/security/cve-2024-38819</a><br>通过功能性 Web 框架 WebMvc.fn 或 WebFlux.fn 提供静态资源的应用程序容易受到路径遍历攻击。攻击者可以构建恶意 HTTP 请求，并获取文件系统上任何文件，这些文件也可以被运行 Spring 应用程序的进程访问。<br>这与 CVE-2024-38816 类似，但输入不同。</p>
 <p>Affected Spring Products and Versions<br>Spring Framework:<br>5.3.0 - 5.3.40<br>6.0.0 - 6.0.24<br>6.1.0 - 6.1.13<br>Older, unsupported versions are also affected</p>
 <p>看到6.1.x版本存在漏洞，而6.1.14版本不存在，我下载了13和14两个版本的代码，想要通过对比查看这个漏洞点在哪里<br>使用<strong>WinMerge</strong>对比代码发现在，webmvc目录下的代码存在如下差异：<br><img src="/2024/10/18/WebSecurity/cve/20241018/image.png"></p>
 <p>来看下变更的代码</p>
@@ -289,7 +290,7 @@
     Copyright &copy;
     
     
-    2024
+    2024-2025
     g0dam
   </div>
   <div class="footer-right">
