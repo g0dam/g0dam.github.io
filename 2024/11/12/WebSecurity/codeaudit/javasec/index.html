@@ -6,13 +6,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="HandheldFriendly" content="True">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
-    <meta name="description" content="Filterjavasec-vuls-struts2JEESNS回答处存在XSS漏洞">
+    <meta name="description" content="「Java安全」https:&#x2F;&#x2F;pan.quark.cn&#x2F;s&#x2F;56c5a74545e7Java的安全问题常常从反序列化漏洞谈起，而反序列化漏洞又与反射紧密相关。反射是Java中的一个强大功能，它允许程序在运行时动态地加载类、调用方法、访问字段等。通过反射，Java能够将这种静态语言赋予动态特性。“动态特性”是指代码在运行时可以改变其行为。例如，通过改变代码中的某些变量，可能会导致代码的执行结果发生">
 <meta property="og:type" content="article">
-<meta property="og:title" content="javasec">
+<meta property="og:title" content="【代码审计】Java代码审计反射篇">
 <meta property="og:url" content="https://godreams.cn/2024/11/12/WebSecurity/codeaudit/javasec/index.html">
 <meta property="og:site_name" content="g0dam">
-<meta property="og:description" content="Filterjavasec-vuls-struts2JEESNS回答处存在XSS漏洞">
+<meta property="og:description" content="「Java安全」https:&#x2F;&#x2F;pan.quark.cn&#x2F;s&#x2F;56c5a74545e7Java的安全问题常常从反序列化漏洞谈起，而反序列化漏洞又与反射紧密相关。反射是Java中的一个强大功能，它允许程序在运行时动态地加载类、调用方法、访问字段等。通过反射，Java能够将这种静态语言赋予动态特性。“动态特性”是指代码在运行时可以改变其行为。例如，通过改变代码中的某些变量，可能会导致代码的执行结果发生">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://godreams.cn/2024/11/12/WebSecurity/codeaudit/javasec/image-6.png">
 <meta property="og:image" content="https://godreams.cn/2024/11/12/WebSecurity/codeaudit/javasec/image-2.png">
 <meta property="og:image" content="https://godreams.cn/2024/11/12/WebSecurity/codeaudit/javasec/image-3.png">
 <meta property="og:image" content="https://godreams.cn/2024/11/12/WebSecurity/codeaudit/javasec/image-4.png">
@@ -20,12 +21,12 @@
 <meta property="og:image" content="https://godreams.cn/2024/11/12/WebSecurity/codeaudit/javasec/image.png">
 <meta property="og:image" content="https://godreams.cn/2024/11/12/WebSecurity/codeaudit/javasec/image-1.png">
 <meta property="article:published_time" content="2024-11-12T02:17:32.000Z">
-<meta property="article:modified_time" content="2024-11-12T13:38:57.739Z">
+<meta property="article:modified_time" content="2025-02-24T08:08:44.432Z">
 <meta property="article:author" content="g0dam">
+<meta property="article:tag" content="Java">
 <meta property="article:tag" content="代码审计">
-<meta property="article:tag" content="PHP">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://godreams.cn/2024/11/12/WebSecurity/codeaudit/javasec/image-2.png">
+<meta name="twitter:image" content="https://godreams.cn/2024/11/12/WebSecurity/codeaudit/javasec/image-6.png">
     
     
       
@@ -45,7 +46,7 @@
       
     
     <!-- title -->
-    <title>javasec</title>
+    <title>【代码审计】Java代码审计反射篇</title>
     <!-- async scripts -->
     <!-- Google Analytics -->
 
@@ -115,20 +116,24 @@
     <div id="share" style="display: none">
       <ul>
   <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://godreams.cn/2024/11/12/WebSecurity/codeaudit/javasec/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://godreams.cn/2024/11/12/WebSecurity/codeaudit/javasec/&text=javasec"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://godreams.cn/2024/11/12/WebSecurity/codeaudit/javasec/&title=javasec"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://godreams.cn/2024/11/12/WebSecurity/codeaudit/javasec/&is_video=false&description=javasec"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=javasec&body=Check out this article: https://godreams.cn/2024/11/12/WebSecurity/codeaudit/javasec/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://godreams.cn/2024/11/12/WebSecurity/codeaudit/javasec/&title=javasec"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://godreams.cn/2024/11/12/WebSecurity/codeaudit/javasec/&title=javasec"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://godreams.cn/2024/11/12/WebSecurity/codeaudit/javasec/&title=javasec"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://godreams.cn/2024/11/12/WebSecurity/codeaudit/javasec/&title=javasec"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://godreams.cn/2024/11/12/WebSecurity/codeaudit/javasec/&name=javasec&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://godreams.cn/2024/11/12/WebSecurity/codeaudit/javasec/&t=javasec"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://godreams.cn/2024/11/12/WebSecurity/codeaudit/javasec/&text=【代码审计】Java代码审计反射篇"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://godreams.cn/2024/11/12/WebSecurity/codeaudit/javasec/&title=【代码审计】Java代码审计反射篇"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://godreams.cn/2024/11/12/WebSecurity/codeaudit/javasec/&is_video=false&description=【代码审计】Java代码审计反射篇"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【代码审计】Java代码审计反射篇&body=Check out this article: https://godreams.cn/2024/11/12/WebSecurity/codeaudit/javasec/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://godreams.cn/2024/11/12/WebSecurity/codeaudit/javasec/&title=【代码审计】Java代码审计反射篇"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://godreams.cn/2024/11/12/WebSecurity/codeaudit/javasec/&title=【代码审计】Java代码审计反射篇"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://godreams.cn/2024/11/12/WebSecurity/codeaudit/javasec/&title=【代码审计】Java代码审计反射篇"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://godreams.cn/2024/11/12/WebSecurity/codeaudit/javasec/&title=【代码审计】Java代码审计反射篇"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://godreams.cn/2024/11/12/WebSecurity/codeaudit/javasec/&name=【代码审计】Java代码审计反射篇&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://godreams.cn/2024/11/12/WebSecurity/codeaudit/javasec/&t=【代码审计】Java代码审计反射篇"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
     
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E9%83%A8%E5%88%86"><span class="toc-number">1.</span> <span class="toc-text">第一部分</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%8D%E5%B0%84%E7%9A%84%E6%A0%B8%E5%BF%83%E5%8A%9F%E8%83%BD"><span class="toc-number">1.1.</span> <span class="toc-text">反射的核心功能</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%8D%E5%B0%84%E7%BB%95%E8%BF%87%E6%B2%99%E7%9B%92%E7%9A%84%E4%BE%8B%E5%AD%90"><span class="toc-number">1.2.</span> <span class="toc-text">反射绕过沙盒的例子</span></a></li></ol></li></ol>
+      </div>
     
   </span>
 </div>
@@ -140,7 +145,7 @@
   <header>
     
     <h1 class="posttitle p-name" itemprop="name headline">
-        javasec
+        【代码审计】Java代码审计反射篇
     </h1>
 
 
@@ -168,7 +173,7 @@
       
     <div class="article-tag">
         <i class="fa-solid fa-tag"></i>
-        <a class="p-category" href="/tags/PHP/" rel="tag">PHP</a>, <a class="p-category" href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/" rel="tag">代码审计</a>
+        <a class="p-category" href="/tags/Java/" rel="tag">Java</a>, <a class="p-category" href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/" rel="tag">代码审计</a>
     </div>
 
 
@@ -177,7 +182,47 @@
   
 
   <div class="content e-content" itemprop="articleBody">
-    <p><img src="/2024/11/12/WebSecurity/codeaudit/javasec/image-2.png"><br><img src="/2024/11/12/WebSecurity/codeaudit/javasec/image-3.png"><br><img src="/2024/11/12/WebSecurity/codeaudit/javasec/image-4.png"><br><img src="/2024/11/12/WebSecurity/codeaudit/javasec/image-5.png"><br>Filter<br>javasec-vuls-struts2<br>JEESNS回答处存在XSS漏洞<br><img src="/2024/11/12/WebSecurity/codeaudit/javasec/image.png"><br><img src="/2024/11/12/WebSecurity/codeaudit/javasec/image-1.png"></p>
+    <p>「Java安全」<a target="_blank" rel="noopener" href="https://pan.quark.cn/s/56c5a74545e7">https://pan.quark.cn/s/56c5a74545e7</a><br>Java的安全问题常常从反序列化漏洞谈起，而反序列化漏洞又与反射紧密相关。反射是Java中的一个强大功能，它允许程序在运行时动态地加载类、调用方法、访问字段等。通过反射，Java能够将这种静态语言赋予动态特性。<br>“动态特性”是指代码在运行时可以改变其行为。例如，通过改变代码中的某些变量，可能会导致代码的执行结果发生变化。虽然Java不像PHP那样灵活，但通过反射，Java也能够提供一定的动态特性。<br>反射在安全研究中常用于绕过沙盒（如限制某些类的访问）。例如，通过反射可以绕过输入限制来加载并执行潜在危险的类。假设你只能获取一个<code>Integer</code>类型的输入，但可以利用反射加载并执行<code>Runtime</code>类中的命令。</p>
+<h2 id="第一部分"><a href="#第一部分" class="headerlink" title="第一部分"></a>第一部分</h2><h3 id="反射的核心功能"><a href="#反射的核心功能" class="headerlink" title="反射的核心功能"></a>反射的核心功能</h3><p>反射是通过以下几种方法实现的：</p>
+<ol>
+<li><p><strong>获取类</strong>：</p>
+<ul>
+<li><code>Class.forName(className)</code>：通过类名加载类。</li>
+<li><code>obj.getClass()</code>：通过已实例化对象来获取其类。</li>
+<li><code>Test.class</code>：如果类已经加载，可以直接通过<code>.class</code>属性来获取。</li>
+</ul>
+</li>
+<li><p><strong>实例化对象</strong>：</p>
+<ul>
+<li><code>clazz.newInstance()</code>：通过反射创建类的实例。</li>
+</ul>
+</li>
+<li><p><strong>获取方法并执行</strong>：</p>
+<ul>
+<li><code>clazz.getMethod(methodName)</code>：通过反射获取类中的方法。</li>
+<li><code>method.invoke(clazz.newInstance())</code>：调用获取到的方法。</li>
+</ul>
+</li>
+</ol>
+<p><code>Class.forName</code> 的详细解析<br><code>Class.forName</code>方法有两个重载版本：</p>
+<ul>
+<li><code>Class&lt;?&gt; forName(String name)</code>：根据类名加载类。</li>
+<li><code>Class&lt;?&gt; forName(String name, boolean initialize, ClassLoader loader)</code>：同样加载类，但可以指定是否初始化类，并通过指定<code>ClassLoader</code>来加载类。</li>
+</ul>
+<p>第⼆个参数 initialize 常常被⼈人误解，我看到勾陈安全实验室有篇讲反射机制的⽂文章（<a target="_blank" rel="noopener" href="http://www.polaris-lab.com/index.php/archives/450/%EF%BC%89%E2%BE%A5%E9%87%8C%E9%87%8C%E8%AF%B4%E5%88%B0%EF%BC%9A">http://www.polaris-lab.com/index.php/archives/450/）⾥里里说到：</a><br>注意，有一点很有趣，使⽤用功能”.class”来创建Class对象的引⽤用时，不会⾃自动初始化该Class对象，使用forName()会自动初始化该Class对象<br><img src="/2024/11/12/WebSecurity/codeaudit/javasec/image-6.png"><br>图中有说“构造函数，初始化时执⾏”，其实在 forName 的时候，构造函数并不不会执行，即使我们设置 initialize&#x3D;true 。<br>那么这个初始化究竟指什什么呢？可以将这个“初始化”理理解为类的初始化。<code>initialize</code>参数决定是否初始化类。对于一些类的加载，它可能会触发类的静态初始化块。例如，以下类的静态块会在类加载时执行：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TrainPrint</span> &#123;</span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        System.out.printf(<span class="string">&quot;Static initial %s\n&quot;</span>, TrainPrint.class);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    &#123;</span><br><span class="line">        System.out.printf(<span class="string">&quot;Empty block initial %s\n&quot;</span>, <span class="built_in">this</span>.getClass());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">TrainPrint</span><span class="params">()</span> &#123;</span><br><span class="line">        System.out.printf(<span class="string">&quot;Initial %s\n&quot;</span>, <span class="built_in">this</span>.getClass());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>加载这个类时，首先会执行<code>static</code>块，然后是实例块，最后是构造函数。</p>
+<h3 id="反射绕过沙盒的例子"><a href="#反射绕过沙盒的例子" class="headerlink" title="反射绕过沙盒的例子"></a>反射绕过沙盒的例子</h3><p>关于绕沙盒，之前Code-Breaking 2018作者出了了⼀一道SpEL的题⽬目，分享⼀一篇第三⽅方Writeup：<a target="_blank" rel="noopener" href="http://rui0.cn/archives/1015">http://rui0.cn/archives/1015</a></p>
+<p>假设你有一个可以控制输入的函数，传入一个类名并通过反射加载这个类：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">ref</span><span class="params">(String name)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">    Class.forName(name);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果<code>name</code>参数由攻击者控制，他们可以利用反射加载恶意类并执行其中的静态初始化块。例如，以下恶意类在静态块中执行<code>Runtime.exec()</code>命令来创建文件：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.lang.Runtime;</span><br><span class="line"><span class="keyword">import</span> java.lang.Process;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TouchFile</span> &#123;</span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="type">Runtime</span> <span class="variable">rt</span> <span class="operator">=</span> Runtime.getRuntime();</span><br><span class="line">            String[] commands = &#123;<span class="string">&quot;touch&quot;</span>, <span class="string">&quot;/tmp/success&quot;</span>&#125;;</span><br><span class="line">            <span class="type">Process</span> <span class="variable">pc</span> <span class="operator">=</span> rt.exec(commands);</span><br><span class="line">            pc.waitFor();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">            <span class="comment">// do nothing</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个恶意类可能通过<code>Class.forName</code>触发，导致在目标系统上执行<code>touch /tmp/success</code>命令，从而创建一个文件。</p>
+<p>OPNSense freeBSD 映做 </p>
+<p><img src="/2024/11/12/WebSecurity/codeaudit/javasec/image-2.png"><br><img src="/2024/11/12/WebSecurity/codeaudit/javasec/image-3.png"><br><img src="/2024/11/12/WebSecurity/codeaudit/javasec/image-4.png"><br><img src="/2024/11/12/WebSecurity/codeaudit/javasec/image-5.png"><br>Filter<br>javasec-vuls-struts2<br>JEESNS回答处存在XSS漏洞<br><img src="/2024/11/12/WebSecurity/codeaudit/javasec/image.png"><br><img src="/2024/11/12/WebSecurity/codeaudit/javasec/image-1.png"></p>
 
   </div>
 </article>
@@ -216,26 +261,32 @@
 
     
     
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E9%83%A8%E5%88%86"><span class="toc-number">1.</span> <span class="toc-text">第一部分</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%8D%E5%B0%84%E7%9A%84%E6%A0%B8%E5%BF%83%E5%8A%9F%E8%83%BD"><span class="toc-number">1.1.</span> <span class="toc-text">反射的核心功能</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%8D%E5%B0%84%E7%BB%95%E8%BF%87%E6%B2%99%E7%9B%92%E7%9A%84%E4%BE%8B%E5%AD%90"><span class="toc-number">1.2.</span> <span class="toc-text">反射绕过沙盒的例子</span></a></li></ol></li></ol>
+      </div>
+    
 
     <div id="share-footer" style="display: none">
       <ul>
   <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://godreams.cn/2024/11/12/WebSecurity/codeaudit/javasec/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://godreams.cn/2024/11/12/WebSecurity/codeaudit/javasec/&text=javasec"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://godreams.cn/2024/11/12/WebSecurity/codeaudit/javasec/&title=javasec"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://godreams.cn/2024/11/12/WebSecurity/codeaudit/javasec/&is_video=false&description=javasec"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=javasec&body=Check out this article: https://godreams.cn/2024/11/12/WebSecurity/codeaudit/javasec/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://godreams.cn/2024/11/12/WebSecurity/codeaudit/javasec/&title=javasec"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://godreams.cn/2024/11/12/WebSecurity/codeaudit/javasec/&title=javasec"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://godreams.cn/2024/11/12/WebSecurity/codeaudit/javasec/&title=javasec"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://godreams.cn/2024/11/12/WebSecurity/codeaudit/javasec/&title=javasec"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://godreams.cn/2024/11/12/WebSecurity/codeaudit/javasec/&name=javasec&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://godreams.cn/2024/11/12/WebSecurity/codeaudit/javasec/&t=javasec"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://godreams.cn/2024/11/12/WebSecurity/codeaudit/javasec/&text=【代码审计】Java代码审计反射篇"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://godreams.cn/2024/11/12/WebSecurity/codeaudit/javasec/&title=【代码审计】Java代码审计反射篇"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://godreams.cn/2024/11/12/WebSecurity/codeaudit/javasec/&is_video=false&description=【代码审计】Java代码审计反射篇"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【代码审计】Java代码审计反射篇&body=Check out this article: https://godreams.cn/2024/11/12/WebSecurity/codeaudit/javasec/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://godreams.cn/2024/11/12/WebSecurity/codeaudit/javasec/&title=【代码审计】Java代码审计反射篇"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://godreams.cn/2024/11/12/WebSecurity/codeaudit/javasec/&title=【代码审计】Java代码审计反射篇"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://godreams.cn/2024/11/12/WebSecurity/codeaudit/javasec/&title=【代码审计】Java代码审计反射篇"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://godreams.cn/2024/11/12/WebSecurity/codeaudit/javasec/&title=【代码审计】Java代码审计反射篇"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://godreams.cn/2024/11/12/WebSecurity/codeaudit/javasec/&name=【代码审计】Java代码审计反射篇&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://godreams.cn/2024/11/12/WebSecurity/codeaudit/javasec/&t=【代码审计】Java代码审计反射篇"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
 
     <div id="actions-footer">
         <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
         
         <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
         <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
