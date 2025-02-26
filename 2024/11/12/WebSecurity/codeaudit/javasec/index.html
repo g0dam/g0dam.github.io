@@ -21,7 +21,7 @@
 <meta property="og:image" content="https://godreams.cn/2024/11/12/WebSecurity/codeaudit/javasec/image.png">
 <meta property="og:image" content="https://godreams.cn/2024/11/12/WebSecurity/codeaudit/javasec/image-1.png">
 <meta property="article:published_time" content="2024-11-12T02:17:32.000Z">
-<meta property="article:modified_time" content="2025-02-24T08:08:44.432Z">
+<meta property="article:modified_time" content="2025-02-26T04:10:49.524Z">
 <meta property="article:author" content="g0dam">
 <meta property="article:tag" content="Java">
 <meta property="article:tag" content="代码审计">
@@ -213,6 +213,7 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TrainPrint</span> &#123;</span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">        System.out.printf(<span class="string">&quot;Static initial %s\n&quot;</span>, TrainPrint.class);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    &#123;</span><br><span class="line">        System.out.printf(<span class="string">&quot;Empty block initial %s\n&quot;</span>, <span class="built_in">this</span>.getClass());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">TrainPrint</span><span class="params">()</span> &#123;</span><br><span class="line">        System.out.printf(<span class="string">&quot;Initial %s\n&quot;</span>, <span class="built_in">this</span>.getClass());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>加载这个类时，首先会执行<code>static</code>块，然后是实例块，最后是构造函数。</p>
+<p>总结来说就是:loadClass()方法只对类进行加载，不会对类进行初始化。Class.forName 会默认对类进行初始化。当对类进行初始化时，静态的代码块就会得到执行，而代码块和构造函数则需要适合的类实例化才能得到执行.</p>
 <h3 id="反射绕过沙盒的例子"><a href="#反射绕过沙盒的例子" class="headerlink" title="反射绕过沙盒的例子"></a>反射绕过沙盒的例子</h3><p>关于绕沙盒，之前Code-Breaking 2018作者出了了⼀一道SpEL的题⽬目，分享⼀一篇第三⽅方Writeup：<a target="_blank" rel="noopener" href="http://rui0.cn/archives/1015">http://rui0.cn/archives/1015</a></p>
 <p>假设你有一个可以控制输入的函数，传入一个类名并通过反射加载这个类：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">ref</span><span class="params">(String name)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">    Class.forName(name);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
