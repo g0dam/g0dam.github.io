@@ -14,7 +14,7 @@
 <meta property="og:description" content="应用安全岗位 Redis 未授权访问漏洞如何入侵利用？漏洞原理：Redis 默认监听在 6379 端口，若未设置密码或绑定特定 IP，攻击者可直接访问。利用方式：- 写入 SSH 公钥：利用 CONFIG SET 命令修改配置，设置持久化目录为 &#x2F;root&#x2F;.ssh&#x2F;，文件名为 authorized_keys，然后使用 SET 命令写入公钥，最终通过 SSH 登录目标服务器。- 反弹 Shell：">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2024-03-03T12:15:58.000Z">
-<meta property="article:modified_time" content="2025-03-04T07:54:53.671Z">
+<meta property="article:modified_time" content="2025-03-11T01:30:52.706Z">
 <meta property="article:author" content="g0dam">
 <meta property="article:tag" content="null">
 <meta name="twitter:card" content="summary">
@@ -92,6 +92,8 @@
         
         <li><a class="icon" aria-label="Previous post" href="/2024/09/10/PaperReading/Auto-Login/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
         
+        
+        <li><a class="icon" aria-label="Next post" href="/2024/03/03/work/workpre2/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
         
         <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
         <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
