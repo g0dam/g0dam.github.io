@@ -13,6 +13,7 @@
 <meta property="og:site_name" content="g0dam">
 <meta property="og:description" content="「Java安全」https:&#x2F;&#x2F;pan.quark.cn&#x2F;s&#x2F;56c5a74545e7Java的安全问题常常从反序列化漏洞谈起，而反序列化漏洞又与反射紧密相关。反射是Java中的一个强大功能，它允许程序在运行时动态地加载类、调用方法、访问字段等。通过反射，Java能够将这种静态语言赋予动态特性。“动态特性”是指代码在运行时可以改变其行为。例如，通过改变代码中的某些变量，可能会导致代码的执行结果发生">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://godreams.cn/2024/11/12/WebSecurity/codeaudit/javasec/image-7.png">
 <meta property="og:image" content="https://godreams.cn/2024/11/12/WebSecurity/codeaudit/javasec/image-6.png">
 <meta property="og:image" content="https://godreams.cn/2024/11/12/WebSecurity/codeaudit/javasec/image-2.png">
 <meta property="og:image" content="https://godreams.cn/2024/11/12/WebSecurity/codeaudit/javasec/image-3.png">
@@ -21,12 +22,12 @@
 <meta property="og:image" content="https://godreams.cn/2024/11/12/WebSecurity/codeaudit/javasec/image.png">
 <meta property="og:image" content="https://godreams.cn/2024/11/12/WebSecurity/codeaudit/javasec/image-1.png">
 <meta property="article:published_time" content="2024-11-12T02:17:32.000Z">
-<meta property="article:modified_time" content="2025-02-26T04:10:49.524Z">
+<meta property="article:modified_time" content="2025-03-12T09:02:25.981Z">
 <meta property="article:author" content="g0dam">
 <meta property="article:tag" content="Java">
 <meta property="article:tag" content="代码审计">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://godreams.cn/2024/11/12/WebSecurity/codeaudit/javasec/image-6.png">
+<meta name="twitter:image" content="https://godreams.cn/2024/11/12/WebSecurity/codeaudit/javasec/image-7.png">
     
     
       
@@ -183,6 +184,7 @@
 
   <div class="content e-content" itemprop="articleBody">
     <p>「Java安全」<a target="_blank" rel="noopener" href="https://pan.quark.cn/s/56c5a74545e7">https://pan.quark.cn/s/56c5a74545e7</a><br>Java的安全问题常常从反序列化漏洞谈起，而反序列化漏洞又与反射紧密相关。反射是Java中的一个强大功能，它允许程序在运行时动态地加载类、调用方法、访问字段等。通过反射，Java能够将这种静态语言赋予动态特性。<br>“动态特性”是指代码在运行时可以改变其行为。例如，通过改变代码中的某些变量，可能会导致代码的执行结果发生变化。虽然Java不像PHP那样灵活，但通过反射，Java也能够提供一定的动态特性。<br>反射在安全研究中常用于绕过沙盒（如限制某些类的访问）。例如，通过反射可以绕过输入限制来加载并执行潜在危险的类。假设你只能获取一个<code>Integer</code>类型的输入，但可以利用反射加载并执行<code>Runtime</code>类中的命令。</p>
+<p><img src="/2024/11/12/WebSecurity/codeaudit/javasec/image-7.png"></p>
 <h2 id="第一部分"><a href="#第一部分" class="headerlink" title="第一部分"></a>第一部分</h2><h3 id="反射的核心功能"><a href="#反射的核心功能" class="headerlink" title="反射的核心功能"></a>反射的核心功能</h3><p>反射是通过以下几种方法实现的：</p>
 <ol>
 <li><p><strong>获取类</strong>：</p>
