@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="https:&#x2F;&#x2F;github.com&#x2F;vvmdx&#x2F;Sec-Interview-4-2023 MSSQL 除了 xp_cmdshell、sp_oacreate 还有什么办法执行命令？在 MSSQL 中，除了使用 xp_cmdshell 和 sp_oacreate，还可以通过以下方法执行系统命令：  CLR 集成：  启用 CLR 集成，创建 CLR 存储过程来执行命令。 步骤包括启用 CLR、创建程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【工作】面试题整理 大厂常见问题">
+<meta property="og:url" content="https://godreams.cn/2024/03/17/work/workpre4/index.html">
+<meta property="og:site_name" content="g0dam">
+<meta property="og:description" content="https:&#x2F;&#x2F;github.com&#x2F;vvmdx&#x2F;Sec-Interview-4-2023 MSSQL 除了 xp_cmdshell、sp_oacreate 还有什么办法执行命令？在 MSSQL 中，除了使用 xp_cmdshell 和 sp_oacreate，还可以通过以下方法执行系统命令：  CLR 集成：  启用 CLR 集成，创建 CLR 存储过程来执行命令。 步骤包括启用 CLR、创建程">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-03-17T08:43:01.000Z">
+<meta property="article:modified_time" content="2025-03-17T09:45:46.907Z">
+<meta property="article:author" content="g0dam">
+<meta property="article:tag" content="null">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>【工作】面试题整理 大厂常见问题</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+      <link rel="alternate" href="/true" title="g0dam" type="application/atom+xml" />
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Categories</a></li><!--
+     --><!--
+       --><li><a href="/idea/">Idea</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/g0dam">Projects</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/2024/09/10/PaperReading/Auto-Login/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2024/03/17/work/workandroid/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://godreams.cn/2024/03/17/work/workpre4/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://godreams.cn/2024/03/17/work/workpre4/&text=【工作】面试题整理 大厂常见问题"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://godreams.cn/2024/03/17/work/workpre4/&title=【工作】面试题整理 大厂常见问题"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://godreams.cn/2024/03/17/work/workpre4/&is_video=false&description=【工作】面试题整理 大厂常见问题"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【工作】面试题整理 大厂常见问题&body=Check out this article: https://godreams.cn/2024/03/17/work/workpre4/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://godreams.cn/2024/03/17/work/workpre4/&title=【工作】面试题整理 大厂常见问题"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://godreams.cn/2024/03/17/work/workpre4/&title=【工作】面试题整理 大厂常见问题"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://godreams.cn/2024/03/17/work/workpre4/&title=【工作】面试题整理 大厂常见问题"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://godreams.cn/2024/03/17/work/workpre4/&title=【工作】面试题整理 大厂常见问题"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://godreams.cn/2024/03/17/work/workpre4/&name=【工作】面试题整理 大厂常见问题&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://godreams.cn/2024/03/17/work/workpre4/&t=【工作】面试题整理 大厂常见问题"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#MSSQL-%E9%99%A4%E4%BA%86-xp-cmdshell%E3%80%81sp-oacreate-%E8%BF%98%E6%9C%89%E4%BB%80%E4%B9%88%E5%8A%9E%E6%B3%95%E6%89%A7%E8%A1%8C%E5%91%BD%E4%BB%A4%EF%BC%9F"><span class="toc-number">1.</span> <span class="toc-text">MSSQL 除了 xp_cmdshell、sp_oacreate 还有什么办法执行命令？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CLR-%E5%8E%9F%E7%90%86%E4%BB%A5%E5%8F%8A%E6%B5%81%E7%A8%8B"><span class="toc-number">2.</span> <span class="toc-text">CLR 原理以及流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Oracle-%E8%83%BD%E4%B8%8D%E8%83%BD-RCE%EF%BC%9F%E6%80%8E%E4%B9%88-RCE%EF%BC%9F%E5%89%8D%E7%BD%AE%E6%9D%A1%E4%BB%B6%E6%98%AF%E5%95%A5%EF%BC%9F"><span class="toc-number">3.</span> <span class="toc-text">Oracle 能不能 RCE？怎么 RCE？前置条件是啥？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Autotype-false-%E7%BB%95%E8%BF%87%E6%9C%89%E5%87%A0%E7%A7%8D%E6%80%9D%E8%B7%AF%EF%BC%9F"><span class="toc-number">4.</span> <span class="toc-text">Autotype&#x3D;false 绕过有几种思路？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PHPInfo-%E4%BD%A0%E4%BC%9A%E5%85%B3%E6%B3%A8%E5%93%AA%E4%BA%9B%E4%BF%A1%E6%81%AF"><span class="toc-number">5.</span> <span class="toc-text">PHPInfo 你会关注哪些信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B5%8F%E8%A7%88%E5%99%A8%E8%A7%A3%E6%9E%90%E9%A1%BA%E5%BA%8F%E5%92%8C%E8%A7%A3%E7%A0%81%E9%A1%BA%E5%BA%8F"><span class="toc-number">6.</span> <span class="toc-text">浏览器解析顺序和解码顺序</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%87%E6%BB%A4limit%E5%90%8E%E7%9A%84%E9%80%97%E5%8F%B7%E5%A6%82%E4%BD%95%E7%BB%95%E8%BF%87"><span class="toc-number">7.</span> <span class="toc-text">过滤limit后的逗号如何绕过</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%87%E6%BB%A4%E9%80%97%E5%8F%B7%E7%9A%84SQL%E6%B3%A8%E5%85%A5%E5%A6%82%E4%BD%95%E7%BB%95%E8%BF%87"><span class="toc-number">8.</span> <span class="toc-text">过滤逗号的SQL注入如何绕过</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Python%E7%9B%B8%E5%85%B3%E7%9A%84%E6%BC%8F%E6%B4%9E%EF%BC%88SSTI%E5%8E%9F%E7%90%86%EF%BC%8C%E5%88%A9%E7%94%A8%E8%BF%87%E7%A8%8B%EF%BC%8Cpayload%E7%9B%B8%E5%85%B3%E7%9A%84%E4%B8%9C%E8%A5%BF%EF%BC%89"><span class="toc-number">9.</span> <span class="toc-text">Python相关的漏洞（SSTI原理，利用过程，payload相关的东西）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Java-%E5%86%85%E5%AD%98%E9%A9%AC"><span class="toc-number">10.</span> <span class="toc-text">Java 内存马</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%B0%E8%9D%8E%E3%80%81%E5%93%A5%E6%96%AF%E6%8B%89%E5%B7%A5%E5%85%B7"><span class="toc-number">11.</span> <span class="toc-text">冰蝎、哥斯拉工具</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%A1%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%BC%95%E6%93%8E%E7%9A%84%E6%AD%A5%E9%AA%A4%E5%92%8C%E6%80%9D%E8%B7%AF"><span class="toc-number">12.</span> <span class="toc-text">审表达式引擎的步骤和思路</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#XXE%E6%BC%8F%E6%B4%9E%E6%88%90%E5%9B%A0%E5%8F%8A%E4%BB%A3%E7%A0%81%E5%B1%82%E9%9D%A2%E5%88%86%E6%9E%90"><span class="toc-number">13.</span> <span class="toc-text">XXE漏洞成因及代码层面分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%81%87%E5%88%B0ORDER-BY%E6%97%B6%E7%9A%84%E9%98%B2%E5%BE%A1"><span class="toc-number">14.</span> <span class="toc-text">遇到ORDER BY时的防御</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%BD%E5%AD%97%E8%8A%82%E6%B3%A8%E5%85%A5"><span class="toc-number">15.</span> <span class="toc-text">宽字节注入</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%89%B9%E6%AE%8A%E5%AD%97%E7%AC%A6%E8%BD%AC%E4%B9%89%E6%97%B6%E7%9A%84%E5%A4%84%E7%90%86"><span class="toc-number">16.</span> <span class="toc-text">特殊字符转义时的处理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E4%BA%8E%E9%BB%91%E7%99%BD%E5%90%8D%E5%8D%95%E7%9A%84%E4%BF%AE%E5%A4%8D%E5%9C%A8Docker%E7%8E%AF%E5%A2%83%E4%B8%AD%E7%9A%84%E5%BA%94%E7%94%A8"><span class="toc-number">17.</span> <span class="toc-text">基于黑白名单的修复在Docker环境中的应用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Java%E7%B3%BB%E7%BB%9F%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E6%B5%81%E7%A8%8B"><span class="toc-number">18.</span> <span class="toc-text">Java系统代码审计流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Java%E7%B3%BB%E7%BB%9F%E4%B8%ADSQL%E6%B3%A8%E5%85%A5%E7%9A%84%E9%98%B2%E5%BE%A1%E4%B8%8E%E4%BF%AE%E5%A4%8D"><span class="toc-number">19.</span> <span class="toc-text">Java系统中SQL注入的防御与修复</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%98%B2%E5%BE%A1%E6%8E%AA%E6%96%BD"><span class="toc-number">19.1.</span> <span class="toc-text">防御措施</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BF%AE%E5%A4%8D%E6%96%B9%E6%B3%95"><span class="toc-number">19.2.</span> <span class="toc-text">修复方法</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%97%B6%E7%9A%84%E9%AD%94%E6%9C%AF%E6%96%B9%E6%B3%95%E5%85%A5%E6%89%8B%E7%82%B9"><span class="toc-number">20.</span> <span class="toc-text">反序列化时的魔术方法入手点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9C%A8PHP%E7%8E%AF%E5%A2%83%E4%B8%8B%E5%88%A9%E7%94%A8SSRF"><span class="toc-number">21.</span> <span class="toc-text">在PHP环境下利用SSRF</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PHP%E4%BB%A3%E7%A0%81%E5%B8%B8%E8%A7%81%E5%85%A5%E5%8F%A3%E5%87%BD%E6%95%B0%E7%9A%84%E6%9F%A5%E6%89%BE"><span class="toc-number">22.</span> <span class="toc-text">PHP代码常见入口函数的查找</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PHP%E5%BC%80%E5%8F%91%E6%A1%86%E6%9E%B6%E7%9A%84URL%E8%B7%AF%E7%94%B1%E6%96%B9%E6%B3%95"><span class="toc-number">23.</span> <span class="toc-text">PHP开发框架的URL路由方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%9C%E7%A8%8B%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E5%92%8C%E6%9C%AC%E5%9C%B0%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%B6%89%E5%8F%8A%E7%9A%84PHP%E8%AE%BE%E7%BD%AE"><span class="toc-number">24.</span> <span class="toc-text">远程文件包含和本地文件包含涉及的PHP设置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%AC%E5%9C%B0%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E7%9A%84PHP%E9%85%8D%E7%BD%AE%E9%99%90%E5%88%B6"><span class="toc-number">25.</span> <span class="toc-text">本地文件包含的PHP配置限制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PHP%E5%9C%A8%E5%81%9ASQL%E6%B3%A8%E5%85%A5%E9%98%B2%E5%BE%A1%E6%97%B6%E7%9A%84%E6%96%B9%E6%B3%95"><span class="toc-number">26.</span> <span class="toc-text">PHP在做SQL注入防御时的方法</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        【工作】面试题整理 大厂常见问题
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">g0dam</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2024-03-17T08:43:01.000Z" class="dt-published" itemprop="datePublished">2024-03-17</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <p><a target="_blank" rel="noopener" href="https://github.com/vvmdx/Sec-Interview-4-2023">https://github.com/vvmdx/Sec-Interview-4-2023</a></p>
+<h3 id="MSSQL-除了-xp-cmdshell、sp-oacreate-还有什么办法执行命令？"><a href="#MSSQL-除了-xp-cmdshell、sp-oacreate-还有什么办法执行命令？" class="headerlink" title="MSSQL 除了 xp_cmdshell、sp_oacreate 还有什么办法执行命令？"></a>MSSQL 除了 <code>xp_cmdshell</code>、<code>sp_oacreate</code> 还有什么办法执行命令？</h3><p>在 MSSQL 中，除了使用 <code>xp_cmdshell</code> 和 <code>sp_oacreate</code>，还可以通过以下方法执行系统命令：</p>
+<ol>
+<li><p><strong>CLR 集成</strong>：</p>
+<ul>
+<li>启用 CLR 集成，创建 CLR 存储过程来执行命令。</li>
+<li>步骤包括启用 CLR、创建程序集、创建存储过程和执行命令。</li>
+</ul>
+</li>
+<li><p><strong>SQL Server 代理作业</strong>：</p>
+<ul>
+<li>使用 SQL Server 代理创建作业来执行命令。</li>
+<li>步骤包括创建作业、添加作业步骤、启动作业。</li>
+</ul>
+</li>
+<li><p><strong>OpenRowset</strong>：</p>
+<ul>
+<li>利用 <code>OpenRowset</code> 和 Jet OLEDB 提供程序执行命令。</li>
+<li>需要启用沙盒模式并执行命令。</li>
+</ul>
+</li>
+<li><p><strong>扩展存储过程</strong>：</p>
+<ul>
+<li>使用 <code>sp_addextendedproc</code> 添加自定义扩展存储过程来执行命令。</li>
+</ul>
+</li>
+</ol>
+<h3 id="CLR-原理以及流程"><a href="#CLR-原理以及流程" class="headerlink" title="CLR 原理以及流程"></a>CLR 原理以及流程</h3><p>CLR（Common Language Runtime）是 .NET Framework 的核心组件之一，负责管理代码的执行。在 MSSQL 中，CLR 集成允许使用 .NET Framework 语言编写存储过程、触发器等。<br>流程包括：</p>
+<ol>
+<li>启用 CLR 集成。</li>
+<li>创建 CLR 存储过程。</li>
+<li>编译并部署 CLR 程序集。</li>
+<li>在 MSSQL 中注册并使用 CLR 存储过程。</li>
+</ol>
+<h3 id="Oracle-能不能-RCE？怎么-RCE？前置条件是啥？"><a href="#Oracle-能不能-RCE？怎么-RCE？前置条件是啥？" class="headerlink" title="Oracle 能不能 RCE？怎么 RCE？前置条件是啥？"></a>Oracle 能不能 RCE？怎么 RCE？前置条件是啥？</h3><p>Oracle 数据库在某些情况下可以被用于远程代码执行（RCE），这通常依赖于数据库的配置和存在的漏洞。<br>攻击方法包括：</p>
+<ol>
+<li><strong>利用 DBMS_SCHEDULER</strong>：通过创建作业来执行系统命令。</li>
+<li><strong>利用外部表</strong>：通过配置外部表来执行命令。</li>
+<li><strong>利用 Java 存储过程</strong>：在数据库中运行 Java 代码来执行命令。</li>
+<li><strong>利用 TNS Listener 漏洞</strong>：通过 TNS Listener 的漏洞执行命令。<br>前置条件包括：</li>
+</ol>
+<ul>
+<li>数据库存在可利用的漏洞。</li>
+<li>攻击者具有足够的权限。</li>
+</ul>
+<h3 id="Autotype-false-绕过有几种思路？"><a href="#Autotype-false-绕过有几种思路？" class="headerlink" title="Autotype&#x3D;false 绕过有几种思路？"></a>Autotype&#x3D;false 绕过有几种思路？</h3><p>当 <code>autotype=false</code> 时，可以尝试以下绕过思路：</p>
+<ol>
+<li><strong>手动指定类型</strong>：显式指定输入的类型。</li>
+<li><strong>使用备用序列化格式</strong>：尝试使用其他序列化格式。</li>
+<li><strong>利用反序列化漏洞工具</strong>：使用工具如 ysoserial 生成特定的 payload。</li>
+<li><strong>修改输入格式</strong>：调整输入数据的格式以匹配预期的类型。</li>
+</ol>
+<h3 id="PHPInfo-你会关注哪些信息"><a href="#PHPInfo-你会关注哪些信息" class="headerlink" title="PHPInfo 你会关注哪些信息"></a>PHPInfo 你会关注哪些信息</h3><p>在查看 <code>phpinfo()</code> 输出时，应关注以下信息：</p>
+<ol>
+<li><strong>PHP 版本</strong>：了解 PHP 的版本和更新情况。</li>
+<li><strong>配置选项</strong>：查看编译时的配置选项。</li>
+<li><strong>扩展和模块</strong>：识别加载的扩展和模块。</li>
+<li><strong>环境变量</strong>：查看服务器的环境变量。</li>
+<li><strong>安全相关设置</strong>：检查与安全相关的配置。</li>
+</ol>
+<h3 id="浏览器解析顺序和解码顺序"><a href="#浏览器解析顺序和解码顺序" class="headerlink" title="浏览器解析顺序和解码顺序"></a>浏览器解析顺序和解码顺序</h3><p>浏览器的解析顺序和解码顺序是两个不同的概念，但它们在处理网页内容时是紧密相关的。解析顺序指的是浏览器处理HTML、CSS和JavaScript等资源的顺序，而解码顺序则涉及浏览器如何将编码的字符转换为可读的文本。</p>
+<ol>
+<li><strong>解析顺序</strong>：<ul>
+<li>浏览器通常按照HTML文档的顺序进行解析，从上到下依次处理标签、属性和内容。</li>
+<li>在解析过程中，遇到<code>&lt;link&gt;</code>、<code>&lt;style&gt;</code>、<code>&lt;script&gt;</code>等标签时，浏览器会暂停HTML解析，去加载和处理这些资源。其中，外部样式表会阻塞后续的外部脚本的加载，但不会阻塞内部脚本的执行。</li>
+</ul>
+</li>
+<li><strong>解码顺序</strong>：<ul>
+<li>浏览器的解码顺序通常是：HTML解码 → URL解码 → JavaScript解码。</li>
+<li><strong>HTML解码</strong>：在构建DOM树时，浏览器会对HTML实体编码的内容进行解码，例如<code>&amp;lt;</code>会被解码为<code>&lt;</code>。</li>
+<li><strong>URL解码</strong>：服务器接收到浏览器请求后，会先进行URL解析，将编码的字符转换回原始字符，例如<code>%20</code>会被解码为空格。</li>
+<li><strong>JavaScript解码</strong>：在执行JavaScript代码时，浏览器会对字符串中的转义字符进行解码，例如<code>\u4e00</code>会被解码为汉字<code>一</code>。</li>
+</ul>
+</li>
+</ol>
+<h3 id="过滤limit后的逗号如何绕过"><a href="#过滤limit后的逗号如何绕过" class="headerlink" title="过滤limit后的逗号如何绕过"></a>过滤<code>limit</code>后的逗号如何绕过</h3><p>在SQL注入中，如果<code>limit</code>后的逗号被过滤，可以使用以下方法绕过：</p>
+<ul>
+<li><strong>使用<code>JOIN</code>代替逗号</strong>：通过构造<code>JOIN</code>查询来替代<code>UNION SELECT</code>中的逗号。例如，将<code>UNION SELECT 1,2,3</code>改为<code>UNION SELECT * FROM ((SELECT 1)A JOIN (SELECT 2)B JOIN (SELECT 3)C)</code>。</li>
+</ul>
+<h3 id="过滤逗号的SQL注入如何绕过"><a href="#过滤逗号的SQL注入如何绕过" class="headerlink" title="过滤逗号的SQL注入如何绕过"></a>过滤逗号的SQL注入如何绕过</h3><p>当SQL注入中逗号被过滤时，可以采用以下方法：</p>
+<ul>
+<li><strong>使用<code>JOIN</code>方法</strong>：通过<code>JOIN</code>多个子查询来构造所需的查询语句，避免直接使用逗号。</li>
+<li><strong>利用函数和变量</strong>：使用数据库提供的函数和变量来间接获取所需的信息，例如使用<code>user()</code>、<code>database()</code>等函数。</li>
+</ul>
+<h3 id="Python相关的漏洞（SSTI原理，利用过程，payload相关的东西）"><a href="#Python相关的漏洞（SSTI原理，利用过程，payload相关的东西）" class="headerlink" title="Python相关的漏洞（SSTI原理，利用过程，payload相关的东西）"></a>Python相关的漏洞（SSTI原理，利用过程，payload相关的东西）</h3><p>一个著名的Python相关漏洞是服务器端模板注入（SSTI）。SSTI发生在服务器端使用用户输入动态渲染模板时，攻击者可以注入恶意模板代码，导致服务器执行任意代码。<br><strong>原理</strong>：</p>
+<ul>
+<li>当服务器端使用如Django、Jinja2等模板引擎时，如果用户输入被直接嵌入模板中，攻击者可以注入模板语法，执行任意代码。</li>
+</ul>
+<p><strong>利用过程</strong>：</p>
+<ol>
+<li><strong>确认漏洞存在</strong>：通过发送包含模板语法的输入，观察服务器响应是否包含执行结果。</li>
+<li><strong>构造payload</strong>：根据模板引擎的语法，构造能够执行命令或读取文件的payload。</li>
+<li><strong>执行命令或读取文件</strong>：利用payload执行系统命令或读取服务器上的敏感文件。</li>
+</ol>
+<p><strong>payload示例</strong>：</p>
+<ul>
+<li><p><strong>Django模板引擎</strong>：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#123; <span class="string">&#x27;&#x27;</span>.__class__.__mro__[<span class="number">1</span>].__subclasses__() &#125;&#125;</span><br></pre></td></tr></table></figure>
+<p>这段payload会返回所有子类，进一步可以利用这些子类执行系统命令。</p>
+</li>
+<li><p><strong>Jinja2模板引擎</strong>：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#123; <span class="variable language_">self</span>.__init__.__globals__[<span class="string">&#x27;os&#x27;</span>].popen(<span class="string">&#x27;id&#x27;</span>).read() &#125;&#125;</span><br></pre></td></tr></table></figure>
+<p>这段payload会执行<code>id</code>命令并返回结果。</p>
+</li>
+</ul>
+<h3 id="Java-内存马"><a href="#Java-内存马" class="headerlink" title="Java 内存马"></a>Java 内存马</h3><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/MachineGunJoe/article/details/118088350">https://blog.csdn.net/MachineGunJoe/article/details/118088350</a></p>
+<h3 id="冰蝎、哥斯拉工具"><a href="#冰蝎、哥斯拉工具" class="headerlink" title="冰蝎、哥斯拉工具"></a>冰蝎、哥斯拉工具</h3><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_53577336/article/details/125048353">https://blog.csdn.net/qq_53577336/article/details/125048353</a></p>
+<h3 id="审表达式引擎的步骤和思路"><a href="#审表达式引擎的步骤和思路" class="headerlink" title="审表达式引擎的步骤和思路"></a>审表达式引擎的步骤和思路</h3><p>审计表达式引擎时，我会：</p>
+<ol>
+<li><strong>分析输入处理</strong>：检查用户输入的表达式是否经过严格验证。</li>
+<li><strong>检查解析过程</strong>：查看引擎如何解析和处理表达式。</li>
+<li><strong>评估安全性</strong>：确保引擎不会执行恶意代码或泄露敏感信息。</li>
+</ol>
+<p>例如，在审计一个Java表达式引擎时，我会检查其是否对输入表达式进行了沙箱限制，防止恶意代码执行。</p>
+<h3 id="XXE漏洞成因及代码层面分析"><a href="#XXE漏洞成因及代码层面分析" class="headerlink" title="XXE漏洞成因及代码层面分析"></a>XXE漏洞成因及代码层面分析</h3><p>XXE（XML外部实体注入）漏洞是由于应用程序在处理XML输入时，启用了外部实体解析功能，且未对用户输入的XML内容进行严格过滤。攻击者可以构造恶意的XML内容，包含外部实体引用，从而读取服务器上的敏感文件或执行其他恶意操作。</p>
+<p>在代码层面，如果应用程序使用了<code>DocumentBuilderFactory</code>来解析XML，并且未禁用外部实体解析，就可能存在XXE漏洞。例如：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">DocumentBuilderFactory</span> <span class="variable">dbf</span> <span class="operator">=</span> DocumentBuilderFactory.newInstance();</span><br><span class="line">dbf.setFeature(<span class="string">&quot;http://apache.org/xml/features/disallow-doctype-declaration&quot;</span>, <span class="literal">false</span>); <span class="comment">// 禁用此功能可防止XXE</span></span><br><span class="line"><span class="type">DocumentBuilder</span> <span class="variable">db</span> <span class="operator">=</span> dbf.newDocumentBuilder();</span><br><span class="line">db.parse(<span class="keyword">new</span> <span class="title class_">InputSource</span>(xmlInput));</span><br></pre></td></tr></table></figure>
+
+<h3 id="遇到ORDER-BY时的防御"><a href="#遇到ORDER-BY时的防御" class="headerlink" title="遇到ORDER BY时的防御"></a>遇到ORDER BY时的防御</h3><p>在处理<code>ORDER BY</code>时，为防止SQL注入，应：<br>2. <strong>限制可排序的列</strong>：只允许对白名单中的列进行排序。</p>
+<h3 id="宽字节注入"><a href="#宽字节注入" class="headerlink" title="宽字节注入"></a>宽字节注入</h3><p>宽字节注入是利用字符编码中的多字节特性，通过构造特定的输入来绕过安全检查。例如，在GBK编码中，某些字符可以有多种编码方式，攻击者可以利用这一点来绕过过滤。</p>
+<h3 id="特殊字符转义时的处理"><a href="#特殊字符转义时的处理" class="headerlink" title="特殊字符转义时的处理"></a>特殊字符转义时的处理</h3><p>如果数据库的列名或表名包含特殊字符，应：</p>
+<ol>
+<li><strong>使用引号</strong>：在SQL语句中使用引号将标识符括起来。</li>
+<li><strong>转义字符</strong>：使用数据库支持的转义字符来处理特殊字符。</li>
+</ol>
+<h3 id="基于黑白名单的修复在Docker环境中的应用"><a href="#基于黑白名单的修复在Docker环境中的应用" class="headerlink" title="基于黑白名单的修复在Docker环境中的应用"></a>基于黑白名单的修复在Docker环境中的应用</h3><p>在Docker环境中，由于IP地址的动态变化和容器重启后环境的不一致性，传统的基于IP的黑白名单策略可能不再适用。可以考虑以下方法来实现黑白名单的修复和安全控制：</p>
+<ul>
+<li><strong>基于镜像和容器名称的黑白名单</strong>：通过镜像名称和标签来识别和控制容器的运行，而不是依赖IP地址。可以在Docker守护进程配置中设置允许或禁止运行的镜像列表。</li>
+<li><strong>使用Docker网络控制</strong>：利用Docker的网络功能，如创建自定义网络，并通过网络策略来控制容器之间的通信。可以限制某些容器只能与特定的网络或端口进行通信。</li>
+<li><strong>结合容器编排工具</strong>：在使用Kubernetes等容器编排工具时，可以通过命名空间、网络策略等资源来实现更细粒度的访问控制和隔离。</li>
+<li><strong>实施最小权限原则</strong>：为容器分配最小必要的权限，避免使用特权模式运行容器，并限制容器对宿主机资源的访问。</li>
+<li><strong>日志审计与监控</strong>：通过监控Docker守护进程的日志和容器日志，及时发现和响应异常活动。</li>
+</ul>
+<h3 id="Java系统代码审计流程"><a href="#Java系统代码审计流程" class="headerlink" title="Java系统代码审计流程"></a>Java系统代码审计流程</h3><p>在拿到Java系统的代码时，审计流程通常包括以下步骤：</p>
+<ol>
+<li><strong>环境搭建</strong>：配置与生产环境相似的开发和测试环境，确保代码能够正常运行。</li>
+<li><strong>代码结构分析</strong>：了解项目的整体架构，包括使用的框架、类库、模块划分等。识别出关键组件和数据流。</li>
+<li><strong>静态代码分析</strong>：使用静态代码分析工具（如SonarQube、FindBugs等）扫描代码，发现潜在的代码质量问题和安全漏洞。</li>
+<li><strong>敏感点审计</strong>：重点关注与安全相关的代码部分，如用户输入处理、身份验证、授权、数据加密等。检查是否存在SQL注入、XSS、CSRF等常见漏洞。</li>
+<li><strong>动态测试</strong>：通过单元测试、集成测试和渗透测试等方式，动态地发现运行时的漏洞和问题。</li>
+<li><strong>代码审查</strong>：进行人工代码审查，检查代码的逻辑、安全性和规范性。</li>
+<li><strong>漏洞验证与修复</strong>：对发现的漏洞进行验证，确定其真实性和影响范围，并根据风险等级制定修复计划。</li>
+<li><strong>回归测试</strong>：在修复漏洞后，进行回归测试，确保修复没有引入新的问题。</li>
+</ol>
+<h3 id="Java系统中SQL注入的防御与修复"><a href="#Java系统中SQL注入的防御与修复" class="headerlink" title="Java系统中SQL注入的防御与修复"></a>Java系统中SQL注入的防御与修复</h3><h4 id="防御措施"><a href="#防御措施" class="headerlink" title="防御措施"></a>防御措施</h4><ol>
+<li><strong>使用预编译语句（PreparedStatement）</strong>：通过预编译语句将用户输入与SQL命令分离，避免直接拼接SQL字符串。<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">String</span> <span class="variable">sql</span> <span class="operator">=</span> <span class="string">&quot;SELECT * FROM users WHERE username = ?&quot;</span>;</span><br><span class="line"><span class="type">PreparedStatement</span> <span class="variable">pstmt</span> <span class="operator">=</span> conn.prepareStatement(sql);</span><br><span class="line">pstmt.setString(<span class="number">1</span>, username);</span><br><span class="line"><span class="type">ResultSet</span> <span class="variable">rs</span> <span class="operator">=</span> pstmt.executeQuery();</span><br></pre></td></tr></table></figure></li>
+<li><strong>使用ORM框架</strong>：如Hibernate、MyBatis等，它们通常会提供安全的API来处理SQL查询，避免直接拼接SQL。</li>
+<li><strong>输入验证</strong>：对用户输入进行严格的验证，限制输入的格式和长度，确保输入符合预期。</li>
+<li><strong>最小权限原则</strong>：为数据库用户分配最小必要的权限，限制其只能执行必要的操作。</li>
+<li><strong>定期更新和打补丁</strong>：及时更新数据库管理系统和相关库，修复已知的安全漏洞。</li>
+</ol>
+<h4 id="修复方法"><a href="#修复方法" class="headerlink" title="修复方法"></a>修复方法</h4><ol>
+<li><strong>替换不安全的JDBC代码</strong>：将使用<code>Statement</code>直接拼接SQL字符串的代码替换为使用<code>PreparedStatement</code>。</li>
+<li><strong>检查和修改MyBatis&#x2F;Hibernate映射文件</strong>：确保在MyBatis的XML映射文件中使用<code>#&#123;&#125; </code>占位符，而不是<code>$&#123;&#125;</code>。</li>
+<li><strong>添加输入验证逻辑</strong>：在处理用户输入的地方添加验证逻辑，过滤掉非法字符和SQL关键字。</li>
+<li><strong>使用安全的库和框架</strong>：选择经过安全审计的库和框架，并正确配置它们的安全相关选项。</li>
+<li><strong>进行安全测试</strong>：在修复后进行安全测试，确保漏洞已得到解决，并没有引入新的问题。</li>
+</ol>
+<h3 id="反序列化时的魔术方法入手点"><a href="#反序列化时的魔术方法入手点" class="headerlink" title="反序列化时的魔术方法入手点"></a>反序列化时的魔术方法入手点</h3><p>在PHP中，当使用<code>unserialize()</code>反序列化一个字符串时，对象的以下魔术方法可能会被自动调用，可以作为寻找反序列化链的入手点：</p>
+<ol>
+<li>**<code>__wakeup()</code>**：<ul>
+<li>当对象被反序列化时，如果定义了<code>__wakeup()</code>方法，该方法会被调用。可以在这个方法中执行一些初始化操作，但也可以被利用来执行恶意代码。</li>
+</ul>
+</li>
+<li>**<code>__destruct()</code>**：<ul>
+<li>当对象被销毁时，如果定义了<code>__destruct()</code>方法，该方法会被调用。在反序列化过程中，如果对象在反序列化后立即被销毁，可能会触发<code>__destruct()</code>方法中的代码。</li>
+</ul>
+</li>
+<li>**<code>__toString()</code>**：<ul>
+<li>当对象被当作字符串使用时，如果定义了<code>__toString()</code>方法，该方法会被调用。在某些情况下，反序列化后的对象可能会被隐式转换为字符串，从而触发<code>__toString()</code>方法。</li>
+</ul>
+</li>
+<li>**<code>__call()</code>**：<ul>
+<li>当调用对象中不存在的方法时，如果定义了<code>__call()</code>方法，该方法会被调用。在反序列化过程中，如果对象的方法调用被触发，可能会执行<code>__call()</code>方法中的代码。</li>
+</ul>
+</li>
+<li>**<code>__get()</code>和<code>__set()</code>**：<ul>
+<li>当访问或设置对象中不存在的属性时，如果定义了<code>__get()</code>和<code>__set()</code>方法，这些方法会被调用。在反序列化过程中，如果对象的属性被访问或设置，可能会触发这些方法。</li>
+</ul>
+</li>
+</ol>
+<h3 id="在PHP环境下利用SSRF"><a href="#在PHP环境下利用SSRF" class="headerlink" title="在PHP环境下利用SSRF"></a>在PHP环境下利用SSRF</h3><p>服务器端请求伪造（SSRF）是一种安全漏洞，攻击者可以通过服务器端发起的请求来访问服务器内部网络或服务。在PHP环境下，利用SSRF获取shell或进入内网的方法如下：</p>
+<ol>
+<li><strong>识别目标服务器的内部网络结构</strong>：了解目标服务器所在的内部网络结构，包括内网IP地址范围、域名等信息。</li>
+<li><strong>构造恶意请求</strong>：利用PHP中的网络请求函数，如<code>file_get_contents()</code>、<code>curl</code>等，构造恶意请求，访问内网资源。<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$url</span> = <span class="string">&#x27;http://内网IP:端口/路径&#x27;</span>;</span><br><span class="line"><span class="variable">$content</span> = <span class="title function_ invoke__">file_get_contents</span>(<span class="variable">$url</span>);</span><br><span class="line"><span class="keyword">echo</span> <span class="variable">$content</span>;</span><br></pre></td></tr></table></figure></li>
+<li><strong>利用中间人攻击</strong>：在内网中设置一个恶意服务器，通过SSRF使目标服务器向该恶意服务器发送请求，从而获取目标服务器的相关信息。</li>
+<li><strong>利用服务器的漏洞或弱配置</strong>：如果目标服务器存在未授权访问、目录遍历等漏洞，可以通过SSRF利用这些漏洞获取更多权限或信息。</li>
+<li><strong>结合其他漏洞</strong>：将SSRF与其他漏洞（如命令注入、文件包含等）结合使用，扩大攻击面。</li>
+</ol>
+<h3 id="PHP代码常见入口函数的查找"><a href="#PHP代码常见入口函数的查找" class="headerlink" title="PHP代码常见入口函数的查找"></a>PHP代码常见入口函数的查找</h3><p>在PHP代码审计中，找到常见的入口函数是关键，因为这些函数往往是处理用户输入和业务逻辑的起点。以下是一些常见的入口函数及其查找方法：</p>
+<ol>
+<li><strong>前端控制器模式</strong>：许多PHP框架采用前端控制器模式，所有请求都通过一个入口文件（如<code>index.php</code>）进行处理。在这些文件中，通常会找到路由分发、请求处理等入口函数。</li>
+<li><strong>路由配置</strong>：在基于框架的项目中，路由配置文件定义了URL到控制器方法的映射。通过分析路由配置，可以找到处理特定请求的入口函数。</li>
+<li><strong>函数调用图</strong>：使用静态分析工具生成函数调用图，找出被频繁调用的函数，这些函数可能是业务逻辑的入口。</li>
+<li><strong>用户输入处理</strong>：查找处理用户输入的函数，如<code>$_GET</code>、<code>$_POST</code>、<code>$_REQUEST</code>等超全局变量的使用位置，这些位置往往是入口点。</li>
+<li><strong>框架特定入口</strong>：对于特定的PHP框架（如ThinkPHP、Laravel等），了解其请求处理流程和入口文件结构，可以直接定位到相关的入口函数。</li>
+</ol>
+<h3 id="PHP开发框架的URL路由方法"><a href="#PHP开发框架的URL路由方法" class="headerlink" title="PHP开发框架的URL路由方法"></a>PHP开发框架的URL路由方法</h3><p>不同的PHP开发框架有不同的URL路由机制，以下是一些常见框架的路由方法：</p>
+<ul>
+<li><strong>ThinkPHP</strong>：通过<code>Route</code>类进行路由定义，支持资源路由、分组路由等多种方式。例如：<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">Route</span>::<span class="title function_ invoke__">get</span>(<span class="string">&#x27;blog/:id&#x27;</span>, <span class="string">&#x27;Blog/index&#x27;</span>);</span><br></pre></td></tr></table></figure></li>
+<li><strong>Laravel</strong>：使用<code>Route</code>门面定义路由，支持GET、POST等HTTP动词，以及路由参数、中间件等。例如：<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">Route</span>::<span class="title function_ invoke__">get</span>(<span class="string">&#x27;/user/&#123;id&#125;&#x27;</span>, function (<span class="variable">$id</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&#x27;User &#x27;</span>.<span class="variable">$id</span>;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></li>
+<li><strong>Symfony</strong>：通过注解或YAML配置文件定义路由，与控制器方法关联。例如：<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">app_user:</span></span><br><span class="line">    <span class="attr">path:</span> <span class="string">/user/&#123;id&#125;</span></span><br><span class="line">    <span class="attr">controller:</span> <span class="string">App\Controller\UserController::index</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="远程文件包含和本地文件包含涉及的PHP设置"><a href="#远程文件包含和本地文件包含涉及的PHP设置" class="headerlink" title="远程文件包含和本地文件包含涉及的PHP设置"></a>远程文件包含和本地文件包含涉及的PHP设置</h3><p>远程文件包含和本地文件包含是PHP中常见的文件包含漏洞类型，它们涉及的PHP设置如下：</p>
+<ul>
+<li><strong>allow_url_fopen</strong>：控制是否允许使用<code>file_get_contents()</code>、<code>fopen()</code>等函数访问远程文件。默认值为<code>On</code>，开启时允许远程文件包含。</li>
+<li><strong>allow_url_include</strong>：控制是否允许在<code>include</code>、<code>require</code>等语句中加载远程文件。默认值为<code>Off</code>，关闭时禁止远程文件包含。</li>
+<li><strong>open_basedir</strong>：限制PHP脚本可以访问的文件系统路径，用于限制本地文件包含的范围。</li>
+</ul>
+<h3 id="本地文件包含的PHP配置限制"><a href="#本地文件包含的PHP配置限制" class="headerlink" title="本地文件包含的PHP配置限制"></a>本地文件包含的PHP配置限制</h3><p>可以通过修改PHP配置文件<code>php.ini</code>中的<code>open_basedir</code>设置来限制本地文件包含的路径。例如：</p>
+<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">open_basedir</span> = /safe_mode_dir</span><br></pre></td></tr></table></figure>
+<p>这样，PHP脚本只能访问<code>/safe_mode_dir</code>及其子目录中的文件，从而限制了本地文件包含的范围。</p>
+<h3 id="PHP在做SQL注入防御时的方法"><a href="#PHP在做SQL注入防御时的方法" class="headerlink" title="PHP在做SQL注入防御时的方法"></a>PHP在做SQL注入防御时的方法</h3><p>在PHP中，防御SQL注入的方法包括：</p>
+<ol>
+<li><p><strong>使用预编译语句（PreparedStatement）</strong>：通过预编译语句将用户输入与SQL命令分离，避免直接拼接SQL字符串。</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$stmt</span> = <span class="variable">$pdo</span>-&gt;<span class="title function_ invoke__">prepare</span>(<span class="string">&#x27;SELECT * FROM users WHERE username = :username&#x27;</span>);</span><br><span class="line"><span class="variable">$stmt</span>-&gt;<span class="title function_ invoke__">execute</span>([<span class="string">&#x27;username&#x27;</span> =&gt; <span class="variable">$username</span>]);</span><br></pre></td></tr></table></figure></li>
+<li><p><strong>使用ORM框架</strong>：如Doctrine、Eloquent等，它们通常会提供安全的API来处理SQL查询，避免直接拼接SQL。</p>
+</li>
+<li><p><strong>输入验证</strong>：对用户输入进行严格的验证，限制输入的格式和长度，确保输入符合预期。</p>
+</li>
+<li><p><strong>使用安全的库和框架</strong>：选择经过安全审计的库和框架，并正确配置它们的安全相关选项。</p>
+</li>
+<li><p><strong>定期更新和打补丁</strong>：及时更新数据库管理系统和相关库，修复已知的安全漏洞。</p>
+</li>
+<li><p><strong>最小权限原则</strong>：为数据库用户分配最小必要的权限，限制其只能执行必要的操作。</p>
+</li>
+</ol>
+<p>0x06 天融信面试复盘</p>
+
+  </div>
+</article>
+
+
+    <div class="blog-post-comments">
+        <div id="utterances_thread">
+            <noscript>Please enable JavaScript to view the comments.</noscript>
+        </div>
+    </div>
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/archives/">Writing</a></li>
+        
+          <li><a href="/search/">Search</a></li>
+        
+          <li><a href="/categories/">Categories</a></li>
+        
+          <li><a href="/idea/">Idea</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="https://github.com/g0dam">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#MSSQL-%E9%99%A4%E4%BA%86-xp-cmdshell%E3%80%81sp-oacreate-%E8%BF%98%E6%9C%89%E4%BB%80%E4%B9%88%E5%8A%9E%E6%B3%95%E6%89%A7%E8%A1%8C%E5%91%BD%E4%BB%A4%EF%BC%9F"><span class="toc-number">1.</span> <span class="toc-text">MSSQL 除了 xp_cmdshell、sp_oacreate 还有什么办法执行命令？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CLR-%E5%8E%9F%E7%90%86%E4%BB%A5%E5%8F%8A%E6%B5%81%E7%A8%8B"><span class="toc-number">2.</span> <span class="toc-text">CLR 原理以及流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Oracle-%E8%83%BD%E4%B8%8D%E8%83%BD-RCE%EF%BC%9F%E6%80%8E%E4%B9%88-RCE%EF%BC%9F%E5%89%8D%E7%BD%AE%E6%9D%A1%E4%BB%B6%E6%98%AF%E5%95%A5%EF%BC%9F"><span class="toc-number">3.</span> <span class="toc-text">Oracle 能不能 RCE？怎么 RCE？前置条件是啥？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Autotype-false-%E7%BB%95%E8%BF%87%E6%9C%89%E5%87%A0%E7%A7%8D%E6%80%9D%E8%B7%AF%EF%BC%9F"><span class="toc-number">4.</span> <span class="toc-text">Autotype&#x3D;false 绕过有几种思路？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PHPInfo-%E4%BD%A0%E4%BC%9A%E5%85%B3%E6%B3%A8%E5%93%AA%E4%BA%9B%E4%BF%A1%E6%81%AF"><span class="toc-number">5.</span> <span class="toc-text">PHPInfo 你会关注哪些信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B5%8F%E8%A7%88%E5%99%A8%E8%A7%A3%E6%9E%90%E9%A1%BA%E5%BA%8F%E5%92%8C%E8%A7%A3%E7%A0%81%E9%A1%BA%E5%BA%8F"><span class="toc-number">6.</span> <span class="toc-text">浏览器解析顺序和解码顺序</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%87%E6%BB%A4limit%E5%90%8E%E7%9A%84%E9%80%97%E5%8F%B7%E5%A6%82%E4%BD%95%E7%BB%95%E8%BF%87"><span class="toc-number">7.</span> <span class="toc-text">过滤limit后的逗号如何绕过</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%87%E6%BB%A4%E9%80%97%E5%8F%B7%E7%9A%84SQL%E6%B3%A8%E5%85%A5%E5%A6%82%E4%BD%95%E7%BB%95%E8%BF%87"><span class="toc-number">8.</span> <span class="toc-text">过滤逗号的SQL注入如何绕过</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Python%E7%9B%B8%E5%85%B3%E7%9A%84%E6%BC%8F%E6%B4%9E%EF%BC%88SSTI%E5%8E%9F%E7%90%86%EF%BC%8C%E5%88%A9%E7%94%A8%E8%BF%87%E7%A8%8B%EF%BC%8Cpayload%E7%9B%B8%E5%85%B3%E7%9A%84%E4%B8%9C%E8%A5%BF%EF%BC%89"><span class="toc-number">9.</span> <span class="toc-text">Python相关的漏洞（SSTI原理，利用过程，payload相关的东西）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Java-%E5%86%85%E5%AD%98%E9%A9%AC"><span class="toc-number">10.</span> <span class="toc-text">Java 内存马</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%B0%E8%9D%8E%E3%80%81%E5%93%A5%E6%96%AF%E6%8B%89%E5%B7%A5%E5%85%B7"><span class="toc-number">11.</span> <span class="toc-text">冰蝎、哥斯拉工具</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%A1%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%BC%95%E6%93%8E%E7%9A%84%E6%AD%A5%E9%AA%A4%E5%92%8C%E6%80%9D%E8%B7%AF"><span class="toc-number">12.</span> <span class="toc-text">审表达式引擎的步骤和思路</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#XXE%E6%BC%8F%E6%B4%9E%E6%88%90%E5%9B%A0%E5%8F%8A%E4%BB%A3%E7%A0%81%E5%B1%82%E9%9D%A2%E5%88%86%E6%9E%90"><span class="toc-number">13.</span> <span class="toc-text">XXE漏洞成因及代码层面分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%81%87%E5%88%B0ORDER-BY%E6%97%B6%E7%9A%84%E9%98%B2%E5%BE%A1"><span class="toc-number">14.</span> <span class="toc-text">遇到ORDER BY时的防御</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%BD%E5%AD%97%E8%8A%82%E6%B3%A8%E5%85%A5"><span class="toc-number">15.</span> <span class="toc-text">宽字节注入</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%89%B9%E6%AE%8A%E5%AD%97%E7%AC%A6%E8%BD%AC%E4%B9%89%E6%97%B6%E7%9A%84%E5%A4%84%E7%90%86"><span class="toc-number">16.</span> <span class="toc-text">特殊字符转义时的处理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E4%BA%8E%E9%BB%91%E7%99%BD%E5%90%8D%E5%8D%95%E7%9A%84%E4%BF%AE%E5%A4%8D%E5%9C%A8Docker%E7%8E%AF%E5%A2%83%E4%B8%AD%E7%9A%84%E5%BA%94%E7%94%A8"><span class="toc-number">17.</span> <span class="toc-text">基于黑白名单的修复在Docker环境中的应用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Java%E7%B3%BB%E7%BB%9F%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E6%B5%81%E7%A8%8B"><span class="toc-number">18.</span> <span class="toc-text">Java系统代码审计流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Java%E7%B3%BB%E7%BB%9F%E4%B8%ADSQL%E6%B3%A8%E5%85%A5%E7%9A%84%E9%98%B2%E5%BE%A1%E4%B8%8E%E4%BF%AE%E5%A4%8D"><span class="toc-number">19.</span> <span class="toc-text">Java系统中SQL注入的防御与修复</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%98%B2%E5%BE%A1%E6%8E%AA%E6%96%BD"><span class="toc-number">19.1.</span> <span class="toc-text">防御措施</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BF%AE%E5%A4%8D%E6%96%B9%E6%B3%95"><span class="toc-number">19.2.</span> <span class="toc-text">修复方法</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%97%B6%E7%9A%84%E9%AD%94%E6%9C%AF%E6%96%B9%E6%B3%95%E5%85%A5%E6%89%8B%E7%82%B9"><span class="toc-number">20.</span> <span class="toc-text">反序列化时的魔术方法入手点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9C%A8PHP%E7%8E%AF%E5%A2%83%E4%B8%8B%E5%88%A9%E7%94%A8SSRF"><span class="toc-number">21.</span> <span class="toc-text">在PHP环境下利用SSRF</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PHP%E4%BB%A3%E7%A0%81%E5%B8%B8%E8%A7%81%E5%85%A5%E5%8F%A3%E5%87%BD%E6%95%B0%E7%9A%84%E6%9F%A5%E6%89%BE"><span class="toc-number">22.</span> <span class="toc-text">PHP代码常见入口函数的查找</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PHP%E5%BC%80%E5%8F%91%E6%A1%86%E6%9E%B6%E7%9A%84URL%E8%B7%AF%E7%94%B1%E6%96%B9%E6%B3%95"><span class="toc-number">23.</span> <span class="toc-text">PHP开发框架的URL路由方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%9C%E7%A8%8B%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E5%92%8C%E6%9C%AC%E5%9C%B0%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%B6%89%E5%8F%8A%E7%9A%84PHP%E8%AE%BE%E7%BD%AE"><span class="toc-number">24.</span> <span class="toc-text">远程文件包含和本地文件包含涉及的PHP设置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%AC%E5%9C%B0%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E7%9A%84PHP%E9%85%8D%E7%BD%AE%E9%99%90%E5%88%B6"><span class="toc-number">25.</span> <span class="toc-text">本地文件包含的PHP配置限制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PHP%E5%9C%A8%E5%81%9ASQL%E6%B3%A8%E5%85%A5%E9%98%B2%E5%BE%A1%E6%97%B6%E7%9A%84%E6%96%B9%E6%B3%95"><span class="toc-number">26.</span> <span class="toc-text">PHP在做SQL注入防御时的方法</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://godreams.cn/2024/03/17/work/workpre4/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://godreams.cn/2024/03/17/work/workpre4/&text=【工作】面试题整理 大厂常见问题"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://godreams.cn/2024/03/17/work/workpre4/&title=【工作】面试题整理 大厂常见问题"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://godreams.cn/2024/03/17/work/workpre4/&is_video=false&description=【工作】面试题整理 大厂常见问题"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【工作】面试题整理 大厂常见问题&body=Check out this article: https://godreams.cn/2024/03/17/work/workpre4/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://godreams.cn/2024/03/17/work/workpre4/&title=【工作】面试题整理 大厂常见问题"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://godreams.cn/2024/03/17/work/workpre4/&title=【工作】面试题整理 大厂常见问题"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://godreams.cn/2024/03/17/work/workpre4/&title=【工作】面试题整理 大厂常见问题"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://godreams.cn/2024/03/17/work/workpre4/&title=【工作】面试题整理 大厂常见问题"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://godreams.cn/2024/03/17/work/workpre4/&name=【工作】面试题整理 大厂常见问题&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://godreams.cn/2024/03/17/work/workpre4/&t=【工作】面试题整理 大厂常见问题"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2024-2025
+    g0dam
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Categories</a></li><!--
+     --><!--
+       --><li><a href="/idea/">Idea</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/g0dam">Projects</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+    <script type="text/javascript">
+      var utterances_repo = 'owner/githubrepo';
+      var utterances_issue_term = 'pathname';
+      var utterances_label = 'Comment';
+      var utterances_theme = 'github-dark';
+
+      (function(){
+          var script = document.createElement('script');
+
+          script.src = 'https://utteranc.es/client.js';
+          script.setAttribute('repo', utterances_repo);
+          script.setAttribute('issue-term', 'pathname');
+          script.setAttribute('label', utterances_label);
+          script.setAttribute('theme', utterances_theme);
+          script.setAttribute('crossorigin', 'anonymous');
+          script.async = true;
+          (document.getElementById('utterances_thread')).appendChild(script);
+      }());
+  </script>
+
+</body>
+</html>
