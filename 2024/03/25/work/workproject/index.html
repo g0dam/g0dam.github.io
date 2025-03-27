@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="基于OpenResty的Web应用防火墙OpenResty是一个集成了Nginx和Lua的高性能Web平台，通过嵌入Lua虚拟机（LuaVM）实现了对HTTP请求的高效处理。基于OpenResty的Web应用防火墙（WAF）利用了Nginx的高性能和Lua的灵活性，通过在Nginx的各个处理阶段（如访问控制阶段、日志记录阶段等）嵌入Lua脚本，实现了对HTTP请求的深度检测和防御。  规则匹配与防">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【工作】面试题整理 项目问题准备">
+<meta property="og:url" content="https://godreams.cn/2024/03/25/work/workproject/index.html">
+<meta property="og:site_name" content="g0dam">
+<meta property="og:description" content="基于OpenResty的Web应用防火墙OpenResty是一个集成了Nginx和Lua的高性能Web平台，通过嵌入Lua虚拟机（LuaVM）实现了对HTTP请求的高效处理。基于OpenResty的Web应用防火墙（WAF）利用了Nginx的高性能和Lua的灵活性，通过在Nginx的各个处理阶段（如访问控制阶段、日志记录阶段等）嵌入Lua脚本，实现了对HTTP请求的深度检测和防御。  规则匹配与防">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-03-25T06:07:20.000Z">
+<meta property="article:modified_time" content="2025-03-25T09:47:21.764Z">
+<meta property="article:author" content="g0dam">
+<meta property="article:tag" content="null">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>【工作】面试题整理 项目问题准备</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+      <link rel="alternate" href="/true" title="g0dam" type="application/atom+xml" />
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Categories</a></li><!--
+     --><!--
+       --><li><a href="/idea/">Idea</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/g0dam">Projects</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/2024/03/26/algorithm/workalgorithm/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2024/03/17/work/workpre4/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://godreams.cn/2024/03/25/work/workproject/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://godreams.cn/2024/03/25/work/workproject/&text=【工作】面试题整理 项目问题准备"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://godreams.cn/2024/03/25/work/workproject/&title=【工作】面试题整理 项目问题准备"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://godreams.cn/2024/03/25/work/workproject/&is_video=false&description=【工作】面试题整理 项目问题准备"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【工作】面试题整理 项目问题准备&body=Check out this article: https://godreams.cn/2024/03/25/work/workproject/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://godreams.cn/2024/03/25/work/workproject/&title=【工作】面试题整理 项目问题准备"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://godreams.cn/2024/03/25/work/workproject/&title=【工作】面试题整理 项目问题准备"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://godreams.cn/2024/03/25/work/workproject/&title=【工作】面试题整理 项目问题准备"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://godreams.cn/2024/03/25/work/workproject/&title=【工作】面试题整理 项目问题准备"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://godreams.cn/2024/03/25/work/workproject/&name=【工作】面试题整理 项目问题准备&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://godreams.cn/2024/03/25/work/workproject/&t=【工作】面试题整理 项目问题准备"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E4%BA%8EOpenResty%E7%9A%84Web%E5%BA%94%E7%94%A8%E9%98%B2%E7%81%AB%E5%A2%99"><span class="toc-number">1.</span> <span class="toc-text">基于OpenResty的Web应用防火墙</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#WAF-lua%E8%84%9A%E6%9C%AC"><span class="toc-number">1.1.</span> <span class="toc-text">WAF lua脚本</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81"><span class="toc-number">1.2.</span> <span class="toc-text">代码</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E4%BA%8ESoot%E7%9A%84%E6%95%B0%E6%8D%AE%E6%B5%81%E5%88%86%E6%9E%90"><span class="toc-number">2.</span> <span class="toc-text">基于Soot的数据流分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Android-CNVD"><span class="toc-number">3.</span> <span class="toc-text">Android CNVD</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%A7%A0-%E4%B8%80%E3%80%81%E8%84%9A%E6%9C%AC%E6%A0%B8%E5%BF%83%E5%8A%9F%E8%83%BD%E5%88%86%E6%9E%90"><span class="toc-number">3.1.</span> <span class="toc-text">🧠 一、脚本核心功能分析</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%F0%9F%93%9C-%E8%84%9A%E6%9C%AC%E5%88%86%E8%A7%A3%E5%88%86%E6%9E%90%EF%BC%9A"><span class="toc-number">3.1.1.</span> <span class="toc-text">📜 脚本分解分析：</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%9A%A8-%E4%BA%8C%E3%80%81%E8%BF%99%E6%AE%B5%E5%AD%97%E7%AC%A6%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BC%9A%E5%AF%BC%E8%87%B4-Android-APP-%E5%8D%A1%E9%A1%BF%E7%94%9A%E8%87%B3%E5%B4%A9%E6%BA%83%EF%BC%9F"><span class="toc-number">3.2.</span> <span class="toc-text">🚨 二、这段字符为什么会导致 Android APP 卡顿甚至崩溃？</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%F0%9F%93%8C-1-%E5%A4%8D%E6%9D%82%E5%AD%97%E7%AC%A6%E5%8F%A0%E5%8A%A0%E6%B8%B2%E6%9F%93%EF%BC%9A"><span class="toc-number">3.2.1.</span> <span class="toc-text">📌 1. 复杂字符叠加渲染：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%F0%9F%93%8C-2-%E5%8F%B3%E5%88%B0%E5%B7%A6%E6%96%87%E6%9C%AC%E6%8E%A7%E5%88%B6%E7%AC%A6-RTL-%E5%92%8C%E6%A0%BC%E5%BC%8F%E6%8E%A7%E5%88%B6%E5%AD%97%E7%AC%A6%EF%BC%9A"><span class="toc-number">3.2.2.</span> <span class="toc-text">📌 2. 右到左文本控制符 (RTL) 和格式控制字符：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%F0%9F%93%8C-3-%E6%B7%B7%E5%90%88%E8%84%9A%E6%9C%AC%E5%BC%95%E8%B5%B7%E7%9A%84%E5%AD%97%E4%BD%93-Fallback%EF%BC%9A"><span class="toc-number">3.2.3.</span> <span class="toc-text">📌 3. 混合脚本引起的字体 Fallback：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%F0%9F%93%8C-4-%E6%8D%A2%E8%A1%8C%E6%8E%A7%E5%88%B6%E7%AC%A6%E6%8F%92%E5%85%A5%EF%BC%9A"><span class="toc-number">3.2.4.</span> <span class="toc-text">📌 4. 换行控制符插入：</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%A7%A8-%E4%B8%89%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BC%9A%E8%A7%A6%E5%8F%91-Android-ANR%EF%BC%9F"><span class="toc-number">3.3.</span> <span class="toc-text">🧨 三、为什么会触发 Android ANR？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%9B%A1%EF%B8%8F-%E5%9B%9B%E3%80%81%E8%A7%A3%E5%86%B3%E5%BB%BA%E8%AE%AE%EF%BC%88%E5%BC%80%E5%8F%91%E8%80%85%E8%A7%92%E5%BA%A6%EF%BC%89"><span class="toc-number">3.4.</span> <span class="toc-text">🛡️ 四、解决建议（开发者角度）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ANR-%E5%88%86%E6%9E%90"><span class="toc-number">3.5.</span> <span class="toc-text">ANR 分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%9C%85-1-%E8%A7%A6%E5%8F%91%E5%85%A5%E5%8F%A3%EF%BC%88%E6%97%A5%E5%BF%97%E9%A6%96%E8%A1%8C%EF%BC%89%EF%BC%9A"><span class="toc-number">3.6.</span> <span class="toc-text">✅ 1. 触发入口（日志首行）：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%9C%85-2-%E5%BA%94%E7%94%A8%E7%BA%BF%E7%A8%8B%E5%A0%86%E6%A0%88%E5%88%86%E6%9E%90%EF%BC%9A"><span class="toc-number">3.7.</span> <span class="toc-text">✅ 2. 应用线程堆栈分析：</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%F0%9F%94%A5-%E8%BF%99%E4%B8%80%E6%AE%B5%E8%AF%B4%E6%98%8E%EF%BC%9A"><span class="toc-number">3.7.1.</span> <span class="toc-text">🔥 这一段说明：</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%A0%E8%BE%93%E5%85%A5%E7%9A%84%E6%98%AF%E8%BF%99%E6%A0%B7%E4%B8%80%E7%A7%8D%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%BB%93%E6%9E%84%EF%BC%9A"><span class="toc-number">3.8.</span> <span class="toc-text">你输入的是这样一种字符串结构：</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%F0%9F%94%B9-%E5%85%B6%E4%B8%AD%E7%9A%84%E2%80%9C%E6%94%BB%E5%87%BB%E6%88%90%E5%88%86%E2%80%9D%E5%A6%82%E4%B8%8B%EF%BC%9A"><span class="toc-number">3.8.1.</span> <span class="toc-text">🔹 其中的“攻击成分”如下：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E2%98%A0%EF%B8%8F-%E5%85%B8%E5%9E%8B%E6%94%BB%E5%87%BB%E7%BB%84%E5%90%88%E6%95%88%E5%BA%94%EF%BC%9A"><span class="toc-number">3.8.2.</span> <span class="toc-text">☠️ 典型攻击组合效应：</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%98%E5%88%86%E7%BC%96%E7%A0%81%E5%99%A8%E6%B7%BB%E5%8A%A0%E5%99%AA%E5%A3%B0"><span class="toc-number">4.</span> <span class="toc-text">变分编码器添加噪声</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E3%80%81VAE%EF%BC%88%E5%8F%98%E5%88%86%E8%87%AA%E7%BC%96%E7%A0%81%E5%99%A8%EF%BC%89"><span class="toc-number">4.1.</span> <span class="toc-text">一、VAE（变分自编码器）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C%E3%80%81CVAE%EF%BC%88%E6%9D%A1%E4%BB%B6%E5%8F%98%E5%88%86%E8%87%AA%E7%BC%96%E7%A0%81%E5%99%A8%EF%BC%89"><span class="toc-number">4.2.</span> <span class="toc-text">二、CVAE（条件变分自编码器）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#VAE-%E5%AE%9E%E7%8E%B0"><span class="toc-number">4.3.</span> <span class="toc-text">VAE 实现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CVAE-%E5%AE%9E%E7%8E%B0"><span class="toc-number">4.4.</span> <span class="toc-text">CVAE 实现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#VAE-%E5%BA%94%E7%94%A8%E6%A1%88%E4%BE%8B"><span class="toc-number">4.5.</span> <span class="toc-text">VAE 应用案例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CVAE-%E5%BA%94%E7%94%A8%E6%A1%88%E4%BE%8B"><span class="toc-number">4.6.</span> <span class="toc-text">CVAE 应用案例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#VAE-%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98"><span class="toc-number">4.7.</span> <span class="toc-text">VAE 相关问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CVAE-%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98"><span class="toc-number">4.8.</span> <span class="toc-text">CVAE 相关问题</span></a></li></ol></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        【工作】面试题整理 项目问题准备
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">g0dam</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2024-03-25T06:07:20.000Z" class="dt-published" itemprop="datePublished">2024-03-25</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h2 id="基于OpenResty的Web应用防火墙"><a href="#基于OpenResty的Web应用防火墙" class="headerlink" title="基于OpenResty的Web应用防火墙"></a>基于OpenResty的Web应用防火墙</h2><p>OpenResty是一个集成了Nginx和Lua的高性能Web平台，通过嵌入Lua虚拟机（LuaVM）实现了对HTTP请求的高效处理。基于OpenResty的Web应用防火墙（WAF）利用了Nginx的高性能和Lua的灵活性，通过在Nginx的各个处理阶段（如访问控制阶段、日志记录阶段等）嵌入Lua脚本，实现了对HTTP请求的深度检测和防御。</p>
+<ul>
+<li><strong>规则匹配与防御动作</strong>：通过定义一系列安全规则（如IP黑白名单、URL过滤规则等），在请求处理过程中匹配这些规则，并根据匹配结果执行相应的防御动作（如拒绝请求、返回403状态码等）。</li>
+<li><strong>日志记录与监控</strong>：支持将所有拒绝的操作记录到日志中，日志格式通常为JSON，便于后续使用ELK等工具进行分析。</li>
+<li><strong>灵活的部署与维护</strong>：可以采用自动化部署工具（如Ansible）来简化部署过程，同时需要定期评估和更新防火墙规则，以应对新型攻击。</li>
+</ul>
+<p><strong>问题1：OpenResty WAF如何处理一个HTTP请求？</strong><br>回答：当一个HTTP请求到达OpenResty WAF时，它会依次经过Nginx的多个处理阶段。在每个阶段，嵌入的Lua脚本会根据预定义的安全规则对请求进行检测。例如，在访问控制阶段，会检查请求的IP地址是否在黑名单中，URL是否符合白名单等。如果请求不符合安全规则，将直接被拒绝或返回相应的错误码。</p>
+<p><strong>问题2：如何在OpenResty中实现一个简单的WAF规则，例如限制特定的URL访问？</strong><br>回答：可以通过编辑Nginx的配置文件，在<code>access_by_lua_block</code>中编写Lua脚本来实现。例如，获取请求的URL并检查是否包含特定的字符串，如果包含则返回403状态码。</p>
+<p><strong>问题4：如何优化OpenResty WAF的性能？</strong><br>回答：可以通过优化Nginx的配置（如调整工作进程数、连接超时时间等）、使用 LuaJIT 提高 Lua 脚本的执行效率、缓存常用的规则匹配结果等方式来提升性能。</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">worker_processes</span>  <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line"><span class="section">events</span> &#123;</span><br><span class="line">    <span class="attribute">worker_connections</span>  <span class="number">1024</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="section">http</span> &#123;</span><br><span class="line">    <span class="attribute">include</span>       mime.types;</span><br><span class="line">    <span class="attribute">default_type</span>  application/octet-stream;</span><br><span class="line">    <span class="attribute">sendfile</span>        <span class="literal">on</span>;</span><br><span class="line">    <span class="attribute">keepalive_timeout</span>  <span class="number">65</span>;</span><br><span class="line"></span><br><span class="line">    <span class="attribute">lua_shared_dict</span> waf_cache <span class="number">10m</span>;</span><br><span class="line"></span><br><span class="line">    <span class="section">server</span> &#123;</span><br><span class="line">        <span class="attribute">listen</span>       <span class="number">80</span>;</span><br><span class="line">        <span class="attribute">server_name</span>  localhost;</span><br><span class="line"></span><br><span class="line">        <span class="section">location</span> / &#123;</span><br><span class="line">            <span class="section">access_by_lua_block</span> &#123;</span><br><span class="line">                <span class="attribute">local</span> waf = require <span class="string">&quot;waf&quot;</span></span><br><span class="line">                local waf_instance = waf.new()</span><br><span class="line">                waf_instance:exec()</span><br><span class="line">            &#125;</span><br><span class="line">            proxy_pass http://backend;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="section">location</span> /status &#123;</span><br><span class="line">            <span class="section">access_by_lua_block</span> &#123;</span><br><span class="line">                <span class="attribute">local</span> waf = require <span class="string">&quot;waf&quot;</span></span><br><span class="line">                local waf_instance = waf.new()</span><br><span class="line">                waf_instance:exec()</span><br><span class="line">            &#125;</span><br><span class="line">            stub_status <span class="literal">on</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="WAF-lua脚本"><a href="#WAF-lua脚本" class="headerlink" title="WAF lua脚本"></a>WAF lua脚本</h3><figure class="highlight lua"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">local</span> waf = &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">waf.new</span><span class="params">()</span></span></span><br><span class="line">    <span class="keyword">local</span> <span class="built_in">self</span> = &#123;</span><br><span class="line">        rules = &#123;</span><br><span class="line">            <span class="comment">-- IP 黑白名单规则</span></span><br><span class="line">            ip_whitelist = &#123;<span class="string">&quot;127.0.0.1&quot;</span>&#125;,</span><br><span class="line">            ip_blacklist = &#123;&#125;,</span><br><span class="line">            <span class="comment">-- URL 规则</span></span><br><span class="line">            url_rules = &#123;</span><br><span class="line">                &#123;pattern = <span class="string">&quot;/admin&quot;</span>, action = <span class="string">&quot;deny&quot;</span>&#125;,</span><br><span class="line">                &#123;pattern = <span class="string">&quot;/api&quot;</span>, action = <span class="string">&quot;allow&quot;</span>&#125;</span><br><span class="line">            &#125;,</span><br><span class="line">            <span class="comment">-- 参数规则</span></span><br><span class="line">            param_rules = &#123;</span><br><span class="line">                &#123;name = <span class="string">&quot;user&quot;</span>, pattern = <span class="string">&quot;[^a-zA-Z0-9_]&quot;</span>, action = <span class="string">&quot;deny&quot;</span>&#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;,</span><br><span class="line">        cache = &#123;&#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">-- 初始化缓存</span></span><br><span class="line">    <span class="built_in">self</span>.cache = ngx.shared.waf_cache</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">self</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">waf:exec</span><span class="params">()</span></span></span><br><span class="line">    <span class="comment">-- 获取客户端 IP</span></span><br><span class="line">    <span class="keyword">local</span> client_ip = ngx.var.remote_addr</span><br><span class="line"></span><br><span class="line">    <span class="comment">-- 检查 IP 黑白名单</span></span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">self</span>:check_ip(client_ip) <span class="keyword">then</span></span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">-- 获取请求的 URI</span></span><br><span class="line">    <span class="keyword">local</span> uri = ngx.var.uri</span><br><span class="line"></span><br><span class="line">    <span class="comment">-- 检查 URL 规则</span></span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">self</span>:check_url(uri) <span class="keyword">then</span></span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">-- 获取请求参数</span></span><br><span class="line">    <span class="keyword">local</span> args = ngx.req.get_uri_args()</span><br><span class="line"></span><br><span class="line">    <span class="comment">-- 检查参数规则</span></span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">self</span>:check_params(args) <span class="keyword">then</span></span><br><span class="line">        <span class="keyword">return</span></span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">-- 如果所有检查通过，允许请求</span></span><br><span class="line">    ngx.<span class="built_in">exit</span>(ngx.HTTP_OK)</span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">waf:check_ip</span><span class="params">(ip)</span></span></span><br><span class="line">    <span class="comment">-- 检查 IP 是否在黑名单中</span></span><br><span class="line">    <span class="keyword">for</span> _, blacklisted_ip <span class="keyword">in</span> <span class="built_in">ipairs</span>(<span class="built_in">self</span>.rules.ip_blacklist) <span class="keyword">do</span></span><br><span class="line">        <span class="keyword">if</span> ip == blacklisted_ip <span class="keyword">then</span></span><br><span class="line">            ngx.<span class="built_in">log</span>(ngx.ERR, <span class="string">&quot;IP &quot;</span> .. ip .. <span class="string">&quot; is blacklisted&quot;</span>)</span><br><span class="line">            ngx.<span class="built_in">exit</span>(ngx.HTTP_FORBIDDEN)</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">        <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">-- 检查 IP 是否在白名单中</span></span><br><span class="line">    <span class="keyword">for</span> _, whitelisted_ip <span class="keyword">in</span> <span class="built_in">ipairs</span>(<span class="built_in">self</span>.rules.ip_whitelist) <span class="keyword">do</span></span><br><span class="line">        <span class="keyword">if</span> ip == whitelisted_ip <span class="keyword">then</span></span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">        <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">-- 如果不在白名单中，允许请求继续检查其他规则</span></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">waf:check_url</span><span class="params">(uri)</span></span></span><br><span class="line">    <span class="comment">-- 检查 URL 是否匹配规则</span></span><br><span class="line">    <span class="keyword">for</span> _, rule <span class="keyword">in</span> <span class="built_in">ipairs</span>(<span class="built_in">self</span>.rules.url_rules) <span class="keyword">do</span></span><br><span class="line">        <span class="keyword">if</span> uri:<span class="built_in">match</span>(rule.pattern) <span class="keyword">then</span></span><br><span class="line">            <span class="keyword">if</span> rule.action == <span class="string">&quot;deny&quot;</span> <span class="keyword">then</span></span><br><span class="line">                ngx.<span class="built_in">log</span>(ngx.ERR, <span class="string">&quot;URI &quot;</span> .. uri .. <span class="string">&quot; is denied by rule&quot;</span>)</span><br><span class="line">                ngx.<span class="built_in">exit</span>(ngx.HTTP_FORBIDDEN)</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">            <span class="keyword">elseif</span> rule.action == <span class="string">&quot;allow&quot;</span> <span class="keyword">then</span></span><br><span class="line">                <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">            <span class="keyword">end</span></span><br><span class="line">        <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">waf:check_params</span><span class="params">(args)</span></span></span><br><span class="line">    <span class="comment">-- 检查请求参数是否符合规则</span></span><br><span class="line">    <span class="keyword">for</span> param_name, param_value <span class="keyword">in</span> <span class="built_in">pairs</span>(args) <span class="keyword">do</span></span><br><span class="line">        <span class="keyword">for</span> _, rule <span class="keyword">in</span> <span class="built_in">ipairs</span>(<span class="built_in">self</span>.rules.param_rules) <span class="keyword">do</span></span><br><span class="line">            <span class="keyword">if</span> param_name == rule.name <span class="keyword">then</span></span><br><span class="line">                <span class="keyword">if</span> <span class="built_in">type</span>(param_value) == <span class="string">&quot;table&quot;</span> <span class="keyword">then</span></span><br><span class="line">                    <span class="keyword">for</span> _, value <span class="keyword">in</span> <span class="built_in">ipairs</span>(param_value) <span class="keyword">do</span></span><br><span class="line">                        <span class="keyword">if</span> value:<span class="built_in">match</span>(rule.pattern) <span class="keyword">then</span></span><br><span class="line">                            ngx.<span class="built_in">log</span>(ngx.ERR, <span class="string">&quot;Parameter &quot;</span> .. param_name .. <span class="string">&quot; has invalid value&quot;</span>)</span><br><span class="line">                            ngx.<span class="built_in">exit</span>(ngx.HTTP_FORBIDDEN)</span><br><span class="line">                            <span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">                        <span class="keyword">end</span></span><br><span class="line">                    <span class="keyword">end</span></span><br><span class="line">                <span class="keyword">else</span></span><br><span class="line">                    <span class="keyword">if</span> param_value:<span class="built_in">match</span>(rule.pattern) <span class="keyword">then</span></span><br><span class="line">                        ngx.<span class="built_in">log</span>(ngx.ERR, <span class="string">&quot;Parameter &quot;</span> .. param_name .. <span class="string">&quot; has invalid value&quot;</span>)</span><br><span class="line">                        ngx.<span class="built_in">exit</span>(ngx.HTTP_FORBIDDEN)</span><br><span class="line">                        <span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">                    <span class="keyword">end</span></span><br><span class="line">                <span class="keyword">end</span></span><br><span class="line">            <span class="keyword">end</span></span><br><span class="line">        <span class="keyword">end</span></span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">return</span> waf</span><br></pre></td></tr></table></figure>
+<h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line">data_dir = <span class="string">r&#x27;.\dataset&#x27;</span></span><br><span class="line">label = []</span><br><span class="line">allData = []</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> label_type <span class="keyword">in</span> [<span class="string">&#x27;good.txt&#x27;</span>, <span class="string">&#x27;bad.txt&#x27;</span>]:</span><br><span class="line">    file_path = os.path.join(data_dir, label_type)</span><br><span class="line">    <span class="keyword">with</span> <span class="built_in">open</span>(file_path, <span class="string">&#x27;rb&#x27;</span>) <span class="keyword">as</span> f:</span><br><span class="line">        <span class="keyword">for</span> line <span class="keyword">in</span> f:</span><br><span class="line">            allData.append(line.decode())</span><br><span class="line">            label.append(<span class="number">0</span> <span class="keyword">if</span> label_type == <span class="string">&#x27;good.txt&#x27;</span> <span class="keyword">else</span> <span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>功能</strong>：从指定目录加载标记为”好”和”坏”的文本数据。</li>
+<li><strong>技术细节</strong>：使用二进制模式读取文件，确保数据的完整性和兼容性。根据文件名区分标签，为后续的模型训练提供监督信息。</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> string</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line">max_length = <span class="number">50</span></span><br><span class="line">characters = string.printable</span><br><span class="line">token_index = <span class="built_in">dict</span>(<span class="built_in">zip</span>(characters, <span class="built_in">range</span>(<span class="number">1</span>, <span class="built_in">len</span>(characters) + <span class="number">1</span>)))</span><br><span class="line"></span><br><span class="line">proData = np.zeros((<span class="built_in">len</span>(allData), max_length, <span class="built_in">max</span>(token_index.values()) + <span class="number">1</span>))</span><br><span class="line"><span class="keyword">for</span> i, sample <span class="keyword">in</span> <span class="built_in">enumerate</span>(allData):</span><br><span class="line">    <span class="keyword">for</span> j, character <span class="keyword">in</span> <span class="built_in">enumerate</span>(sample[:max_length]):</span><br><span class="line">        index = token_index.get(character)</span><br><span class="line">        <span class="keyword">if</span> index:</span><br><span class="line">            proData[i, j, index] = <span class="number">1</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>功能</strong>：将文本数据转换为模型可处理的数值形式。</li>
+<li><strong>技术细节</strong>：使用字符级的独热编码（one-hot encoding），将每个字符映射到一个唯一的索引。限制最大长度为50，超出部分截断，不足部分补零。这种编码方式保留了字符的顺序信息，同时将文本转换为固定长度的数值矩阵。</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">np.random.seed(<span class="number">200</span>)</span><br><span class="line">np.random.shuffle(proData)</span><br><span class="line">np.random.seed(<span class="number">200</span>)</span><br><span class="line">np.random.shuffle(label)</span><br><span class="line">label = np.asarray(label).astype(<span class="string">&#x27;float32&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>功能</strong>：打乱数据顺序，避免模型对数据顺序的依赖。</li>
+<li><strong>技术细节</strong>：使用相同的随机种子确保数据和标签的打乱顺序一致。将标签转换为浮点型数组，适应模型的输出层设计。</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> keras <span class="keyword">import</span> Sequential</span><br><span class="line"><span class="keyword">from</span> keras.layers <span class="keyword">import</span> Conv1D, MaxPooling1D, GlobalMaxPooling1D, Dense</span><br><span class="line"></span><br><span class="line">model = Sequential()</span><br><span class="line">model.add(Conv1D(<span class="number">3</span>, <span class="number">3</span>, activation=<span class="string">&#x27;relu&#x27;</span>, input_shape=(max_length, <span class="number">101</span>)))</span><br><span class="line">model.add(MaxPooling1D(<span class="number">2</span>))</span><br><span class="line">model.add(Conv1D(<span class="number">2</span>, <span class="number">2</span>, activation=<span class="string">&#x27;relu&#x27;</span>))</span><br><span class="line">model.add(GlobalMaxPooling1D())</span><br><span class="line">model.add(Dense(<span class="number">1</span>, activation=<span class="string">&#x27;sigmoid&#x27;</span>))</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>功能</strong>：构建一个用于文本分类的卷积神经网络（CNN）。</li>
+<li><strong>技术细节</strong>：<ul>
+<li><strong>卷积层（Conv1D）</strong>：提取文本的局部特征。第一层使用3个滤波器，窗口大小为3；第二层使用2个滤波器，窗口大小为2。激活函数使用ReLU，增加模型的非线性表达能力。</li>
+<li><strong>池化层（MaxPooling1D）</strong>：降低数据维度，减少计算量，同时保留重要特征。</li>
+<li><strong>全局池化层（GlobalMaxPooling1D）</strong>：将每个特征通道的最大值提取出来，进一步降低维度。</li>
+<li><strong>全连接层（Dense）</strong>：输出层使用sigmoid函数，将模型的输出映射到[0,1]区间，适用于二分类任务。</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">model.<span class="built_in">compile</span>(optimizer=<span class="string">&#x27;adam&#x27;</span>, loss=<span class="string">&#x27;binary_crossentropy&#x27;</span>, metrics=[<span class="string">&#x27;accuracy&#x27;</span>])</span><br><span class="line">history = model.fit(proData, label, epochs=<span class="number">50</span>, batch_size=<span class="number">256</span>, validation_split=<span class="number">0.2</span>)</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>功能</strong>：编译模型并进行训练。</li>
+<li><strong>技术细节</strong>：<ul>
+<li><strong>优化器（Adam）</strong>：自适应学习率优化算法，能够自动调整每个参数的学习率，提高训练效率和模型性能。</li>
+<li><strong>损失函数（binary_crossentropy）</strong>：适用于二分类问题的损失函数，衡量模型预测与真实标签之间的差异。</li>
+<li><strong>训练参数</strong>：设置50个训练周期，批量大小为256，验证集比例为20%，在每个周期结束后评估模型在验证集上的表现。</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">model.save(<span class="string">&#x27;my_model.h5&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>功能</strong>：保存训练好的模型，便于后续使用和部署。</li>
+<li><strong>技术细节</strong>：使用Keras的模型保存功能，将模型的结构和权重保存到HDF5文件中。加载时可以直接还原模型状态，无需重新训练。</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> kerassurgeon.operations <span class="keyword">import</span> delete_channels</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">cut_cnn_low</span>(<span class="params">model, num</span>):</span><br><span class="line">    cnn_layer = model.get_layer(index=num)</span><br><span class="line">    weight_all = cnn_layer.get_weights()</span><br><span class="line">    weight_filter = weight_all[<span class="number">0</span>]</span><br><span class="line">    num_filter = weight_filter.shape[-<span class="number">1</span>]</span><br><span class="line">    sum_filter = np.zeros([num_filter])</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(num_filter):</span><br><span class="line">        sum_filter[i] = np.<span class="built_in">sum</span>(np.<span class="built_in">abs</span>(weight_filter[:, :, i]))</span><br><span class="line">    num_small = np.argmin(sum_filter)</span><br><span class="line">    new_model = delete_channels(model, cnn_layer, [num_small], copy=<span class="literal">True</span>)</span><br><span class="line">    <span class="keyword">return</span> new_model</span><br><span class="line"></span><br><span class="line">new_model = cut_cnn_low(model, <span class="number">0</span>)</span><br><span class="line">new_model.<span class="built_in">compile</span>(optimizer=<span class="string">&#x27;adam&#x27;</span>, loss=<span class="string">&#x27;binary_crossentropy&#x27;</span>, metrics=[<span class="string">&#x27;accuracy&#x27;</span>])</span><br><span class="line">new_model.fit(proData, label, epochs=<span class="number">10</span>, batch_size=<span class="number">256</span>, validation_split=<span class="number">0.2</span>)</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>功能</strong>：对模型进行剪枝，优化模型结构，减少计算量。</li>
+<li><strong>技术细节</strong>：<ul>
+<li><strong>剪枝策略</strong>：删除卷积层中权重绝对值和最小的卷积核，减少模型的参数数量。</li>
+<li><strong>模型重建</strong>：使用kerassurgeon库的delete_channels函数，创建一个新的模型，继承原始模型的结构和权重，但移除了指定的卷积核。</li>
+<li><strong>重新训练</strong>：对剪枝后的模型进行重新训练，恢复模型性能，同时保持模型的轻量化。</li>
+</ul>
+</li>
+</ul>
+<h2 id="基于Soot的数据流分析"><a href="#基于Soot的数据流分析" class="headerlink" title="基于Soot的数据流分析"></a>基于Soot的数据流分析</h2><p><a target="_blank" rel="noopener" href="https://bbs.huaweicloud.com/blogs/308700">https://bbs.huaweicloud.com/blogs/308700</a><br><a target="_blank" rel="noopener" href="https://fynch3r.github.io/soot%E7%9F%A5%E8%AF%86%E7%82%B9%E6%95%B4%E7%90%86/">https://fynch3r.github.io/soot%E7%9F%A5%E8%AF%86%E7%82%B9%E6%95%B4%E7%90%86/</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/m0_51641604/article/details/140240239#">https://blog.csdn.net/m0_51641604/article/details/140240239#</a></p>
+<h2 id="Android-CNVD"><a href="#Android-CNVD" class="headerlink" title="Android CNVD"></a>Android CNVD</h2><h3 id="🧠-一、脚本核心功能分析"><a href="#🧠-一、脚本核心功能分析" class="headerlink" title="🧠 一、脚本核心功能分析"></a>🧠 一、脚本核心功能分析</h3><h4 id="📜-脚本分解分析："><a href="#📜-脚本分解分析：" class="headerlink" title="📜 脚本分解分析："></a>📜 脚本分解分析：</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pyperclip</span><br><span class="line"></span><br><span class="line">n=<span class="built_in">int</span>(<span class="built_in">input</span>(<span class="string">&quot;请输入长度:&quot;</span>))  <span class="comment"># 用户输入控制生成字符重复的数量</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 含有 RTL 控制符、变体选择器等</span></span><br><span class="line">a1=<span class="string">&quot;\u0f19\u0f19\u0f87\u0f87\ufb50\u0020\u093a\u200d\ufb50\u064d\u0651\u0636\u0020\u206a&quot;</span></span><br><span class="line">a2=<span class="string">&quot;\u0f19\u0f19\u0f87\u0f87\ufb50\u0020\u093a\u200d\ufb50\u064d\u0651\u0636\u000d\u000a&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 罕见的叠加字符（Unicode Combining Marks）</span></span><br><span class="line">a01=<span class="string">&quot;\u0737&quot;</span>  <span class="comment"># Syriac Abbreviation Mark</span></span><br><span class="line">a02=<span class="string">&quot;\u0736&quot;</span>  <span class="comment"># Syriac Oblique Line Above</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 组合构造字符串并复制</span></span><br><span class="line">pyperclip.copy(<span class="string">f&quot;<span class="subst">&#123;a1&#125;</span><span class="subst">&#123;a01*n&#125;</span><span class="subst">&#123;a02*n&#125;</span><span class="subst">&#123;a2&#125;</span>&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="🚨-二、这段字符为什么会导致-Android-APP-卡顿甚至崩溃？"><a href="#🚨-二、这段字符为什么会导致-Android-APP-卡顿甚至崩溃？" class="headerlink" title="🚨 二、这段字符为什么会导致 Android APP 卡顿甚至崩溃？"></a>🚨 二、这段字符为什么会导致 Android APP 卡顿甚至崩溃？</h3><h4 id="📌-1-复杂字符叠加渲染："><a href="#📌-1-复杂字符叠加渲染：" class="headerlink" title="📌 1. 复杂字符叠加渲染："></a>📌 1. <strong>复杂字符叠加渲染：</strong></h4><ul>
+<li><code>\u0736</code> 和 <code>\u0737</code> 是 <strong>Combining Characters</strong>，不会单独显示，而是叠加在前一个字符上。</li>
+<li>当你把它们连续叠加 <code>n</code> 次，会导致：<ul>
+<li><strong>一个字符上叠加几十层装饰（如斜线、点等）</strong></li>
+<li>Android 系统和字体渲染引擎（Skia、HarfBuzz）在渲染时非常耗资源，可能会导致线程阻塞。</li>
+</ul>
+</li>
+</ul>
+<h4 id="📌-2-右到左文本控制符-RTL-和格式控制字符："><a href="#📌-2-右到左文本控制符-RTL-和格式控制字符：" class="headerlink" title="📌 2. 右到左文本控制符 (RTL) 和格式控制字符："></a>📌 2. <strong>右到左文本控制符 (RTL) 和格式控制字符：</strong></h4><ul>
+<li>例如：<code>\u200d</code>（Zero Width Joiner）, <code>\u206a</code>（Inhibit Symmetric Swapping）</li>
+<li>会干扰文本排版方向、字符顺序、合字等行为。</li>
+<li>安卓可能会尝试“解析方向+合字+组合修饰”的完整流程 → <strong>导致 Layout 或 MeasureText 阶段超时</strong>。</li>
+</ul>
+<h4 id="📌-3-混合脚本引起的字体-Fallback："><a href="#📌-3-混合脚本引起的字体-Fallback：" class="headerlink" title="📌 3. 混合脚本引起的字体 Fallback："></a>📌 3. <strong>混合脚本引起的字体 Fallback：</strong></h4><ul>
+<li>你同时使用了藏文、叙利亚文、阿拉伯文、天城文（印地语）等。</li>
+<li>系统在找字体时会频繁 fallback、load 字形。</li>
+<li>多脚本混合 + 未知字符可能导致大量“字体匹配查找”。</li>
+</ul>
+<h4 id="📌-4-换行控制符插入："><a href="#📌-4-换行控制符插入：" class="headerlink" title="📌 4. 换行控制符插入："></a>📌 4. <strong>换行控制符插入：</strong></h4><ul>
+<li><code>\u000d\u000a</code> 是 CR+LF，部分组件（如基于 EditText 的输入框）在解析为多行时可能失效或者死循环处理输入内容。</li>
+</ul>
+<hr>
+<h3 id="🧨-三、为什么会触发-Android-ANR？"><a href="#🧨-三、为什么会触发-Android-ANR？" class="headerlink" title="🧨 三、为什么会触发 Android ANR？"></a>🧨 三、为什么会触发 Android ANR？</h3><p><strong>ANR（Application Not Responding）</strong>是 Android 系统在发现主线程（UI线程）超过 5 秒无响应时的强制报错。</p>
+<p>在你的场景中：</p>
+<ul>
+<li>文本渲染是在 UI 线程完成的。</li>
+<li>你构造的字符会导致：<ul>
+<li>文本测量（measure）</li>
+<li>文本布局（layout）</li>
+<li>字体查找与渲染</li>
+<li>控制符解释</li>
+</ul>
+</li>
+</ul>
+<p>这些任务全部在主线程阻塞运行，无法处理点击、滚动、交互等事件，于是系统报 ANR，<strong>甚至在某些系统版本上导致卡退或崩溃</strong>。</p>
+<hr>
+<h3 id="🛡️-四、解决建议（开发者角度）"><a href="#🛡️-四、解决建议（开发者角度）" class="headerlink" title="🛡️ 四、解决建议（开发者角度）"></a>🛡️ 四、解决建议（开发者角度）</h3><p>如果你是 APP 开发方，应注意：</p>
+<ol>
+<li><p><strong>对输入内容进行字符白名单或黑名单过滤</strong>：</p>
+<ul>
+<li>禁止大量 Combining Marks、Control Characters。</li>
+<li>过滤 <code>\u200d</code>、<code>\u202e</code>、<code>\u2066</code> 等已知 RTL&#x2F;LTR 控制符。</li>
+</ul>
+</li>
+<li><p><strong>设置输入长度上限</strong>：例如不允许粘贴超过 500 字符的文本。</p>
+</li>
+<li><p><strong>Android 端输入预处理</strong>：使用 <code>InputFilter</code> 或 <code>TextWatcher</code> 对字符做拦截。</p>
+</li>
+<li><p><strong>尽量避免在主线程进行复杂的 TextView 设置</strong>，可以做异步检查。</p>
+</li>
+</ol>
+<hr>
+<h3 id="ANR-分析"><a href="#ANR-分析" class="headerlink" title="ANR 分析"></a>ANR 分析</h3><blockquote>
+<p>该问题是典型的 <strong>Unicode 文本渲染拒绝服务漏洞（DoS）</strong>，通过构造大量复杂的字符组合，使系统在 <code>Paint.getRunAdvance()</code> → <code>TextLine.measureRun()</code> 这一路径中反复执行高开销操作，最终导致 <strong>主线程（UI线程）卡死超时触发 ANR</strong>。</p>
+</blockquote>
+<h3 id="✅-1-触发入口（日志首行）："><a href="#✅-1-触发入口（日志首行）：" class="headerlink" title="✅ 1. 触发入口（日志首行）："></a>✅ 1. 触发入口（日志首行）：</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ANR in com.youxiake (com.youxiake/.ui.community.ui.CommunityForumDetailActivity)</span><br><span class="line">Reason: Input dispatching timed out</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>Input dispatching timed out</code> 表明：<ul>
+<li><strong>主线程没有及时响应用户事件（例如触摸、滚动、键盘输入）</strong></li>
+<li>通常是因为 <strong>UI 渲染被阻塞</strong>。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="✅-2-应用线程堆栈分析："><a href="#✅-2-应用线程堆栈分析：" class="headerlink" title="✅ 2. 应用线程堆栈分析："></a>✅ 2. 应用线程堆栈分析：</h3><p>关键调用链如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">android.graphics.Paint.getRunAdvance(Paint.java:<span class="number">2969</span>)</span><br><span class="line">↳ android.text.TextLine.getRunAdvance(TextLine.java:<span class="number">883</span>)</span><br><span class="line">↳ android.text.TextLine.handleText(TextLine.java:<span class="number">936</span>)</span><br><span class="line">↳ android.text.TextLine.handleRun(TextLine.java:<span class="number">1182</span>)</span><br><span class="line">↳ android.text.TextLine.measureRun(TextLine.java:<span class="number">540</span>)</span><br><span class="line">↳ android.text.Layout.getLineHorizontals(Layout.java:<span class="number">1260</span>)</span><br></pre></td></tr></table></figure>
+
+<h4 id="🔥-这一段说明："><a href="#🔥-这一段说明：" class="headerlink" title="🔥 这一段说明："></a>🔥 这一段说明：</h4><ol>
+<li>系统正在尝试对某段文本进行 <strong>逐字符排版和测量（measureRun）</strong>。</li>
+<li><code>getRunAdvance()</code> 是测量每个字符的偏移量（位置），涉及字体处理、合字、控制字符解释。</li>
+<li><strong>这一过程因为你输入的字符串太复杂，执行时间远超预期</strong>，导致 UI 线程阻塞超过 5 秒。</li>
+</ol>
+<hr>
+<h3 id="你输入的是这样一种字符串结构："><a href="#你输入的是这样一种字符串结构：" class="headerlink" title="你输入的是这样一种字符串结构："></a>你输入的是这样一种字符串结构：</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">a1 + (\u0737 * n) + (\u0736 * n) + a2</span><br></pre></td></tr></table></figure>
+
+<h4 id="🔹-其中的“攻击成分”如下："><a href="#🔹-其中的“攻击成分”如下：" class="headerlink" title="🔹 其中的“攻击成分”如下："></a>🔹 其中的“攻击成分”如下：</h4><table>
+<thead>
+<tr>
+<th>字符</th>
+<th>名称</th>
+<th>类型</th>
+<th>风险点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>\u0736</code>, <code>\u0737</code></td>
+<td>Syriac Combining Marks</td>
+<td>Combining Mark（叠加字符）</td>
+<td>叠加到前一个字符上，<strong>导致排版和渲染极其复杂</strong></td>
+</tr>
+<tr>
+<td><code>\u200d</code></td>
+<td>Zero Width Joiner</td>
+<td>控制符</td>
+<td>会试图将多个字符合并成一个“合字”，增大复杂性</td>
+</tr>
+<tr>
+<td><code>\u206a</code></td>
+<td>Inhibit Symmetric Swapping</td>
+<td>文本控制符</td>
+<td>改变字符顺序处理，造成 RTL&#x2F;LTR 混乱</td>
+</tr>
+<tr>
+<td><code>\u0f87</code>, <code>\u0f19</code>, <code>\ufb50</code></td>
+<td>藏文、阿拉伯合字</td>
+<td>脚本混合字符</td>
+<td>触发字体 fallback 和字形渲染</td>
+</tr>
+</tbody></table>
+<h4 id="☠️-典型攻击组合效应："><a href="#☠️-典型攻击组合效应：" class="headerlink" title="☠️ 典型攻击组合效应："></a>☠️ 典型攻击组合效应：</h4><ul>
+<li>字符呈现为 <strong>一个字符上叠加几十层符号</strong>（例如斜线、点、曲线）。</li>
+<li>同时激活字体渲染系统的：<ul>
+<li>字形查找（glyph shaping）</li>
+<li>合字处理（ligature resolution）</li>
+<li>文本方向分析（BiDi）</li>
+</ul>
+</li>
+<li>所有操作都在主线程同步执行 → 直接引发卡顿和 ANR。</li>
+</ul>
+<h2 id="变分编码器添加噪声"><a href="#变分编码器添加噪声" class="headerlink" title="变分编码器添加噪声"></a>变分编码器添加噪声</h2><p>VAE 是一种概率生成模型，它通过变分推断学习输入数据的潜在分布，将编码器输出为潜变量的分布（而非固定向量），使用重参数技巧解决梯度传播问题，训练目标是最大化 ELBO，也就是重构误差与 KL 散度的加权和。而 CVAE 是 VAE 的条件扩展，通过引入条件变量 y 实现条件生成，比如给定标签生成特定图像。两者都属于深度生成模型，广泛应用于图像、文本、语音等领域。</p>
+<h3 id="一、VAE（变分自编码器）"><a href="#一、VAE（变分自编码器）" class="headerlink" title="一、VAE（变分自编码器）"></a>一、VAE（变分自编码器）</h3><p>VAE 是一种生成模型，它结合了概率图模型和神经网络。其核心思想是通过变分推理（Variational Inference）来学习数据的潜在分布，从而能够生成新的数据样本。</p>
+<ul>
+<li><strong>编码器（Encoder）</strong>：将输入数据映射到潜在空间（Latent Space），得到潜在变量的均值和方差。通常是一个神经网络，输出两个向量，分别代表潜在变量的均值和方差。</li>
+<li><strong>解码器（Decoder）</strong>：从潜在空间采样，将潜在变量映射回原始数据空间，重构输入数据。也是一个神经网络，以潜在变量为输入，输出重构的数据。</li>
+<li><strong>变分下界（Evidence Lower Bound, ELBO）</strong>：VAE 的优化目标是最大化变分下界，它由两部分组成：<ul>
+<li>重构误差（Reconstruction Loss）：衡量重构数据与原始数据的差异，通常使用均方误差（MSE）或交叉熵损失。</li>
+<li>正则化项（KL Divergence）：衡量潜在变量分布与先验分布（通常为标准正态分布）的差异，用于防止过拟合并鼓励学习紧凑的潜在表示。</li>
+</ul>
+</li>
+</ul>
+<ol start="2">
+<li>数学公式</li>
+</ol>
+<ul>
+<li>编码器输出：对于输入数据 (x)，编码器输出均值 (\mu(x)) 和方差 (\sigma^2(x))。</li>
+<li>重参数化技巧（Reparameterization Trick）：为了能够进行梯度下降优化，引入随机变量 (\epsilon \sim \mathcal{N}(0, I))，潜在变量 (z) 表示为 (z &#x3D; \mu(x) + \sigma(x) \odot \epsilon)，其中 (\odot) 表示逐元素相乘。</li>
+<li>变分下界（ELBO）：(\mathcal{L}(x) &#x3D; \mathbb{E}_{z \sim q_\phi(z|x)}[\log p_\theta(x|z)] - \text{KL}(q_\phi(z|x) | p(z)))，其中 (q_\phi(z|x)) 是编码器分布，(p_\theta(x|z)) 是解码器分布，(p(z)) 是先验分布。</li>
+</ul>
+<ol start="3">
+<li>训练过程</li>
+</ol>
+<ul>
+<li>前向传播：输入数据通过编码器得到潜在变量的均值和方差，利用重参数化技巧采样得到潜在变量，然后通过解码器重构数据。</li>
+<li>损失计算：计算重构误差和 KL 散度，得到总损失。</li>
+<li>反向传播：通过梯度下降优化损失函数，更新编码器和解码器的参数。</li>
+</ul>
+<ol start="4">
+<li>生成新样本</li>
+</ol>
+<ul>
+<li>采样：从先验分布 (p(z)) 中采样潜在变量 (z)。</li>
+<li>解码：将潜在变量通过解码器生成新的数据样本。</li>
+</ul>
+<h3 id="二、CVAE（条件变分自编码器）"><a href="#二、CVAE（条件变分自编码器）" class="headerlink" title="二、CVAE（条件变分自编码器）"></a>二、CVAE（条件变分自编码器）</h3><ol>
+<li>基本原理<br>CVAE 是 VAE 的扩展，它引入了条件变量（Condition Variable），使得生成过程可以受到条件的控制。这在许多任务中非常有用，例如条件图像生成、条件文本生成等。</li>
+</ol>
+<ul>
+<li><strong>条件编码器（Conditional Encoder）</strong>：将输入数据和条件变量一起编码到潜在空间，得到潜在变量的分布。</li>
+<li><strong>条件解码器（Conditional Decoder）</strong>：从潜在空间采样，并结合条件变量，将潜在变量和条件变量一起映射回原始数据空间，生成条件数据。</li>
+<li><strong>优化目标</strong>：与 VAE 类似，也是最大化变分下界，但需要考虑条件变量的影响。</li>
+</ul>
+<ol start="2">
+<li>数学公式</li>
+</ol>
+<ul>
+<li>编码器分布：(q_\phi(z|x, y))，其中 (y) 是条件变量。</li>
+<li>解码器分布：(p_\theta(x|z, y))。</li>
+<li>变分下界（ELBO）：(\mathcal{L}(x, y) &#x3D; \mathbb{E}_{z \sim q_\phi(z|x, y)}[\log p_\theta(x|z, y)] - \text{KL}(q_\phi(z|x, y) | p(z)))。</li>
+</ul>
+<ol start="3">
+<li>训练过程</li>
+</ol>
+<ul>
+<li>前向传播：输入数据和条件变量通过编码器得到潜在变量的分布，采样得到潜在变量，然后通过解码器生成条件数据。</li>
+<li>损失计算：计算重构误差和 KL 散度，得到总损失。</li>
+<li>反向传播：优化损失函数，更新编码器和解码器的参数。</li>
+</ul>
+<ol start="4">
+<li>生成新样本</li>
+</ol>
+<ul>
+<li>采样：从先验分布 (p(z)) 中采样潜在变量 (z)。</li>
+<li>解码：将潜在变量和条件变量通过解码器生成新的条件数据样本。</li>
+</ul>
+<h3 id="VAE-实现"><a href="#VAE-实现" class="headerlink" title="VAE 实现"></a>VAE 实现</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">import</span> torch.nn <span class="keyword">as</span> nn</span><br><span class="line"><span class="keyword">import</span> torch.nn.functional <span class="keyword">as</span> F</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">VAE</span>(nn.Module):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, input_dim, hidden_dim, latent_dim</span>):</span><br><span class="line">        <span class="built_in">super</span>(VAE, <span class="variable language_">self</span>).__init__()</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 编码器</span></span><br><span class="line">        <span class="variable language_">self</span>.fc1 = nn.Linear(input_dim, hidden_dim)</span><br><span class="line">        <span class="variable language_">self</span>.fc2_mu = nn.Linear(hidden_dim, latent_dim)</span><br><span class="line">        <span class="variable language_">self</span>.fc2_logvar = nn.Linear(hidden_dim, latent_dim)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 解码器</span></span><br><span class="line">        <span class="variable language_">self</span>.fc3 = nn.Linear(latent_dim, hidden_dim)</span><br><span class="line">        <span class="variable language_">self</span>.fc4 = nn.Linear(hidden_dim, input_dim)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">encode</span>(<span class="params">self, x</span>):</span><br><span class="line">        h = F.relu(<span class="variable language_">self</span>.fc1(x))</span><br><span class="line">        mu = <span class="variable language_">self</span>.fc2_mu(h)</span><br><span class="line">        logvar = <span class="variable language_">self</span>.fc2_logvar(h)</span><br><span class="line">        <span class="keyword">return</span> mu, logvar</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">reparameterize</span>(<span class="params">self, mu, logvar</span>):</span><br><span class="line">        std = torch.exp(<span class="number">0.5</span> * logvar)</span><br><span class="line">        eps = torch.randn_like(std)</span><br><span class="line">        <span class="keyword">return</span> mu + eps * std</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">decode</span>(<span class="params">self, z</span>):</span><br><span class="line">        h = F.relu(<span class="variable language_">self</span>.fc3(z))</span><br><span class="line">        <span class="keyword">return</span> torch.sigmoid(<span class="variable language_">self</span>.fc4(h))</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, x</span>):</span><br><span class="line">        mu, logvar = <span class="variable language_">self</span>.encode(x)</span><br><span class="line">        z = <span class="variable language_">self</span>.reparameterize(mu, logvar)</span><br><span class="line">        x_reconst = <span class="variable language_">self</span>.decode(z)</span><br><span class="line">        <span class="keyword">return</span> x_reconst, mu, logvar</span><br><span class="line"></span><br><span class="line"><span class="comment"># 损失函数</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">vae_loss</span>(<span class="params">reconst, x, mu, logvar</span>):</span><br><span class="line">    reconst_loss = F.binary_cross_entropy(reconst, x, reduction=<span class="string">&#x27;sum&#x27;</span>)</span><br><span class="line">    kl_div = -<span class="number">0.5</span> * torch.<span class="built_in">sum</span>(<span class="number">1</span> + logvar - mu.<span class="built_in">pow</span>(<span class="number">2</span>) - logvar.exp())</span><br><span class="line">    <span class="keyword">return</span> reconst_loss + kl_div</span><br></pre></td></tr></table></figure>
+
+<h3 id="CVAE-实现"><a href="#CVAE-实现" class="headerlink" title="CVAE 实现"></a>CVAE 实现</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">CVAE</span>(nn.Module):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, input_dim, condition_dim, hidden_dim, latent_dim</span>):</span><br><span class="line">        <span class="built_in">super</span>(CVAE, <span class="variable language_">self</span>).__init__()</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 编码器</span></span><br><span class="line">        <span class="variable language_">self</span>.fc1 = nn.Linear(input_dim + condition_dim, hidden_dim)</span><br><span class="line">        <span class="variable language_">self</span>.fc2_mu = nn.Linear(hidden_dim, latent_dim)</span><br><span class="line">        <span class="variable language_">self</span>.fc2_logvar = nn.Linear(hidden_dim, latent_dim)</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 解码器</span></span><br><span class="line">        <span class="variable language_">self</span>.fc3 = nn.Linear(latent_dim + condition_dim, hidden_dim)</span><br><span class="line">        <span class="variable language_">self</span>.fc4 = nn.Linear(hidden_dim, input_dim)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">encode</span>(<span class="params">self, x, y</span>):</span><br><span class="line">        <span class="built_in">input</span> = torch.cat([x, y], dim=<span class="number">1</span>)</span><br><span class="line">        h = F.relu(<span class="variable language_">self</span>.fc1(<span class="built_in">input</span>))</span><br><span class="line">        mu = <span class="variable language_">self</span>.fc2_mu(h)</span><br><span class="line">        logvar = <span class="variable language_">self</span>.fc2_logvar(h)</span><br><span class="line">        <span class="keyword">return</span> mu, logvar</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">reparameterize</span>(<span class="params">self, mu, logvar</span>):</span><br><span class="line">        std = torch.exp(<span class="number">0.5</span> * logvar)</span><br><span class="line">        eps = torch.randn_like(std)</span><br><span class="line">        <span class="keyword">return</span> mu + eps * std</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">decode</span>(<span class="params">self, z, y</span>):</span><br><span class="line">        <span class="built_in">input</span> = torch.cat([z, y], dim=<span class="number">1</span>)</span><br><span class="line">        h = F.relu(<span class="variable language_">self</span>.fc3(<span class="built_in">input</span>))</span><br><span class="line">        <span class="keyword">return</span> torch.sigmoid(<span class="variable language_">self</span>.fc4(h))</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, x, y</span>):</span><br><span class="line">        mu, logvar = <span class="variable language_">self</span>.encode(x, y)</span><br><span class="line">        z = <span class="variable language_">self</span>.reparameterize(mu, logvar)</span><br><span class="line">        x_reconst = <span class="variable language_">self</span>.decode(z, y)</span><br><span class="line">        <span class="keyword">return</span> x_reconst, mu, logvar</span><br><span class="line"></span><br><span class="line"><span class="comment"># 损失函数</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">cvae_loss</span>(<span class="params">reconst, x, mu, logvar</span>):</span><br><span class="line">    reconst_loss = F.binary_cross_entropy(reconst, x, reduction=<span class="string">&#x27;sum&#x27;</span>)</span><br><span class="line">    kl_div = -<span class="number">0.5</span> * torch.<span class="built_in">sum</span>(<span class="number">1</span> + logvar - mu.<span class="built_in">pow</span>(<span class="number">2</span>) - logvar.exp())</span><br><span class="line">    <span class="keyword">return</span> reconst_loss + kl_div</span><br></pre></td></tr></table></figure>
+
+<h3 id="VAE-应用案例"><a href="#VAE-应用案例" class="headerlink" title="VAE 应用案例"></a>VAE 应用案例</h3><ul>
+<li><strong>图像生成</strong>：使用 VAE 生成手写数字（MNIST 数据集）、人脸图像等。</li>
+<li><strong>数据压缩</strong>：通过学习数据的潜在表示，实现数据的压缩和降维。</li>
+</ul>
+<h3 id="CVAE-应用案例"><a href="#CVAE-应用案例" class="headerlink" title="CVAE 应用案例"></a>CVAE 应用案例</h3><ul>
+<li><strong>条件图像生成</strong>：根据给定的标签或属性生成特定的图像，例如生成特定数字的手写图像、具有特定表情的人脸图像等。</li>
+<li><strong>条件文本生成</strong>：根据给定的主题或情感生成相应的文本内容。</li>
+</ul>
+<h3 id="VAE-相关问题"><a href="#VAE-相关问题" class="headerlink" title="VAE 相关问题"></a>VAE 相关问题</h3><ol>
+<li><p><strong>VAE 的核心思想是什么？</strong></p>
+<ul>
+<li>VAE 结合了概率图模型和神经网络，通过变分推理学习数据的潜在分布，从而能够生成新的数据样本。</li>
+</ul>
+</li>
+<li><p><strong>VAE 的编码器和解码器分别起什么作用？</strong></p>
+<ul>
+<li>编码器将输入数据映射到潜在空间，得到潜在变量的均值和方差；解码器从潜在空间采样，将潜在变量映射回原始数据空间，重构输入数据。</li>
+</ul>
+</li>
+<li><p><strong>VAE 的优化目标是什么？</strong></p>
+<ul>
+<li>VAE 的优化目标是最大化变分下界（ELBO），它由重构误差和正则化项（KL 散度）组成。</li>
+</ul>
+</li>
+<li><p><strong>如何处理 VAE 中的不可微问题？</strong></p>
+<ul>
+<li>使用重参数化技巧（Reparameterization Trick），将随机性从变量中分离出来，使得可以通过梯度下降进行优化。</li>
+</ul>
+</li>
+<li><p><strong>VAE 与自编码器（Autoencoder）的区别是什么？</strong></p>
+<ul>
+<li>VAE 是一种生成模型，学习数据的概率分布；而自编码器主要用于数据的压缩和重构，不直接用于生成新样本。</li>
+</ul>
+</li>
+</ol>
+<h3 id="CVAE-相关问题"><a href="#CVAE-相关问题" class="headerlink" title="CVAE 相关问题"></a>CVAE 相关问题</h3><ol>
+<li><p><strong>CVAE 的核心思想是什么？</strong></p>
+<ul>
+<li>CVAE 是 VAE 的扩展，引入了条件变量，使得生成过程可以受到条件的控制。</li>
+</ul>
+</li>
+<li><p><strong>CVAE 的编码器和解码器如何处理条件变量？</strong></p>
+<ul>
+<li>编码器将输入数据和条件变量一起编码到潜在空间；解码器从潜在空间采样，并结合条件变量，生成条件数据。</li>
+</ul>
+</li>
+<li><p><strong>CVAE 的优化目标与 VAE 有什么不同？</strong></p>
+<ul>
+<li>CVAE 的优化目标也是最大化变分下界，但需要考虑条件变量的影响。</li>
+</ul>
+</li>
+<li><p><strong>CVAE 在实际应用中有哪些优势？</strong></p>
+<ul>
+<li>CVAE 可以根据条件生成特定的数据样本，适用于有条件的生成任务，如条件图像生成、条件文本生成等。</li>
+</ul>
+</li>
+<li><p><strong>如何设计 CVAE 的条件变量？</strong></p>
+<ul>
+<li>条件变量可以根据具体任务的需求进行设计，例如使用标签、属性或其他相关数据作为条件变量。</li>
+</ul>
+</li>
+</ol>
+
+  </div>
+</article>
+
+
+    <div class="blog-post-comments">
+        <div id="utterances_thread">
+            <noscript>Please enable JavaScript to view the comments.</noscript>
+        </div>
+    </div>
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/archives/">Writing</a></li>
+        
+          <li><a href="/search/">Search</a></li>
+        
+          <li><a href="/categories/">Categories</a></li>
+        
+          <li><a href="/idea/">Idea</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="https://github.com/g0dam">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E4%BA%8EOpenResty%E7%9A%84Web%E5%BA%94%E7%94%A8%E9%98%B2%E7%81%AB%E5%A2%99"><span class="toc-number">1.</span> <span class="toc-text">基于OpenResty的Web应用防火墙</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#WAF-lua%E8%84%9A%E6%9C%AC"><span class="toc-number">1.1.</span> <span class="toc-text">WAF lua脚本</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81"><span class="toc-number">1.2.</span> <span class="toc-text">代码</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E4%BA%8ESoot%E7%9A%84%E6%95%B0%E6%8D%AE%E6%B5%81%E5%88%86%E6%9E%90"><span class="toc-number">2.</span> <span class="toc-text">基于Soot的数据流分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Android-CNVD"><span class="toc-number">3.</span> <span class="toc-text">Android CNVD</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%A7%A0-%E4%B8%80%E3%80%81%E8%84%9A%E6%9C%AC%E6%A0%B8%E5%BF%83%E5%8A%9F%E8%83%BD%E5%88%86%E6%9E%90"><span class="toc-number">3.1.</span> <span class="toc-text">🧠 一、脚本核心功能分析</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%F0%9F%93%9C-%E8%84%9A%E6%9C%AC%E5%88%86%E8%A7%A3%E5%88%86%E6%9E%90%EF%BC%9A"><span class="toc-number">3.1.1.</span> <span class="toc-text">📜 脚本分解分析：</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%9A%A8-%E4%BA%8C%E3%80%81%E8%BF%99%E6%AE%B5%E5%AD%97%E7%AC%A6%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BC%9A%E5%AF%BC%E8%87%B4-Android-APP-%E5%8D%A1%E9%A1%BF%E7%94%9A%E8%87%B3%E5%B4%A9%E6%BA%83%EF%BC%9F"><span class="toc-number">3.2.</span> <span class="toc-text">🚨 二、这段字符为什么会导致 Android APP 卡顿甚至崩溃？</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%F0%9F%93%8C-1-%E5%A4%8D%E6%9D%82%E5%AD%97%E7%AC%A6%E5%8F%A0%E5%8A%A0%E6%B8%B2%E6%9F%93%EF%BC%9A"><span class="toc-number">3.2.1.</span> <span class="toc-text">📌 1. 复杂字符叠加渲染：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%F0%9F%93%8C-2-%E5%8F%B3%E5%88%B0%E5%B7%A6%E6%96%87%E6%9C%AC%E6%8E%A7%E5%88%B6%E7%AC%A6-RTL-%E5%92%8C%E6%A0%BC%E5%BC%8F%E6%8E%A7%E5%88%B6%E5%AD%97%E7%AC%A6%EF%BC%9A"><span class="toc-number">3.2.2.</span> <span class="toc-text">📌 2. 右到左文本控制符 (RTL) 和格式控制字符：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%F0%9F%93%8C-3-%E6%B7%B7%E5%90%88%E8%84%9A%E6%9C%AC%E5%BC%95%E8%B5%B7%E7%9A%84%E5%AD%97%E4%BD%93-Fallback%EF%BC%9A"><span class="toc-number">3.2.3.</span> <span class="toc-text">📌 3. 混合脚本引起的字体 Fallback：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%F0%9F%93%8C-4-%E6%8D%A2%E8%A1%8C%E6%8E%A7%E5%88%B6%E7%AC%A6%E6%8F%92%E5%85%A5%EF%BC%9A"><span class="toc-number">3.2.4.</span> <span class="toc-text">📌 4. 换行控制符插入：</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%A7%A8-%E4%B8%89%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BC%9A%E8%A7%A6%E5%8F%91-Android-ANR%EF%BC%9F"><span class="toc-number">3.3.</span> <span class="toc-text">🧨 三、为什么会触发 Android ANR？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%9B%A1%EF%B8%8F-%E5%9B%9B%E3%80%81%E8%A7%A3%E5%86%B3%E5%BB%BA%E8%AE%AE%EF%BC%88%E5%BC%80%E5%8F%91%E8%80%85%E8%A7%92%E5%BA%A6%EF%BC%89"><span class="toc-number">3.4.</span> <span class="toc-text">🛡️ 四、解决建议（开发者角度）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ANR-%E5%88%86%E6%9E%90"><span class="toc-number">3.5.</span> <span class="toc-text">ANR 分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%9C%85-1-%E8%A7%A6%E5%8F%91%E5%85%A5%E5%8F%A3%EF%BC%88%E6%97%A5%E5%BF%97%E9%A6%96%E8%A1%8C%EF%BC%89%EF%BC%9A"><span class="toc-number">3.6.</span> <span class="toc-text">✅ 1. 触发入口（日志首行）：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%9C%85-2-%E5%BA%94%E7%94%A8%E7%BA%BF%E7%A8%8B%E5%A0%86%E6%A0%88%E5%88%86%E6%9E%90%EF%BC%9A"><span class="toc-number">3.7.</span> <span class="toc-text">✅ 2. 应用线程堆栈分析：</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%F0%9F%94%A5-%E8%BF%99%E4%B8%80%E6%AE%B5%E8%AF%B4%E6%98%8E%EF%BC%9A"><span class="toc-number">3.7.1.</span> <span class="toc-text">🔥 这一段说明：</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%A0%E8%BE%93%E5%85%A5%E7%9A%84%E6%98%AF%E8%BF%99%E6%A0%B7%E4%B8%80%E7%A7%8D%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%BB%93%E6%9E%84%EF%BC%9A"><span class="toc-number">3.8.</span> <span class="toc-text">你输入的是这样一种字符串结构：</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%F0%9F%94%B9-%E5%85%B6%E4%B8%AD%E7%9A%84%E2%80%9C%E6%94%BB%E5%87%BB%E6%88%90%E5%88%86%E2%80%9D%E5%A6%82%E4%B8%8B%EF%BC%9A"><span class="toc-number">3.8.1.</span> <span class="toc-text">🔹 其中的“攻击成分”如下：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E2%98%A0%EF%B8%8F-%E5%85%B8%E5%9E%8B%E6%94%BB%E5%87%BB%E7%BB%84%E5%90%88%E6%95%88%E5%BA%94%EF%BC%9A"><span class="toc-number">3.8.2.</span> <span class="toc-text">☠️ 典型攻击组合效应：</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%98%E5%88%86%E7%BC%96%E7%A0%81%E5%99%A8%E6%B7%BB%E5%8A%A0%E5%99%AA%E5%A3%B0"><span class="toc-number">4.</span> <span class="toc-text">变分编码器添加噪声</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E3%80%81VAE%EF%BC%88%E5%8F%98%E5%88%86%E8%87%AA%E7%BC%96%E7%A0%81%E5%99%A8%EF%BC%89"><span class="toc-number">4.1.</span> <span class="toc-text">一、VAE（变分自编码器）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C%E3%80%81CVAE%EF%BC%88%E6%9D%A1%E4%BB%B6%E5%8F%98%E5%88%86%E8%87%AA%E7%BC%96%E7%A0%81%E5%99%A8%EF%BC%89"><span class="toc-number">4.2.</span> <span class="toc-text">二、CVAE（条件变分自编码器）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#VAE-%E5%AE%9E%E7%8E%B0"><span class="toc-number">4.3.</span> <span class="toc-text">VAE 实现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CVAE-%E5%AE%9E%E7%8E%B0"><span class="toc-number">4.4.</span> <span class="toc-text">CVAE 实现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#VAE-%E5%BA%94%E7%94%A8%E6%A1%88%E4%BE%8B"><span class="toc-number">4.5.</span> <span class="toc-text">VAE 应用案例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CVAE-%E5%BA%94%E7%94%A8%E6%A1%88%E4%BE%8B"><span class="toc-number">4.6.</span> <span class="toc-text">CVAE 应用案例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#VAE-%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98"><span class="toc-number">4.7.</span> <span class="toc-text">VAE 相关问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#CVAE-%E7%9B%B8%E5%85%B3%E9%97%AE%E9%A2%98"><span class="toc-number">4.8.</span> <span class="toc-text">CVAE 相关问题</span></a></li></ol></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://godreams.cn/2024/03/25/work/workproject/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://godreams.cn/2024/03/25/work/workproject/&text=【工作】面试题整理 项目问题准备"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://godreams.cn/2024/03/25/work/workproject/&title=【工作】面试题整理 项目问题准备"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://godreams.cn/2024/03/25/work/workproject/&is_video=false&description=【工作】面试题整理 项目问题准备"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【工作】面试题整理 项目问题准备&body=Check out this article: https://godreams.cn/2024/03/25/work/workproject/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://godreams.cn/2024/03/25/work/workproject/&title=【工作】面试题整理 项目问题准备"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://godreams.cn/2024/03/25/work/workproject/&title=【工作】面试题整理 项目问题准备"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://godreams.cn/2024/03/25/work/workproject/&title=【工作】面试题整理 项目问题准备"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://godreams.cn/2024/03/25/work/workproject/&title=【工作】面试题整理 项目问题准备"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://godreams.cn/2024/03/25/work/workproject/&name=【工作】面试题整理 项目问题准备&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://godreams.cn/2024/03/25/work/workproject/&t=【工作】面试题整理 项目问题准备"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2024-2025
+    g0dam
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Categories</a></li><!--
+     --><!--
+       --><li><a href="/idea/">Idea</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/g0dam">Projects</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+    <script type="text/javascript">
+      var utterances_repo = 'owner/githubrepo';
+      var utterances_issue_term = 'pathname';
+      var utterances_label = 'Comment';
+      var utterances_theme = 'github-dark';
+
+      (function(){
+          var script = document.createElement('script');
+
+          script.src = 'https://utteranc.es/client.js';
+          script.setAttribute('repo', utterances_repo);
+          script.setAttribute('issue-term', 'pathname');
+          script.setAttribute('label', utterances_label);
+          script.setAttribute('theme', utterances_theme);
+          script.setAttribute('crossorigin', 'anonymous');
+          script.async = true;
+          (document.getElementById('utterances_thread')).appendChild(script);
+      }());
+  </script>
+
+</body>
+</html>

