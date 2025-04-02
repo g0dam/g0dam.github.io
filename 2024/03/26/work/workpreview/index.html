@@ -14,7 +14,7 @@
 <meta property="og:description" content="数据库提权写shell方式https:&#x2F;&#x2F;developer.aliyun.com&#x2F;article&#x2F;1225524 MySQL 提权 CVE-2012-2122 漏洞利用：  确认目标 MySQL 版本在受影响范围内（MariaDB versions from 5.1.62, 5.2.12, 5.3.6, 5.5.23；MySQL versions from 5.1.63, 5.5.24, 5.6">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2024-03-26T02:55:36.000Z">
-<meta property="article:modified_time" content="2025-03-26T04:56:08.491Z">
+<meta property="article:modified_time" content="2025-03-28T07:53:33.697Z">
 <meta property="article:author" content="g0dam">
 <meta property="article:tag" content="null">
 <meta name="twitter:card" content="summary">
@@ -123,7 +123,7 @@
     
     
       <div id="toc">
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E6%8F%90%E6%9D%83%E5%86%99shell%E6%96%B9%E5%BC%8F"><span class="toc-number">1.</span> <span class="toc-text">数据库提权写shell方式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#MySQL-%E6%8F%90%E6%9D%83"><span class="toc-number">1.1.</span> <span class="toc-text">MySQL 提权</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MSSQL-%E6%8F%90%E6%9D%83"><span class="toc-number">1.2.</span> <span class="toc-text">MSSQL 提权</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Oracle-%E6%8F%90%E6%9D%83"><span class="toc-number">1.3.</span> <span class="toc-text">Oracle 提权</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BA%94%E6%80%A5%E5%93%8D%E5%BA%94%E6%B5%81%E7%A8%8B"><span class="toc-number">2.</span> <span class="toc-text">应急响应流程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SSRF-%E6%BC%8F%E6%B4%9E%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8"><span class="toc-number">3.</span> <span class="toc-text">SSRF 漏洞原理与应用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%8E%9F%E7%90%86"><span class="toc-number">3.1.</span> <span class="toc-text">漏洞原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SSRF-%E6%BC%8F%E6%B4%9E%E4%B8%AD%E5%B8%B8%E7%94%A8%E5%8D%8F%E8%AE%AE%E7%9A%84%E5%8A%9F%E8%83%BD%E5%92%8C%E4%BD%9C%E7%94%A8"><span class="toc-number">3.2.</span> <span class="toc-text">SSRF 漏洞中常用协议的功能和作用</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-file-%E5%8D%8F%E8%AE%AE"><span class="toc-number">3.2.1.</span> <span class="toc-text">1. file 协议</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-dict-%E5%8D%8F%E8%AE%AE"><span class="toc-number">3.2.2.</span> <span class="toc-text">2. dict 协议</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-gopher-%E5%8D%8F%E8%AE%AE"><span class="toc-number">3.2.3.</span> <span class="toc-text">3. gopher 协议</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%8F%91%E7%8E%B0"><span class="toc-number">3.3.</span> <span class="toc-text">漏洞发现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8"><span class="toc-number">3.4.</span> <span class="toc-text">漏洞利用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8E-Redis-%E7%9A%84%E7%BB%93%E5%90%88%E5%88%A9%E7%94%A8"><span class="toc-number">3.5.</span> <span class="toc-text">与 Redis 的结合利用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E9%98%B2%E5%BE%A1"><span class="toc-number">3.6.</span> <span class="toc-text">漏洞防御</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%9C%E4%B8%BA%E4%BC%97%E6%B5%8B%E8%BF%90%E8%90%A5%E4%BA%BA%E5%91%98%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-number">4.</span> <span class="toc-text">作为众测运营人员的问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E7%AD%89%E7%BA%A7%E8%AF%84%E5%88%A4%E6%A0%87%E5%87%86"><span class="toc-number">4.1.</span> <span class="toc-text">漏洞等级评判标准</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E9%AA%8C%E8%AF%81%E7%9A%84%E9%80%BB%E8%BE%91%E5%92%8C%E6%B5%81%E7%A8%8B"><span class="toc-number">4.2.</span> <span class="toc-text">漏洞验证的逻辑和流程</span></a></li></ol></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E6%8F%90%E6%9D%83%E5%86%99shell%E6%96%B9%E5%BC%8F"><span class="toc-number">1.</span> <span class="toc-text">数据库提权写shell方式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#MySQL-%E6%8F%90%E6%9D%83"><span class="toc-number">1.1.</span> <span class="toc-text">MySQL 提权</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MSSQL-%E6%8F%90%E6%9D%83"><span class="toc-number">1.2.</span> <span class="toc-text">MSSQL 提权</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Oracle-%E6%8F%90%E6%9D%83"><span class="toc-number">1.3.</span> <span class="toc-text">Oracle 提权</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BA%94%E6%80%A5%E5%93%8D%E5%BA%94%E6%B5%81%E7%A8%8B"><span class="toc-number">2.</span> <span class="toc-text">应急响应流程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SSRF-%E6%BC%8F%E6%B4%9E%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8"><span class="toc-number">3.</span> <span class="toc-text">SSRF 漏洞原理与应用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%8E%9F%E7%90%86"><span class="toc-number">3.1.</span> <span class="toc-text">漏洞原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SSRF-%E6%BC%8F%E6%B4%9E%E4%B8%AD%E5%B8%B8%E7%94%A8%E5%8D%8F%E8%AE%AE%E7%9A%84%E5%8A%9F%E8%83%BD%E5%92%8C%E4%BD%9C%E7%94%A8"><span class="toc-number">3.2.</span> <span class="toc-text">SSRF 漏洞中常用协议的功能和作用</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-file-%E5%8D%8F%E8%AE%AE"><span class="toc-number">3.2.1.</span> <span class="toc-text">1. file 协议</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-dict-%E5%8D%8F%E8%AE%AE"><span class="toc-number">3.2.2.</span> <span class="toc-text">2. dict 协议</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-gopher-%E5%8D%8F%E8%AE%AE"><span class="toc-number">3.2.3.</span> <span class="toc-text">3. gopher 协议</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%8F%91%E7%8E%B0"><span class="toc-number">3.3.</span> <span class="toc-text">漏洞发现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8"><span class="toc-number">3.4.</span> <span class="toc-text">漏洞利用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8E-Redis-%E7%9A%84%E7%BB%93%E5%90%88%E5%88%A9%E7%94%A8"><span class="toc-number">3.5.</span> <span class="toc-text">与 Redis 的结合利用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E9%98%B2%E5%BE%A1"><span class="toc-number">3.6.</span> <span class="toc-text">漏洞防御</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%9C%E4%B8%BA%E4%BC%97%E6%B5%8B%E8%BF%90%E8%90%A5%E4%BA%BA%E5%91%98%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-number">4.</span> <span class="toc-text">作为众测运营人员的问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E7%AD%89%E7%BA%A7%E8%AF%84%E5%88%A4%E6%A0%87%E5%87%86"><span class="toc-number">4.1.</span> <span class="toc-text">漏洞等级评判标准</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E9%AA%8C%E8%AF%81%E7%9A%84%E9%80%BB%E8%BE%91%E5%92%8C%E6%B5%81%E7%A8%8B"><span class="toc-number">4.2.</span> <span class="toc-text">漏洞验证的逻辑和流程</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A7%BB%E5%8A%A8%E5%AE%89%E5%85%A8"><span class="toc-number">5.</span> <span class="toc-text">移动安全</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Frida%E6%A3%80%E6%B5%8B%E5%92%8C%E5%8F%8D%E6%A3%80%E6%B5%8B%E7%9A%84%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF%E6%88%96%E7%89%B9%E5%BE%81"><span class="toc-number">5.1.</span> <span class="toc-text">Frida检测和反检测的相关技术或特征</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ELF%E6%96%87%E4%BB%B6%E7%9A%84%E5%8A%A0%E8%BD%BD%E6%96%B9%E5%BC%8F%E5%92%8C%E8%BF%87%E7%A8%8B"><span class="toc-number">5.2.</span> <span class="toc-text">ELF文件的加载方式和过程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E7%9A%84%E6%B7%B7%E6%B7%86%E6%8A%80%E6%9C%AF%E4%BB%A5%E5%8F%8A%E9%92%88%E5%AF%B9%E6%AF%8F%E7%A7%8D%E6%8A%80%E6%9C%AF%E5%A6%82%E4%BD%95%E5%88%86%E6%9E%90"><span class="toc-number">5.3.</span> <span class="toc-text">常见的混淆技术以及针对每种技术如何分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8A%A8%E6%80%81%E5%BA%93%E5%92%8C%E9%9D%99%E6%80%81%E5%BA%93%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB"><span class="toc-number">5.4.</span> <span class="toc-text">动态库和静态库有什么区别</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#native%E7%9A%84hook%E5%87%BD%E6%95%B0hook%E6%9F%90%E4%B8%AA%E5%9C%B0%E5%9D%80%E7%9A%84%E5%87%BD%E6%95%B0%E5%B9%B6%E4%BF%AE%E6%94%B9%E5%80%BC"><span class="toc-number">5.5.</span> <span class="toc-text">native的hook函数hook某个地址的函数并修改值</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#AES%E5%92%8CMD5%E7%AE%97%E6%B3%95%E7%9A%84%E4%B8%8D%E5%90%8C%E4%BB%A5%E5%8F%8A%E6%AF%8F%E4%B8%AA%E7%AE%97%E6%B3%95%E7%9A%84%E8%AF%A6%E7%BB%86%E6%AD%A5%E9%AA%A4"><span class="toc-number">5.6.</span> <span class="toc-text">AES和MD5算法的不同以及每个算法的详细步骤</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E7%9A%84Android%E6%B7%B7%E6%B7%86%E5%92%8C%E5%8A%A0%E5%A3%B3%E6%96%B9%E5%BC%8F%E7%9A%84%E7%89%B9%E5%BE%81%E4%BB%A5%E5%8F%8A%E5%85%B7%E4%BD%93%E5%88%86%E6%9E%90%E6%96%B9%E6%B3%95"><span class="toc-number">5.7.</span> <span class="toc-text">常见的Android混淆和加壳方式的特征以及具体分析方法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CSRF%EF%BC%88%E8%B7%A8%E7%AB%99%E8%AF%B7%E6%B1%82%E4%BC%AA%E9%80%A0%EF%BC%89%E7%9A%84%E4%BB%8B%E7%BB%8D%E4%B8%8E%E9%98%B2%E6%8A%A4"><span class="toc-number">6.</span> <span class="toc-text">CSRF（跨站请求伪造）的介绍与防护</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%8C%E6%BA%90%E7%AD%96%E7%95%A5%E4%B8%8EJSONP%E7%BB%95%E8%BF%87%E5%90%8C%E6%BA%90%E7%AD%96%E7%95%A5%E7%9A%84%E6%96%B9%E5%BC%8F"><span class="toc-number">6.1.</span> <span class="toc-text">同源策略与JSONP绕过同源策略的方式</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%95%E8%BF%87WAF%EF%BC%88Web%E5%BA%94%E7%94%A8%E9%98%B2%E7%81%AB%E5%A2%99%EF%BC%89%E7%9A%84%E5%B8%B8%E8%A7%81%E6%96%B9%E6%B3%95"><span class="toc-number">7.</span> <span class="toc-text">绕过WAF（Web应用防火墙）的常见方法</span></a></li></ol>
       </div>
     
   </span>
@@ -409,6 +409,29 @@
 </ul>
 </li>
 </ol>
+<ul>
+<li><strong>常见的Redis提权方案</strong><ul>
+<li><strong>方案一：利用Redis写入公钥进行SSH登录提权</strong><ul>
+<li><strong>步骤</strong>：<ol>
+<li>攻击者获取到Redis的写权限，将生成的SSH公钥写入到目标服务器的<code>~/.ssh/authorized_keys</code>文件中。</li>
+<li>攻击者使用对应的私钥通过SSH客户端连接到目标服务器，从而获得服务器的shell权限，实现提权。</li>
+</ol>
+</li>
+<li><strong>说明</strong>：此方案需要Redis服务具有写入目标文件系统的权限，并且目标服务器的SSH服务配置允许公钥认证。</li>
+</ul>
+</li>
+<li><strong>方案二：利用Redis的模块加载功能执行恶意代码</strong><ul>
+<li><strong>步骤</strong>：<ol>
+<li>攻击者编写恶意的Redis模块代码，该模块在加载后可以在服务器上执行特定的命令或操作。</li>
+<li>攻击者通过Redis的<code>MODULE LOAD</code>命令加载该恶意模块，触发恶意代码的执行，从而获得服务器的更高权限或执行权限提升的操作。</li>
+</ol>
+</li>
+<li><strong>说明</strong>：此方案适用于Redis版本支持模块加载功能，并且攻击者能够成功编写和加载具有提权能力的模块。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
 <h3 id="漏洞防御"><a href="#漏洞防御" class="headerlink" title="漏洞防御"></a>漏洞防御</h3><ol>
 <li><strong>限制协议</strong>：仅允许 HTTP 和 HTTPS 请求。</li>
 <li><strong>限制 IP</strong>：避免应用被用来获取内网数据，攻击内网。</li>
@@ -416,6 +439,23 @@
 <li><strong>过滤返回信息</strong>：验证远程服务器对请求的响应，避免泄露敏感信息。</li>
 <li><strong>统一错误信息</strong>：避免用户根据错误信息判断远端服务器的端口状态。</li>
 </ol>
+<ul>
+<li><p><strong>SSRF的利用</strong></p>
+<ul>
+<li>SSRF攻击是指攻击者诱导服务器端发起HTTP请求到指定的URL，从而访问到服务器内部网络或受信任的服务。例如，攻击者可以构造恶意的URL，让服务器请求内部的管理界面、数据库等服务，进而获取敏感信息或执行未授权的操作。</li>
+<li>利用方式包括：通过服务器端的漏洞（如未正确验证和限制请求的URL）发送构造的请求，访问到内部的资源；利用服务器对某些服务的信任关系，进行权限提升或数据泄露等。</li>
+</ul>
+</li>
+<li><p><strong>SSRF的防护手段</strong></p>
+<ul>
+<li><strong>输入验证</strong>：对用户输入的URL进行严格的验证，确保其符合预期的格式和访问范围。例如，限制只能访问特定的域名或IP地址段，过滤掉敏感的协议（如file:&#x2F;&#x2F;、dict:&#x2F;&#x2F;等）。</li>
+<li><strong>网络隔离</strong>：将内部服务和外部网络进行隔离，使用防火墙等设备限制服务器对内部网络的访问。只允许必要的服务和端口进行通信，避免服务器被诱导访问到内部敏感资源。</li>
+<li><strong>限制服务器端请求</strong>：在服务器端代码中，限制发起请求的功能，只允许必要的请求操作，并对请求的目标地址进行白名单限制。</li>
+<li><strong>使用安全的库和框架</strong>：选择经过安全审计的HTTP客户端库和框架，避免使用存在已知漏洞或不安全实现的库，以降低被SSRF攻击的风险。</li>
+<li><strong>定期安全测试</strong>：通过渗透测试和代码审计等手段，发现和修复潜在的SSRF漏洞，及时更新和修补系统及应用的安全漏洞。</li>
+</ul>
+</li>
+</ul>
 <h2 id="作为众测运营人员的问题"><a href="#作为众测运营人员的问题" class="headerlink" title="作为众测运营人员的问题"></a>作为众测运营人员的问题</h2><h3 id="漏洞等级评判标准"><a href="#漏洞等级评判标准" class="headerlink" title="漏洞等级评判标准"></a>漏洞等级评判标准</h3><ol>
 <li><p><strong>严重漏洞</strong>：</p>
 <ul>
@@ -497,6 +537,221 @@
 </ul>
 </li>
 </ol>
+<h2 id="移动安全"><a href="#移动安全" class="headerlink" title="移动安全"></a>移动安全</h2><h3 id="Frida检测和反检测的相关技术或特征"><a href="#Frida检测和反检测的相关技术或特征" class="headerlink" title="Frida检测和反检测的相关技术或特征"></a>Frida检测和反检测的相关技术或特征</h3><ul>
+<li><strong>检测技术</strong><ul>
+<li><strong>进程名检测</strong>：遍历运行的进程，对比进程名是否为fridaserver。</li>
+<li><strong>端口检测</strong>：通过遍历端口来检查 frida server，通常是27042端口。</li>
+<li><strong>maps文件检测</strong>：在&#x2F;proc&#x2F;self&#x2F;maps 中会出现libgadget.so ,或frida-agent-32.so,frida-agent.so等模块。</li>
+<li><strong>fd检测</strong>：检查&#x2F;proc&#x2F;self&#x2F;fd&#x2F;下的文件描述符，查找与frida相关的链接。</li>
+<li><strong>线程名检测</strong>：读取&#x2F;proc&#x2F;self&#x2F;task&#x2F;tid&#x2F;status文件，检查线程名是否包含gmain、gum-js-loop等。</li>
+<li><strong>inlinehook检测</strong>：检测是否对关键函数进行了inlinehook。</li>
+</ul>
+</li>
+<li><strong>反检测技术</strong><ul>
+<li><strong>修改Frida server文件名</strong>：更改fridaserver的文件名，绕过基于文件名的检测。</li>
+<li><strong>修改Frida server端口</strong>：通过命令行指定参数改变fridaserver的监听端口。</li>
+<li><strong>以spawn模式启动应用</strong>：主要是为了过掉双进程保护。</li>
+<li><strong>hook系统库函数</strong>：如hook strstr、strcmp等函数，绕过对maps文件、线程名等的检测。</li>
+<li><strong>更改Frida server的特征</strong>：手动编译Hluda Frida Server等，更改fridaserver的诸多特征，从而达到隐藏的效果。</li>
+</ul>
+</li>
+</ul>
+<h3 id="ELF文件的加载方式和过程"><a href="#ELF文件的加载方式和过程" class="headerlink" title="ELF文件的加载方式和过程"></a>ELF文件的加载方式和过程</h3><ol>
+<li><strong>读取文件头部</strong>：内核首先读取ELF文件头部，获取各种数据结构的信息，如程序头表、段表等。</li>
+<li><strong>加载可加载段</strong>：根据段表中的信息，调用mmap()把找到的可加载段（如文本段、数据段）的内容加载到内存中，并设置相应的权限。</li>
+<li><strong>加载动态链接器</strong>：从PT_INTERP的段中找到所对应的动态链接器名称，并加载动态链接器。</li>
+<li><strong>设置进程堆栈</strong>：内核把新进程的堆栈中设置一些标记对，以指示动态链接器的相关操作。</li>
+<li><strong>传递控制权给动态链接器</strong>：内核把控制权传递给动态链接器。</li>
+<li><strong>动态链接器处理共享库</strong>：动态链接器检查程序对共享库的依赖性，并在需要时对其进行加载。</li>
+<li><strong>重定位</strong>：动态链接器对程序的外部引用进行重定位，确定引用的外部变量&#x2F;函数的地址。</li>
+<li><strong>执行初始化代码</strong>：动态链接器执行在ELF文件中标记为.init的节的代码，进行程序运行的初始化。</li>
+<li><strong>开始执行程序</strong>：动态链接器把控制传递给程序，从ELF文件头部中定义的程序进入点开始执行。<br>ELF（Executable and Linkable Format）文件头包含了描述ELF文件的基本信息和结构的字段，以下是ELF文件头的主要字段：</li>
+</ol>
+<ul>
+<li><code>e_ident</code>：标识字段，包含ELF文件的魔数（如<code>\x7F``E``L``F</code>）和文件类别的信息（如32位或64位）。</li>
+<li><code>e_type</code>：文件类型，如可执行文件（<code>ET_EXEC</code>）、可重定位文件（<code>ET_REL</code>）、共享目标文件（<code>ET_DYN</code>）等。</li>
+<li><code>e_machine</code>：目标机器架构，如x86（<code>EM_386</code>）、ARM（<code>EM_ARM</code>）等。</li>
+<li><code>e_version</code>：文件版本号。</li>
+<li><code>e_entry</code>：程序入口的虚拟地址，当程序被加载执行时，从这个地址开始运行。</li>
+<li><code>e_phoff</code>：程序头表在文件中的偏移位置。</li>
+<li><code>e_shoff</code>：节头表在文件中的偏移位置。</li>
+<li><code>e_flags</code>：与目标机器相关的标志。</li>
+<li><code>e_ehsize</code>：ELF头本身的大小。</li>
+<li><code>e_phentsize</code>：程序头表中每个条目的大小。</li>
+<li><code>e_phnum</code>：程序头表中的条目数目。</li>
+<li><code>e_shentsize</code>：节头表中每个条目的大小。</li>
+<li><code>e_shnum</code>：节头表中的条目数目。</li>
+<li><code>e_shstrndx</code>：节头表中字符串表节的索引。</li>
+</ul>
+<h3 id="常见的混淆技术以及针对每种技术如何分析"><a href="#常见的混淆技术以及针对每种技术如何分析" class="headerlink" title="常见的混淆技术以及针对每种技术如何分析"></a>常见的混淆技术以及针对每种技术如何分析</h3><ul>
+<li><strong>代码混淆</strong><ul>
+<li><strong>技术描述</strong>：通过改变代码的结构和逻辑，使代码难以阅读和理解，如变量名替换、代码块打乱等。</li>
+<li><strong>分析方法</strong>：使用反编译工具（如IDA、JEB等）对混淆后的代码进行反编译，结合静态分析和动态调试，逐步还原代码的原始逻辑。</li>
+</ul>
+</li>
+<li><strong>字符串加密</strong><ul>
+<li><strong>技术描述</strong>：对字符串进行加密处理，防止直接从代码中获取敏感信息，如用户名、密码等。</li>
+<li><strong>分析方法</strong>：通过动态调试，在程序运行时捕获加密字符串的解密过程，或者分析加密算法，尝试逆向解密。</li>
+</ul>
+</li>
+<li><strong>控制流平坦化</strong><ul>
+<li><strong>技术描述</strong>：将程序的控制流结构进行平坦化处理，增加控制流的复杂度，使分析人员难以理解程序的执行流程。</li>
+<li><strong>分析方法</strong>：通过分析控制流图，识别平坦化后的结构，结合对关键函数的分析，还原原始的控制流。</li>
+</ul>
+</li>
+<li><strong>资源文件加密</strong><ul>
+<li><strong>技术描述</strong>：对应用的资源文件（如图片、音频等）进行加密，防止直接提取和使用。</li>
+<li><strong>分析方法</strong>：通过动态调试，截获资源文件的解密过程，或者分析加密算法，尝试解密资源文件。</li>
+</ul>
+</li>
+<li><strong>反射调用</strong><ul>
+<li><strong>技术描述</strong>：通过反射机制动态加载类和调用方法，隐藏代码的调用关系，增加分析难度。</li>
+<li><strong>分析方法</strong>：分析反射调用的相关代码，确定被调用的类和方法，结合对相关类的分析，理解程序的功能。</li>
+</ul>
+</li>
+</ul>
+<h3 id="动态库和静态库有什么区别"><a href="#动态库和静态库有什么区别" class="headerlink" title="动态库和静态库有什么区别"></a>动态库和静态库有什么区别</h3><ul>
+<li><p><strong>定义</strong></p>
+<ul>
+<li><strong>动态库</strong>：在程序运行时才被加载到内存中的库文件，多个程序可以共享同一份动态库的内存副本。</li>
+<li><strong>静态库</strong>：在程序编译链接时就被链接到可执行文件中，生成的可执行文件包含静态库的代码副本。</li>
+</ul>
+</li>
+<li><p><strong>链接方式</strong></p>
+<ul>
+<li><strong>动态库</strong>：在程序运行时由操作系统动态链接器加载。</li>
+<li><strong>静态库</strong>：在编译阶段就与程序代码链接在一起。</li>
+</ul>
+</li>
+<li><p><strong>内存占用</strong></p>
+<ul>
+<li><strong>动态库</strong>：多个程序同时使用时，只占用一份内存。</li>
+<li><strong>静态库</strong>：每个使用该库的程序都包含一份完整的库代码副本，内存占用较大。</li>
+</ul>
+</li>
+<li><p><strong>更新维护</strong></p>
+<ul>
+<li><strong>动态库</strong>：更新库文件后，所有依赖该库的程序都会自动使用新的版本。</li>
+<li><strong>静态库</strong>：如果需要更新，需要重新编译链接程序。</li>
+</ul>
+</li>
+<li><p><strong>常见文件后缀</strong></p>
+<ul>
+<li><strong>动态库</strong>：在Linux系统（包括Android）中，动态库的常见文件后缀是<code>.so</code>（Shared Object的缩写）。</li>
+<li><strong>静态库</strong>：在Linux系统中，静态库的常见文件后缀是<code>.a</code>。</li>
+</ul>
+</li>
+<li><p><strong>加载方式</strong></p>
+<ul>
+<li><strong>动态库</strong>：在Android中，动态库通常在程序运行时由系统动态加载器加载。加载方式主要有两种：<ul>
+<li><strong>通过<code>dlopen</code>函数加载</strong>：程序在运行时调用<code>dlopen</code>函数来显式加载动态库，并可以通过<code>dlsym</code>函数获取库中函数的地址进行调用。</li>
+<li><strong>在程序启动时自动加载</strong>：如果动态库在程序的链接阶段被指定，系统会在程序启动时自动加载所需的动态库。</li>
+</ul>
+</li>
+<li><strong>静态库</strong>：在Android中，静态库在程序编译链接阶段就被链接到可执行文件中。加载方式是在编译时使用<code>-l</code>选项指定静态库文件，链接器会将静态库中的代码和数据链接到可执行文件中，生成的可执行文件包含静态库的完整副本。</li>
+</ul>
+</li>
+<li><p><strong>在Android当中的情况</strong></p>
+<ul>
+<li><strong>动态库</strong>：Android中的动态库通常存放在<code>/system/lib/</code>或<code>/vendor/lib/</code>等目录下，应用程序也可以将私有动态库放在自身的<code>lib</code>目录下。应用程序在运行时通过动态加载器加载这些动态库。</li>
+<li><strong>静态库</strong>：静态库在Android中通常以<code>.a</code>文件的形式存在，开发者在编译应用程序时将其链接到可执行文件中。静态库的使用可以减少应用程序对外部库文件的依赖，但会增加可执行文件的大小。</li>
+</ul>
+</li>
+</ul>
+<h3 id="native的hook函数hook某个地址的函数并修改值"><a href="#native的hook函数hook某个地址的函数并修改值" class="headerlink" title="native的hook函数hook某个地址的函数并修改值"></a>native的hook函数hook某个地址的函数并修改值</h3><p>以下是一个简单的示例，使用Frida的Native API来hook某个地址的函数并修改值：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">Java</span>.<span class="title function_">perform</span>(</span><br><span class="line">    <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">        <span class="comment">//获取当前安卓设备的系统版本</span></span><br><span class="line">        <span class="keyword">var</span> v=<span class="title class_">Java</span>.<span class="property">androidVersion</span>;</span><br><span class="line">        <span class="title function_">send</span>(<span class="string">&#x27;Version:&#x27;</span>+v);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//打印调用堆栈</span></span><br><span class="line">        <span class="keyword">function</span> <span class="title function_">printstack</span>(<span class="params"></span>) &#123;</span><br><span class="line">            <span class="title function_">send</span>(<span class="title class_">Java</span>.<span class="title function_">use</span>(<span class="string">&quot;android.util.Log&quot;</span>).<span class="title function_">getStackTraceString</span>(<span class="title class_">Java</span>.<span class="title function_">use</span>(<span class="string">&quot;java.lang.Exception&quot;</span>).$new()));</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//Hook软件包的类名为：com.myclass</span></span><br><span class="line">        <span class="keyword">var</span> myclass= <span class="title class_">Java</span>.<span class="title function_">use</span>(<span class="string">&#x27;com.myclass&#x27;</span>);</span><br><span class="line">        <span class="comment">//调用Hook软件包类名下的方法：mymethod</span></span><br><span class="line">        myclass.<span class="property">mymethod</span>.<span class="property">implementation</span> = <span class="keyword">function</span> (<span class="params">bytearray</span>) &#123;</span><br><span class="line">            <span class="title function_">send</span>(<span class="string">&#x27;com.myclass.mymethod.implementation&#x27;</span>);</span><br><span class="line">            <span class="title function_">printstack</span>();</span><br><span class="line">            <span class="keyword">var</span> ret = <span class="variable language_">this</span>.<span class="title function_">mymethod</span>(bytearray);</span><br><span class="line">            <span class="title function_">send</span>(<span class="string">&quot;result:&quot;</span>+ret);</span><br><span class="line">            <span class="keyword">return</span> ret;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">main</span>(<span class="params"></span>)&#123;</span><br><span class="line">	<span class="keyword">const</span> addAddr = <span class="title class_">Module</span>.<span class="title function_">findExportByName</span>(<span class="string">&#x27;libleidian.so&#x27;</span>, <span class="string">&#x27;Java_com_example_leidian_MainActivity_add&#x27;</span>);</span><br><span class="line">    <span class="keyword">const</span> addFunction = <span class="keyword">new</span> <span class="title class_">NativeFunction</span>(addAddr, <span class="string">&#x27;int64&#x27;</span>, [<span class="string">&#x27;int64&#x27;</span>, <span class="string">&#x27;int64&#x27;</span>, <span class="string">&#x27;int&#x27;</span>, <span class="string">&#x27;int&#x27;</span>]);</span><br><span class="line">    <span class="keyword">const</span> result = <span class="title function_">addFunction</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>);</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&quot;result: &quot;</span>, result);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title class_">Interceptor</span>.<span class="title function_">attach</span>(helloAddr, &#123;</span><br><span class="line">    <span class="attr">onEnter</span>: <span class="keyword">function</span> (<span class="params">args</span>) &#123;</span><br><span class="line">        args[<span class="number">2</span>] = <span class="title function_">ptr</span>(<span class="number">1000</span>) <span class="comment">// 指针类型参数 和 整数类型参数 修改</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="attr">onLeave</span>: <span class="keyword">function</span> (<span class="params">retval</span>) &#123;</span><br><span class="line">        retval.<span class="title function_">replace</span>(<span class="number">1337</span>) <span class="comment">// 整数类型返回值替换</span></span><br><span class="line">        retval.<span class="title function_">replace</span>(<span class="title function_">ptr</span>(<span class="string">&quot;0x1234&quot;</span>))<span class="comment">//指针类型返回值替换 （指针其实仍然是数值）</span></span><br><span class="line">    &#125;,</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<h3 id="AES和MD5算法的不同以及每个算法的详细步骤"><a href="#AES和MD5算法的不同以及每个算法的详细步骤" class="headerlink" title="AES和MD5算法的不同以及每个算法的详细步骤"></a>AES和MD5算法的不同以及每个算法的详细步骤</h3><ul>
+<li><strong>AES算法</strong><ul>
+<li><strong>不同点</strong>：AES是一种对称加密算法，用于对数据进行加密和解密，而MD5是一种哈希算法，用于生成数据的摘要。</li>
+<li><strong>详细步骤</strong><ol>
+<li><strong>密钥扩展</strong>：将原始密钥扩展成一系列的轮密钥，用于每一轮的加密操作。</li>
+<li><strong>初始轮</strong>：将明文与初始密钥进行异或操作。</li>
+<li><strong>多轮加密</strong>：进行多轮（如10轮、14轮等）的加密操作，每轮包括字节替换、行移位、列混淆和轮密钥异或等步骤。</li>
+<li><strong>最终轮</strong>：最后一轮不进行列混淆操作，直接进行字节替换、行移位和轮密钥异或。</li>
+<li><strong>解密过程</strong>：与加密过程相反，使用相应的逆操作和轮密钥进行解密。</li>
+</ol>
+</li>
+</ul>
+</li>
+<li><strong>MD5算法</strong><ul>
+<li><strong>不同点</strong>：MD5是一种单向哈希函数，用于将任意长度的数据转换成固定长度的摘要，无法通过哈希值反推出原始数据。</li>
+<li><strong>详细步骤</strong><ol>
+<li><strong>填充数据</strong>：将输入数据填充到满足特定长度要求的倍数。</li>
+<li><strong>附加长度</strong>：在填充后的数据末尾附加原始数据的长度信息。</li>
+<li><strong>初始化缓冲区</strong>：设置四个初始的32位缓冲区值。</li>
+<li><strong>处理数据块</strong>：将数据分成固定大小的块，对每个块进行四轮的处理，每轮包括一系列的逻辑运算和模加运算。</li>
+<li><strong>输出哈希值</strong>：将四个缓冲区的值连接起来，形成最终的128位哈希值。</li>
+</ol>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="常见的Android混淆和加壳方式的特征以及具体分析方法"><a href="#常见的Android混淆和加壳方式的特征以及具体分析方法" class="headerlink" title="常见的Android混淆和加壳方式的特征以及具体分析方法"></a>常见的Android混淆和加壳方式的特征以及具体分析方法</h3><ul>
+<li><strong>常见的混淆方式及其特征</strong><ul>
+<li><strong>代码混淆</strong>：通过改变代码的结构和逻辑，如变量名替换、代码块打乱等，使代码难以阅读和理解。特征是在反编译后的代码中出现大量无意义的变量名和复杂的控制流。</li>
+<li><strong>字符串加密</strong>：对字符串进行加密处理，防止直接从代码中获取敏感信息。特征是在反编译后的代码中字符串以加密形式存在，需要在运行时解密。</li>
+<li><strong>控制流平坦化</strong>：将程序的控制流结构进行平坦化处理，增加控制流的复杂度。特征是反编译后的代码中出现大量的跳转和条件判断，难以理解程序的执行流程。</li>
+<li><strong>资源文件加密</strong>：对应用的资源文件进行加密，防止直接提取和使用。特征是资源文件无法直接被读取，需要在运行时解密。</li>
+<li><strong>反射调用</strong>：通过反射机制动态加载类和调用方法，隐藏代码的调用关系。特征是在代码中大量使用<code>Class.forName</code>和<code>Method.invoke</code>等反射相关的方法。</li>
+</ul>
+</li>
+<li><strong>常见的加壳方式及其特征</strong><ul>
+<li><strong>静态加壳</strong>：在程序编译后对可执行文件进行处理，添加壳代码以实现保护功能。特征是可执行文件的结构发生变化，通常会增加额外的段或修改入口点。</li>
+<li><strong>动态加壳</strong>：在程序运行时通过动态加载壳代码来实现保护。特征是在运行时会加载额外的动态库或代码片段，这些代码负责对程序进行保护和控制。</li>
+</ul>
+</li>
+<li><strong>具体分析方法</strong><ul>
+<li><strong>反编译分析</strong>：使用反编译工具（如apktool、JEB等）对Android应用进行反编译，查看代码和资源文件，识别混淆和加壳的特征。</li>
+<li><strong>动态调试</strong>：通过调试工具（如Frida、Xposed等）在程序运行时进行动态调试，截获关键函数的调用和数据流动，分析加壳和混淆后的实际行为。</li>
+<li><strong>内存分析</strong>：使用内存分析工具（如Memory Analyzer）查看程序运行时的内存状态，分析壳代码的加载和执行情况，以及解密后的代码和数据。</li>
+<li><strong>特征比对</strong>：将分析结果与已知的混淆和加壳技术的特征进行比对，确定具体使用的技术和实现方式。</li>
+</ul>
+</li>
+</ul>
+<h2 id="CSRF（跨站请求伪造）的介绍与防护"><a href="#CSRF（跨站请求伪造）的介绍与防护" class="headerlink" title="CSRF（跨站请求伪造）的介绍与防护"></a>CSRF（跨站请求伪造）的介绍与防护</h2><ul>
+<li><p><strong>CSRF的介绍</strong></p>
+<ul>
+<li>CSRF是一种攻击方式，攻击者诱导已登录某网站的用户浏览器，向该网站发送伪造的请求，从而在用户不知情的情况下执行操作。例如，攻击者可以构造一个恶意的表单或链接，当用户点击或提交时，用户的浏览器会向其已登录的银行网站发送转账请求，导致用户的资金被盗用。</li>
+</ul>
+</li>
+<li><p><strong>CSRF的防护方法</strong></p>
+<ul>
+<li><strong>使用CSRF令牌</strong>：在服务器生成唯一的CSRF令牌，并将其嵌入到每个表单或请求中。客户端在提交请求时必须包含该令牌，服务器在处理请求时验证令牌的合法性。这样可以确保请求是由用户的真实意愿发起的，而不是被伪造的请求。</li>
+<li><strong>验证HTTP头信息</strong>：检查请求中的<code>Referer</code>头，确保请求来自合法的来源页面；也可以使用自定义的HTTP头，如<code>X-CSRF-Token</code>，在服务器端验证该头是否存在和有效。</li>
+<li><strong>使用SameSite属性</strong>：在设置Cookie时，使用<code>SameSite</code>属性（如<code>SameSite=Strict</code>或<code>SameSite=Lax</code>），限制Cookie在跨站请求时是否被发送。这样可以减少CSRF攻击中Cookie被自动提交的可能性。</li>
+<li><strong>用户教育</strong>：提醒用户不要随意点击不可信的链接或访问不明来源的网站，提高用户的安全意识，减少被CSRF攻击的风险。</li>
+</ul>
+</li>
+</ul>
+<h3 id="同源策略与JSONP绕过同源策略的方式"><a href="#同源策略与JSONP绕过同源策略的方式" class="headerlink" title="同源策略与JSONP绕过同源策略的方式"></a>同源策略与JSONP绕过同源策略的方式</h3><ul>
+<li><p><strong>同源策略</strong></p>
+<ul>
+<li>同源策略是一种安全策略，限制了来自不同源的文档或脚本如何获取和交互其他源的资源。同源是指协议、域名和端口号都相同的来源。例如，<code>http://example.com:8080</code>和<code>https://example.com:8080</code>被认为是不同源，因为协议不同。同源策略的主要目的是防止恶意网站获取其他网站的敏感信息，如Cookie、本地存储等。</li>
+</ul>
+</li>
+<li><p><strong>JSONP绕过同源策略的方式</strong></p>
+<ul>
+<li>JSONP（JSON with Padding）是一种跨域数据请求的方式，它利用了<code>&lt;script&gt;</code>标签的<code>src</code>属性不受同源策略限制的特点。其工作原理是：<ol>
+<li>客户端在页面中动态创建一个<code>&lt;script&gt;</code>标签，将<code>src</code>属性设置为目标服务器的API地址，并在请求参数中指定一个回调函数名。</li>
+<li>目标服务器接收到请求后，将数据以JavaScript函数调用的形式返回，函数名与客户端指定的回调函数名一致，数据作为参数传递给该函数。</li>
+<li>客户端浏览器解析并执行返回的脚本，调用回调函数，从而实现了跨域的数据获取和处理。</li>
+</ol>
+</li>
+<li>例如，客户端代码：  <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">&quot;跨域的图片地址&quot;</span>&gt;</span> 可以用于统计打点，可以使用第三方统计服务？？？</span><br><span class="line"><span class="tag">&lt;<span class="name">link</span> <span class="attr">href</span>=<span class="string">&quot;跨域的CSS地址&quot;</span>&gt;</span> 可以使用CDN,一般外域</span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;跨域的js地址&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span> 实现JSONP????具体实现</span><br><span class="line">// 上面的方式都可以跨域</span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript">    <span class="keyword">function</span> <span class="title function_">handleResponse</span>(<span class="params">data</span>) &#123;</span></span><br><span class="line"><span class="language-javascript">        <span class="comment">// 处理返回的数据</span></span></span><br><span class="line"><span class="language-javascript">        <span class="variable language_">console</span>.<span class="title function_">log</span>(data);</span></span><br><span class="line"><span class="language-javascript">    &#125;</span></span><br><span class="line"><span class="language-javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">&quot;https://api.example.com/data?callback=handleResponse&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+  目标服务器返回：  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">handleResponse</span>(&#123;<span class="string">&quot;key&quot;</span>: <span class="string">&quot;value&quot;</span>&#125;);</span><br></pre></td></tr></table></figure>
+  这样就绕过了同源策略的限制，实现了跨域的数据交互。<br>  另外，CORS（跨域资源共享）也是一种常见的跨域解决方案，它通过服务端设置特定的 HTTP 头（如 Access-Control-Allow-Origin）来允许不同源的请求，实现跨域资源共享。与 JSONP 不同，CORS 的实现主要在服务端，且支持多种 HTTP 方法（如 GET、POST、PUT、DELETE 等）。</li>
+</ul>
+</li>
+</ul>
+<h2 id="绕过WAF（Web应用防火墙）的常见方法"><a href="#绕过WAF（Web应用防火墙）的常见方法" class="headerlink" title="绕过WAF（Web应用防火墙）的常见方法"></a>绕过WAF（Web应用防火墙）的常见方法</h2><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_50464560/article/details/120926097%E3%80%81https://cloud.tencent.com/developer/article/2315120">https://blog.csdn.net/weixin_50464560/article/details/120926097、https://cloud.tencent.com/developer/article/2315120</a></p>
+<ul>
+<li><strong>常见的WAF绕过方法</strong><ul>
+<li><strong>编码绕过</strong>：对攻击payload进行编码处理，如使用URL编码、Unicode编码、Base64编码等，使WAF无法正确识别出攻击特征。例如，将<code>&lt;script&gt;</code>编码为<code>%3Cscript%3E</code>，绕过WAF对特定标签的检测。</li>
+<li><strong>分段攻击</strong>：将攻击payload分成多个部分，分别发送到服务器，然后在服务器端进行拼接和执行。这样可以避免完整的攻击特征被WAF捕获。<a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_43571641/article/details/123116234">可以看下这个博客的讲解</a></li>
+<li><strong>利用HTTP请求走私</strong>：通过操纵HTTP请求的头部和消息体，使不同的服务器或组件对请求的解析不一致，从而绕过WAF的检测并将恶意请求传递给目标服务器。<a target="_blank" rel="noopener" href="https://forum.butian.net/share/1876">这个讲的很好</a></li>
+</ul>
+</li>
+</ul>
 
   </div>
 </article>
@@ -536,7 +791,7 @@
     
     
       <div id="toc-footer" style="display: none">
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E6%8F%90%E6%9D%83%E5%86%99shell%E6%96%B9%E5%BC%8F"><span class="toc-number">1.</span> <span class="toc-text">数据库提权写shell方式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#MySQL-%E6%8F%90%E6%9D%83"><span class="toc-number">1.1.</span> <span class="toc-text">MySQL 提权</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MSSQL-%E6%8F%90%E6%9D%83"><span class="toc-number">1.2.</span> <span class="toc-text">MSSQL 提权</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Oracle-%E6%8F%90%E6%9D%83"><span class="toc-number">1.3.</span> <span class="toc-text">Oracle 提权</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BA%94%E6%80%A5%E5%93%8D%E5%BA%94%E6%B5%81%E7%A8%8B"><span class="toc-number">2.</span> <span class="toc-text">应急响应流程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SSRF-%E6%BC%8F%E6%B4%9E%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8"><span class="toc-number">3.</span> <span class="toc-text">SSRF 漏洞原理与应用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%8E%9F%E7%90%86"><span class="toc-number">3.1.</span> <span class="toc-text">漏洞原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SSRF-%E6%BC%8F%E6%B4%9E%E4%B8%AD%E5%B8%B8%E7%94%A8%E5%8D%8F%E8%AE%AE%E7%9A%84%E5%8A%9F%E8%83%BD%E5%92%8C%E4%BD%9C%E7%94%A8"><span class="toc-number">3.2.</span> <span class="toc-text">SSRF 漏洞中常用协议的功能和作用</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-file-%E5%8D%8F%E8%AE%AE"><span class="toc-number">3.2.1.</span> <span class="toc-text">1. file 协议</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-dict-%E5%8D%8F%E8%AE%AE"><span class="toc-number">3.2.2.</span> <span class="toc-text">2. dict 协议</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-gopher-%E5%8D%8F%E8%AE%AE"><span class="toc-number">3.2.3.</span> <span class="toc-text">3. gopher 协议</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%8F%91%E7%8E%B0"><span class="toc-number">3.3.</span> <span class="toc-text">漏洞发现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8"><span class="toc-number">3.4.</span> <span class="toc-text">漏洞利用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8E-Redis-%E7%9A%84%E7%BB%93%E5%90%88%E5%88%A9%E7%94%A8"><span class="toc-number">3.5.</span> <span class="toc-text">与 Redis 的结合利用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E9%98%B2%E5%BE%A1"><span class="toc-number">3.6.</span> <span class="toc-text">漏洞防御</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%9C%E4%B8%BA%E4%BC%97%E6%B5%8B%E8%BF%90%E8%90%A5%E4%BA%BA%E5%91%98%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-number">4.</span> <span class="toc-text">作为众测运营人员的问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E7%AD%89%E7%BA%A7%E8%AF%84%E5%88%A4%E6%A0%87%E5%87%86"><span class="toc-number">4.1.</span> <span class="toc-text">漏洞等级评判标准</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E9%AA%8C%E8%AF%81%E7%9A%84%E9%80%BB%E8%BE%91%E5%92%8C%E6%B5%81%E7%A8%8B"><span class="toc-number">4.2.</span> <span class="toc-text">漏洞验证的逻辑和流程</span></a></li></ol></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E6%8F%90%E6%9D%83%E5%86%99shell%E6%96%B9%E5%BC%8F"><span class="toc-number">1.</span> <span class="toc-text">数据库提权写shell方式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#MySQL-%E6%8F%90%E6%9D%83"><span class="toc-number">1.1.</span> <span class="toc-text">MySQL 提权</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MSSQL-%E6%8F%90%E6%9D%83"><span class="toc-number">1.2.</span> <span class="toc-text">MSSQL 提权</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Oracle-%E6%8F%90%E6%9D%83"><span class="toc-number">1.3.</span> <span class="toc-text">Oracle 提权</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BA%94%E6%80%A5%E5%93%8D%E5%BA%94%E6%B5%81%E7%A8%8B"><span class="toc-number">2.</span> <span class="toc-text">应急响应流程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SSRF-%E6%BC%8F%E6%B4%9E%E5%8E%9F%E7%90%86%E4%B8%8E%E5%BA%94%E7%94%A8"><span class="toc-number">3.</span> <span class="toc-text">SSRF 漏洞原理与应用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%8E%9F%E7%90%86"><span class="toc-number">3.1.</span> <span class="toc-text">漏洞原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SSRF-%E6%BC%8F%E6%B4%9E%E4%B8%AD%E5%B8%B8%E7%94%A8%E5%8D%8F%E8%AE%AE%E7%9A%84%E5%8A%9F%E8%83%BD%E5%92%8C%E4%BD%9C%E7%94%A8"><span class="toc-number">3.2.</span> <span class="toc-text">SSRF 漏洞中常用协议的功能和作用</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-file-%E5%8D%8F%E8%AE%AE"><span class="toc-number">3.2.1.</span> <span class="toc-text">1. file 协议</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-dict-%E5%8D%8F%E8%AE%AE"><span class="toc-number">3.2.2.</span> <span class="toc-text">2. dict 协议</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-gopher-%E5%8D%8F%E8%AE%AE"><span class="toc-number">3.2.3.</span> <span class="toc-text">3. gopher 协议</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%8F%91%E7%8E%B0"><span class="toc-number">3.3.</span> <span class="toc-text">漏洞发现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8"><span class="toc-number">3.4.</span> <span class="toc-text">漏洞利用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8E-Redis-%E7%9A%84%E7%BB%93%E5%90%88%E5%88%A9%E7%94%A8"><span class="toc-number">3.5.</span> <span class="toc-text">与 Redis 的结合利用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E9%98%B2%E5%BE%A1"><span class="toc-number">3.6.</span> <span class="toc-text">漏洞防御</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%9C%E4%B8%BA%E4%BC%97%E6%B5%8B%E8%BF%90%E8%90%A5%E4%BA%BA%E5%91%98%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-number">4.</span> <span class="toc-text">作为众测运营人员的问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E7%AD%89%E7%BA%A7%E8%AF%84%E5%88%A4%E6%A0%87%E5%87%86"><span class="toc-number">4.1.</span> <span class="toc-text">漏洞等级评判标准</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E9%AA%8C%E8%AF%81%E7%9A%84%E9%80%BB%E8%BE%91%E5%92%8C%E6%B5%81%E7%A8%8B"><span class="toc-number">4.2.</span> <span class="toc-text">漏洞验证的逻辑和流程</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A7%BB%E5%8A%A8%E5%AE%89%E5%85%A8"><span class="toc-number">5.</span> <span class="toc-text">移动安全</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Frida%E6%A3%80%E6%B5%8B%E5%92%8C%E5%8F%8D%E6%A3%80%E6%B5%8B%E7%9A%84%E7%9B%B8%E5%85%B3%E6%8A%80%E6%9C%AF%E6%88%96%E7%89%B9%E5%BE%81"><span class="toc-number">5.1.</span> <span class="toc-text">Frida检测和反检测的相关技术或特征</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ELF%E6%96%87%E4%BB%B6%E7%9A%84%E5%8A%A0%E8%BD%BD%E6%96%B9%E5%BC%8F%E5%92%8C%E8%BF%87%E7%A8%8B"><span class="toc-number">5.2.</span> <span class="toc-text">ELF文件的加载方式和过程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E7%9A%84%E6%B7%B7%E6%B7%86%E6%8A%80%E6%9C%AF%E4%BB%A5%E5%8F%8A%E9%92%88%E5%AF%B9%E6%AF%8F%E7%A7%8D%E6%8A%80%E6%9C%AF%E5%A6%82%E4%BD%95%E5%88%86%E6%9E%90"><span class="toc-number">5.3.</span> <span class="toc-text">常见的混淆技术以及针对每种技术如何分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8A%A8%E6%80%81%E5%BA%93%E5%92%8C%E9%9D%99%E6%80%81%E5%BA%93%E6%9C%89%E4%BB%80%E4%B9%88%E5%8C%BA%E5%88%AB"><span class="toc-number">5.4.</span> <span class="toc-text">动态库和静态库有什么区别</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#native%E7%9A%84hook%E5%87%BD%E6%95%B0hook%E6%9F%90%E4%B8%AA%E5%9C%B0%E5%9D%80%E7%9A%84%E5%87%BD%E6%95%B0%E5%B9%B6%E4%BF%AE%E6%94%B9%E5%80%BC"><span class="toc-number">5.5.</span> <span class="toc-text">native的hook函数hook某个地址的函数并修改值</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#AES%E5%92%8CMD5%E7%AE%97%E6%B3%95%E7%9A%84%E4%B8%8D%E5%90%8C%E4%BB%A5%E5%8F%8A%E6%AF%8F%E4%B8%AA%E7%AE%97%E6%B3%95%E7%9A%84%E8%AF%A6%E7%BB%86%E6%AD%A5%E9%AA%A4"><span class="toc-number">5.6.</span> <span class="toc-text">AES和MD5算法的不同以及每个算法的详细步骤</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E7%9A%84Android%E6%B7%B7%E6%B7%86%E5%92%8C%E5%8A%A0%E5%A3%B3%E6%96%B9%E5%BC%8F%E7%9A%84%E7%89%B9%E5%BE%81%E4%BB%A5%E5%8F%8A%E5%85%B7%E4%BD%93%E5%88%86%E6%9E%90%E6%96%B9%E6%B3%95"><span class="toc-number">5.7.</span> <span class="toc-text">常见的Android混淆和加壳方式的特征以及具体分析方法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CSRF%EF%BC%88%E8%B7%A8%E7%AB%99%E8%AF%B7%E6%B1%82%E4%BC%AA%E9%80%A0%EF%BC%89%E7%9A%84%E4%BB%8B%E7%BB%8D%E4%B8%8E%E9%98%B2%E6%8A%A4"><span class="toc-number">6.</span> <span class="toc-text">CSRF（跨站请求伪造）的介绍与防护</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%8C%E6%BA%90%E7%AD%96%E7%95%A5%E4%B8%8EJSONP%E7%BB%95%E8%BF%87%E5%90%8C%E6%BA%90%E7%AD%96%E7%95%A5%E7%9A%84%E6%96%B9%E5%BC%8F"><span class="toc-number">6.1.</span> <span class="toc-text">同源策略与JSONP绕过同源策略的方式</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%95%E8%BF%87WAF%EF%BC%88Web%E5%BA%94%E7%94%A8%E9%98%B2%E7%81%AB%E5%A2%99%EF%BC%89%E7%9A%84%E5%B8%B8%E8%A7%81%E6%96%B9%E6%B3%95"><span class="toc-number">7.</span> <span class="toc-text">绕过WAF（Web应用防火墙）的常见方法</span></a></li></ol>
       </div>
     
 
